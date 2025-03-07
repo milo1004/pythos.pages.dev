@@ -50,6 +50,18 @@
             padding: 10px;
             margin-top: 20px;
         }
+        a.here-link {
+            color: #77aaff;
+            text-decoration: underline;
+        }
+        a.here-link:hover {
+            color: #5599ff;
+        }
+
+        /* Smooth scrolling behavior */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +104,7 @@
             <h2>Installation</h2>
             <p>To install PythOS, follow these steps:</p>
             <ol>
-                <li>Download the latest PythOS ISO from the official website.</li>
+                <li>Download the latest PythOS ISO <a href="#downloads" class="here-link">here</a>.</li>
                 <li>Create a bootable USB drive using the downloaded ISO.</li>
                 <li>Boot your computer from the USB drive.</li>
                 <li>You will see a Systemback bootloader.</li>
@@ -128,7 +140,8 @@
             <h2>Downloads</h2>
             <p>Download the latest version of PythOS from the links below:</p>
             <ul>
-                <li><a href="https://example.com/pythos-64bit.iso" target="_blank">PythOS ISO</a></li>
+                <li><a href="https://example.com/pythos-64bit.iso" target="_blank">PythOS ISO (64-bit)</a></li>
+                <li><a href="https://example.com/pythos-32bit.iso" target="_blank">PythOS ISO (32-bit)</a></li>
                 <li><a href="https://example.com/pythos-user-manual.pdf" target="_blank">PythOS User Manual (PDF)</a></li>
             </ul>
         </section>
@@ -137,5 +150,24 @@
     <footer>
         <p>&copy; 2025 PythOS. All rights reserved.</p>
     </footer>
+
+    <!-- Smooth scrolling JavaScript -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default jump behavior
+                const targetId = this.getAttribute('href').substring(1); // Get the target section ID
+                const targetElement = document.getElementById(targetId); // Find the target element
+
+                if (targetElement) {
+                    // Smoothly scroll to the target element
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
