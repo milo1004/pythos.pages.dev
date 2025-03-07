@@ -23,6 +23,10 @@
             padding-top: 30px;
             min-height: 70px;
             border-bottom: #77aaff 3px solid;
+            position: fixed; /* Make the header stick to the top */
+            top: 0; /* Position it at the top */
+            width: 100%; /* Make it span the full width */
+            z-index: 1000; /* Ensure it stays above other content */
         }
         header a {
             color: #fff;
@@ -41,7 +45,7 @@
         .main {
             padding: 20px;
             background: #fff;
-            margin-top: 20px;
+            margin-top: 100px; /* Add margin to avoid content being hidden behind the fixed header */
         }
         footer {
             background: #333;
