@@ -11,41 +11,43 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex; /* Use flexbox for layout */
         }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
-        header {
-            background: #333;
+        .sidebar {
+            width: 250px; /* Fixed width for the sidebar */
+            background: #333; /* Dark background for the sidebar */
             color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #77aaff 3px solid;
-            position: fixed; /* Make the header stick to the top */
-            top: 0; /* Position it at the top */
-            width: 100%; /* Make it span the full width */
-            z-index: 1000; /* Ensure it stays above other content */
+            padding: 20px;
+            height: 100vh; /* Full height of the viewport */
+            position: fixed; /* Make the sidebar stick to the left */
+            top: 0;
+            left: 0;
+            overflow-y: auto; /* Allow scrolling if content overflows */
         }
-        header a {
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
+        .sidebar h1 {
+            margin-top: 0;
+            font-size: 24px;
         }
-        header ul {
+        .sidebar nav ul {
             padding: 0;
             list-style: none;
         }
-        header li {
-            display: inline;
-            padding: 0 20px 0 20px;
+        .sidebar nav ul li {
+            margin: 15px 0;
         }
-        .main {
+        .sidebar nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .sidebar nav ul li a:hover {
+            color: #77aaff; /* Highlight color on hover */
+        }
+        .main-content {
+            margin-left: 250px; /* Offset main content to the right of the sidebar */
             padding: 20px;
             background: #fff;
-            margin-top: 100px; /* Add margin to avoid content being hidden behind the fixed header */
+            flex-grow: 1; /* Allow main content to take remaining space */
         }
         footer {
             background: #333;
@@ -69,24 +71,24 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>PythOS Documentation</h1>
-            <nav>
-                <ul>
-                    <li><a href="#introduction">Introduction</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#installation">Installation</a></li>
-                    <li><a href="#usage">Usage</a></li>
-                    <li><a href="#contributing">Contributing</a></li>
-                    <li><a href="#developers">Our Developers</a></li>
-                    <li><a href="#downloads">Downloads</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h1>PythOS Documentation</h1>
+        <nav>
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#contributing">Contributing</a></li>
+                <li><a href="#developers">Our Developers</a></li>
+                <li><a href="#downloads">Downloads</a></li>
+            </ul>
+        </nav>
+    </div>
 
-    <div class="container main">
+    <!-- Main Content -->
+    <div class="main-content">
         <section id="introduction">
             <h2>Introduction</h2>
             <p>PythOS is a modern, lightweight operating system designed for efficiency and ease of use. Built with a focus on simplicity and performance, PythOS is perfect for both developers and everyday users.</p>
@@ -149,11 +151,11 @@
                 <li><a href="https://example.com/pythos-user-manual.pdf" target="_blank">PythOS User Manual (PDF)</a></li>
             </ul>
         </section>
-    </div>
 
-    <footer>
-        <p>&copy; 2025 PythOS. All rights reserved.</p>
-    </footer>
+        <footer>
+            <p>&copy; 2025 PythOS. All rights reserved.</p>
+        </footer>
+    </div>
 
     <!-- Smooth scrolling JavaScript -->
     <script>
