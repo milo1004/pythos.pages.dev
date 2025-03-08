@@ -10,7 +10,7 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             display: flex;
         }
         .sidebar {
@@ -47,7 +47,7 @@
         .main-content {
             margin-left: 200px; /* Adjusted margin to match the sidebar width */
             padding: 20px 20px 20px 50px; /* Increased left padding to 50px */
-            background: #fff;
+            background: #fffdf4;
             flex-grow: 1; /* Allow main content to take remaining space */
             transition: margin-left 0.3s ease; /* Smooth transition for main content */
         }
@@ -59,11 +59,11 @@
             margin-top: 20px;
         }
         a.here-link {
-            color: #77aaff;
-            text-decoration: underline;
+            color: #616161;
+            font-weight: bold;
         }
         a.here-link:hover {
-            color: #5599ff;
+            color: #000000;
         }
 
         /* Button to toggle sidebar */
@@ -71,7 +71,7 @@
             position: fixed;
             top: 20px;
             left: 220px; /* Position to the right of the sidebar */
-            background: #333;
+            background: #333333;
             color: #fff;
             border: none;
             padding: 10px;
@@ -121,8 +121,15 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for better visibility */
             margin: 0;
         }
+        .download-link {
+            color: #3a3a3a;
+        }
+        .download-link:hover {
+            color: #3a3a3a;
+        }
     </style>
 </head>
+
 <body>
     <!-- Sidebar Navigation -->
     <div class="sidebar" id="sidebar">
@@ -143,7 +150,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <!-- Button to toggle sidebar -->
-        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        <button class="sidebar-toggle squircle" id="sidebarToggle">☰</button>
 
         <!-- Introduction Section with Image -->
         <section id="introduction">
@@ -212,7 +219,19 @@
                 <li><a href="https://example.com/pythos-64bit.iso" target="_blank">PythOS ISO (64-bit)</a></li>
                 <li><a href="https://example.com/pythos-32bit.iso" target="_blank">PythOS ISO (32-bit)</a></li>
                 <li><a href="https://example.com/pythos-user-manual.pdf" target="_blank">PythOS User Manual (PDF)</a></li>
+                <a href="https://github.com/milo1004/PythonOS/" target="_blank" rel="noopener noreferrer" class="repo-link">
+                    <br>
+                    GitHub
+                    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only"></span></span></a>
             </ul>
+            <style>
+                a:active {
+                    color: gray;
+                }
+                a:visited {
+                    color:black;
+                }
+            </style>
         </section>
 
         <footer>
