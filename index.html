@@ -106,20 +106,20 @@
             overflow: hidden; /* Ensure the image doesn't overflow */
             position: relative; /* For positioning text over the image */
             margin-bottom: 20px; /* Space below the image */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .introduction-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensure the image covers the area */
+            width: 100px; /* Adjust width as needed */
+            height: auto;
+            margin-right: 20px; /* Space between image and title */
         }
         .introduction-image h1 {
-            position: absolute; /* Position text over the image */
-            top: 50%; /* Center vertically */
-            left: 50%; /* Center horizontally */
-            transform: translate(-50%, -50%); /* Perfect centering */
             color: #fff; /* White text */
             font-size: 48px; /* Large font size */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for better visibility */
+            margin: 0;
         }
     </style>
 </head>
@@ -148,8 +148,8 @@
         <!-- Introduction Section with Image -->
         <section id="introduction">
             <div class="introduction-image">
-                <img src="PythOS.png" alt="Logo of PythOS", style="width:100px; height:auto;">
-                <h1>PythOS</h1>
+                <img src="PythOS.png" alt="Logo of PythOS">
+                <h1>PythOS Documentation</h1>
             </div>
             <h2>Introduction</h2>
             <p>PythOS is a modern, lightweight operating system designed for efficiency and ease of use. Built with a focus on simplicity and performance, PythOS is perfect for both developers and everyday users.</p>
