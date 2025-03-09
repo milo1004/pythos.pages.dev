@@ -142,9 +142,10 @@
             }
             .sidebar-toggle {
                 left: 20px; /* Move button to the left when sidebar is hidden */
+                transition: left 0.3s ease; /* Smooth transition for button */
             }
-            .sidebar.collapsed + .main-content {
-                margin-left: 0; /* Ensure main content doesn't shift when sidebar is shown */
+            .sidebar.collapsed + .main-content .sidebar-toggle {
+                left: 220px; /* Move button to the right when sidebar is shown */
             }
         }
 
