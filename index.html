@@ -1,31 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS Documentation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: 16px;
             line-height: 1.6;
             margin: 0;
             padding: 0;
             background-color: #ffffff;
             display: flex;
-        }
-        .sidebar {
-            width: 200px; /* Sidebar width */
-            background: #333; /* Dark background for the sidebar */
-            color: #fff;
-            padding: 20px;
-            height: 200vh; /* Full height of the viewport */
-            position: fixed; /* Make the sidebar stick to the left */
-            top: 0;
-            left: 0;
-            overflow-y: auto; /* Allow scrolling if content overflows */
-            transition: transform 0.3s ease; /* Smooth transition for sidebar */
-            z-index: 1000; /* Ensure sidebar is above other content */
         }
         .sidebar h1 {
             margin-top: 0;
@@ -39,7 +29,7 @@
             margin: 15px 0;
         }
         .sidebar nav ul li a {
-            color: #fff;
+            color: #ffffff;
             text-decoration: none;
             font-size: 16px;
         }
@@ -47,15 +37,15 @@
             color: #77aaff; /* Highlight color on hover */
         }
         .main-content {
-            margin-left: 200px; /* Adjusted margin to match the sidebar width */
+            margin-left: 250px; /* Adjusted margin to match the sidebar width */
             padding: 20px 20px 20px 50px; /* Increased left padding to 50px */
-            background: #fffdf4;
+            background: #ffffff;
             flex-grow: 1; /* Allow main content to take remaining space */
             transition: margin-left 0.3s ease; /* Smooth transition for main content */
         }
         footer {
             background: #333;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
             padding: 10px;
             margin-top: 20px;
@@ -72,17 +62,19 @@
         .sidebar-toggle {
             position: fixed;
             top: 20px;
-            left: 220px; /* Position to the right of the sidebar */
-            background: #333333;
+            left: 270px; /* Position to the right of the sidebar */
+            background: linear-gradient(30deg, #0048bd, #44a7fd); /* Match sidebar gradient */
             color: #fff;
             border: none;
-            padding: 10px;
+            padding: 10px 15px; /* Slightly wider padding */
             cursor: pointer;
             z-index: 1000; /* Ensure it's above other content */
             transition: left 0.3s ease; /* Smooth transition for button */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
         }
         .sidebar-toggle:hover {
-            background: #555;
+            background: linear-gradient(30deg, #0038ad, #3497ed); /* Slightly darker gradient on hover */
         }
 
         /* Smooth scrolling behavior */
@@ -92,7 +84,7 @@
 
         /* When sidebar is hidden */
         .sidebar.collapsed {
-            transform: translateX(-200px); /* Hide sidebar off-screen */
+            transform: translateX(-250px); /* Hide sidebar off-screen */
         }
         .sidebar.collapsed + .main-content {
             margin-left: 0; /* Remove margin when sidebar is hidden */
@@ -133,7 +125,7 @@
         /* Media query for mobile devices */
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-200px); /* Hide sidebar by default on mobile */
+                transform: translateX(-250px); /* Hide sidebar by default on mobile */
             }
             .sidebar.collapsed {
                 transform: translateX(0); /* Show sidebar when toggled */
@@ -146,7 +138,7 @@
                 transition: left 0.3s ease; /* Smooth transition for button */
             }
             .sidebar.collapsed + .main-content .sidebar-toggle {
-                left: 220px; /* Move button to the right when sidebar is shown */
+                left: 270px; /* Move button to the right when sidebar is shown */
             }
         }
 
@@ -156,7 +148,7 @@
                 transform: translateX(0); /* Always show sidebar on desktops/tablets */
             }
             .sidebar.collapsed {
-                transform: translateX(-200px); /* Hide sidebar if toggled (optional) */
+                transform: translateX(-250px); /* Hide sidebar if toggled (optional) */
             }
             .sidebar.collapsed + .main-content {
                 margin-left: 0; /* Adjust main content margin if sidebar is hidden */
@@ -170,15 +162,127 @@
     <div class="sidebar" id="sidebar">
         <h1>PythOS Documentation</h1>
         <nav>
-            <ul>
-                <li><a href="#introduction">Introduction</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#installation">Installation</a></li>
-                <li><a href="#usage">Usage</a></li>
-                <li><a href="#contributing">Contributing</a></li>
-                <li><a href="#developers">Our Developers</a></li>
-                <li><a href="#downloads">Downloads</a></li>
-            </ul>
+            <aside>
+                <a href="#introduction">
+                  Introduction
+                </a>
+                <br>
+                <a href="#features">
+                  Features
+                </a>
+                <br>
+                <a href="#installation">
+                  Installation
+                </a>
+                <br>
+                <a href="#usage">
+                  Usage
+                </a>
+                <br>
+                <a href="#contributing">
+                  Contributing
+                </a>
+                <br>
+                <a href="#developers">
+                  Our Developers
+                </a>
+                <br>
+                <a href="#downloads">
+                  Downloads
+                </a>
+                <br>
+              </aside>
+              </div>
+              <style>
+                aside {
+  color: #fff;
+  width: 250px;
+  padding-left: 20px;
+  height: 100vh;
+  background-image: linear-gradient(30deg , #0048bd, #44a7fd);
+  border-top-right-radius: 80px;
+  position: absolute;
+  left: 0;
+}
+ 
+aside a {
+  font-size: 12px;
+  color: #fff;
+  display: block;
+  padding: 12px;
+  padding-left: 30px;
+  text-decoration: none;
+  -webkit-tap-highlight-color:transparent;
+}
+ 
+aside a:hover {
+  color: #3f5efb;
+  background: #fff;
+  outline: none;
+  position: relative;
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+ 
+aside a i {
+  margin-right: 5px;
+}
+ 
+aside a:hover::after {
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  bottom: 100%;
+  right: 0;
+  height: 35px;
+  width: 35px;
+  border-bottom-right-radius: 18px;
+  box-shadow: 0 20px 0 0 #fff;
+}
+ 
+aside a:hover::before {
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  top: 38px;
+  right: 0;
+  height: 35px;
+  width: 35px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 -20px 0 0 #fff;
+}
+ 
+aside p {
+  margin: 0;
+  padding: 40px 0;
+}
+ 
+body {
+  font-family: 'Roboto';
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+}
+ 
+.social {
+  height: 0;  
+}
+ 
+.social i:before {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  position: fixed;
+  color: #fff;
+  background: #0077B5;
+  padding: 10px;
+  border-radius: 50%;
+  top:5px;
+  right:5px;
+}
+                    </style>
+
         </nav>
     </div>
 
@@ -191,7 +295,7 @@
         <section id="introduction">
             <div class="introduction-image">
                 <img src="PythOS.png" alt="Logo of PythOS">
-                <h1 style="color: black;">PythOS Documentation</h1>
+                <h1>PythOS Documentation</h1>
             </div>
             <h2>Introduction</h2>
             <p>PythOS is a modern, lightweight operating system designed for efficiency and ease of use. Built with a focus on simplicity and performance, PythOS is perfect for both developers and everyday users.</p>
@@ -219,10 +323,9 @@
                 <li>You will see a Systemback bootloader.</li>
                 <ol>
                     <li>Select option 2 if you want to install the OS.</li>
-                    <li>Select option 1 if you want to try the OS. (Not recommended for new users.)</li>
+                    <li>Select option 1 if you want to try the OS. (Not recommended for new users.</li>
                 </ol>
                 <li>Follow the on-screen instructions to complete the installation.</li>
-                <p>For more instructions, click <a href="#downloads" class="here-link">here</a>, or download the instructions file down below.</p>
             </ol>
         </section>
 
@@ -252,12 +355,10 @@
             <h2>Downloads</h2>
             <p>Download the latest version of PythOS from the links below:</p>
             <ul>
-                <li><a href="https://example.com/pythos-64bit.iso" target="_blank">PythOS ISO (64-bit)</a></li>
-                <li><a href="https://example.com/pythos-32bit.iso" target="_blank">PythOS ISO (32-bit)</a></li>
-                <li><a href="https://example.com/pythos-user-manual.pdf" target="_blank">PythOS User Manual (PDF)</a></li>
+                <li><a href="https:github.com/milo1004/PythonOS/releases/" target="_blank">PythOS ISO</a></li>
+                <br>
                 <a href="https://github.com/milo1004/PythonOS/" target="_blank" rel="noopener noreferrer" class="repo-link">
-                    <br>
-                    GitHub
+                    <strong>GitHub</strong>
                     <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only"></span></span></a>
             </ul>
             <style>
@@ -284,5 +385,7 @@
             sidebar.classList.toggle('collapsed');
         });
     </script>
+
+
 </body>
 </html>
