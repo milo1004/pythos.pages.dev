@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS Documentation</title>
-    <!-- Add Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             display: flex;
         }
         .sidebar {
@@ -20,12 +18,13 @@
             background: #333; /* Dark background for the sidebar */
             color: #fff;
             padding: 20px;
-            height: 100vh; /* Full height of the viewport */
+            height: 200vh; /* Full height of the viewport */
             position: fixed; /* Make the sidebar stick to the left */
             top: 0;
             left: 0;
             overflow-y: auto; /* Allow scrolling if content overflows */
             transition: transform 0.3s ease; /* Smooth transition for sidebar */
+            z-index: 1000; /* Ensure sidebar is above other content */
         }
         .sidebar h1 {
             margin-top: 0;
@@ -49,7 +48,7 @@
         .main-content {
             margin-left: 200px; /* Adjusted margin to match the sidebar width */
             padding: 20px 20px 20px 50px; /* Increased left padding to 50px */
-            background: #fff;
+            background: #fffdf4;
             flex-grow: 1; /* Allow main content to take remaining space */
             transition: margin-left 0.3s ease; /* Smooth transition for main content */
         }
@@ -61,11 +60,11 @@
             margin-top: 20px;
         }
         a.here-link {
-            color: #77aaff;
-            text-decoration: underline;
+            color: #616161;
+            font-weight: bold;
         }
         a.here-link:hover {
-            color: #5599ff;
+            color: #000000;
         }
 
         /* Button to toggle sidebar */
@@ -73,7 +72,7 @@
             position: fixed;
             top: 20px;
             left: 220px; /* Position to the right of the sidebar */
-            background: #333;
+            background: #333333;
             color: #fff;
             border: none;
             padding: 10px;
@@ -108,23 +107,29 @@
             overflow: hidden; /* Ensure the image doesn't overflow */
             position: relative; /* For positioning text over the image */
             margin-bottom: 20px; /* Space below the image */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .introduction-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensure the image covers the area */
+            width: 100px; /* Adjust width as needed */
+            height: auto;
+            margin-right: 20px; /* Space between image and title */
         }
         .introduction-image h1 {
-            position: absolute; /* Position text over the image */
-            top: 50%; /* Center vertically */
-            left: 50%; /* Center horizontally */
-            transform: translate(-50%, -50%); /* Perfect centering */
             color: #fff; /* White text */
             font-size: 48px; /* Large font size */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for better visibility */
+            margin: 0;
+        }
+        .download-link {
+            color: #3a3a3a;
+        }
+        .download-link:hover {
+            color: #3a3a3a;
         }
 
-        /* Mobile Styles */
+        /* Media query for mobile devices */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-200px); /* Hide sidebar by default on mobile */
@@ -137,10 +142,28 @@
             }
             .sidebar-toggle {
                 left: 20px; /* Move button to the left when sidebar is hidden */
+                transition: left 0.3s ease; /* Smooth transition for button */
+            }
+            .sidebar.collapsed + .main-content .sidebar-toggle {
+                left: 220px; /* Move button to the right when sidebar is shown */
+            }
+        }
+
+        /* Media query for desktops and tablets */
+        @media (min-width: 769px) {
+            .sidebar {
+                transform: translateX(0); /* Always show sidebar on desktops/tablets */
+            }
+            .sidebar.collapsed {
+                transform: translateX(-200px); /* Hide sidebar if toggled (optional) */
+            }
+            .sidebar.collapsed + .main-content {
+                margin-left: 0; /* Adjust main content margin if sidebar is hidden */
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar Navigation -->
     <div class="sidebar" id="sidebar">
@@ -161,13 +184,13 @@
     <!-- Main Content -->
     <div class="main-content">
         <!-- Button to toggle sidebar -->
-        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        <button class="sidebar-toggle squircle" id="sidebarToggle">☰</button>
 
         <!-- Introduction Section with Image -->
         <section id="introduction">
             <div class="introduction-image">
-                <img src="https://via.placeholder.com/1200x300" alt="PythOS Introduction Image"> <!-- Replace with your image URL -->
-                <h1>PythOS</h1>
+                <img src="PythOS.png" alt="Logo of PythOS">
+                <h1 style="color: black;">PythOS Documentation</h1>
             </div>
             <h2>Introduction</h2>
             <p>PythOS is a modern, lightweight operating system designed for efficiency and ease of use. Built with a focus on simplicity and performance, PythOS is perfect for both developers and everyday users.</p>
@@ -216,11 +239,12 @@
             <h2>Our Developers</h2>
             <p>PythOS is developed by a dedicated team of contributors. Below are some of the key developers:</p>
             <ul>
-                <li><strong>milo1004</strong> - Founder and Developer</li>
-                <li><strong>alex0206</strong> - Co-Founder and Developer (actually he's also the founder)</li>
+                <li><a href="https://github.com/milo1004" target="_blank"><strong>milo1004</strong></a> - Founder and Developer</li>
+                <li><a href="https://github.com/alexlam0206" target="_blank"><strong>alexlam0206</strong></a> - Co-Founder and Developer</li>
             </ul>
         </section>
 
+        
         <!-- New Section: Downloads -->
         <section id="downloads">
             <h2>Downloads</h2>
@@ -229,7 +253,19 @@
                 <li><a href="https://example.com/pythos-64bit.iso" target="_blank">PythOS ISO (64-bit)</a></li>
                 <li><a href="https://example.com/pythos-32bit.iso" target="_blank">PythOS ISO (32-bit)</a></li>
                 <li><a href="https://example.com/pythos-user-manual.pdf" target="_blank">PythOS User Manual (PDF)</a></li>
+                <a href="https://github.com/milo1004/PythonOS/" target="_blank" rel="noopener noreferrer" class="repo-link">
+                    <br>
+                    GitHub
+                    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only"></span></span></a>
             </ul>
+            <style>
+                a:active {
+                    color: gray;
+                }
+                a:visited {
+                    color:black;
+                }
+            </style>
         </section>
 
         <footer>
