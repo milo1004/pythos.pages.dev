@@ -127,6 +127,19 @@
         .download-link:hover {
             color: #3a3a3a;
         }
+
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-200px); /* Hide sidebar by default on mobile */
+            }
+            .main-content {
+                margin-left: 0; /* Remove margin when sidebar is hidden */
+            }
+            .sidebar-toggle {
+                left: 20px; /* Move button to the left when sidebar is hidden */
+            }
+        }
     </style>
 </head>
 
