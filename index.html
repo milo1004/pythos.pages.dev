@@ -24,6 +24,7 @@
             left: 0;
             overflow-y: auto; /* Allow scrolling if content overflows */
             transition: transform 0.3s ease; /* Smooth transition for sidebar */
+            z-index: 1000; /* Ensure sidebar is above other content */
         }
         .sidebar h1 {
             margin-top: 0;
@@ -133,11 +134,30 @@
             .sidebar {
                 transform: translateX(-200px); /* Hide sidebar by default on mobile */
             }
+            .sidebar.collapsed {
+                transform: translateX(0); /* Show sidebar when toggled */
+            }
             .main-content {
                 margin-left: 0; /* Remove margin when sidebar is hidden */
             }
             .sidebar-toggle {
                 left: 20px; /* Move button to the left when sidebar is hidden */
+            }
+            .sidebar.collapsed + .main-content {
+                margin-left: 0; /* Ensure main content doesn't shift when sidebar is shown */
+            }
+        }
+
+        /* Media query for desktops and tablets */
+        @media (min-width: 769px) {
+            .sidebar {
+                transform: translateX(0); /* Always show sidebar on desktops/tablets */
+            }
+            .sidebar.collapsed {
+                transform: translateX(-200px); /* Hide sidebar if toggled (optional) */
+            }
+            .sidebar.collapsed + .main-content {
+                margin-left: 0; /* Adjust main content margin if sidebar is hidden */
             }
         }
     </style>
