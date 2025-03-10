@@ -63,7 +63,7 @@
             position: fixed;
             top: 20px;
             left: 270px; /* Position to the right of the sidebar */
-            background: linear-gradient(30deg, #0048bd, #44a7fd); /* Match sidebar gradient */
+            background: linear-gradient(30deg, #fabd69, #205c64); /* New gradient color */
             color: #fff;
             border: none;
             padding: 10px 15px; /* Slightly wider padding */
@@ -74,7 +74,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
         }
         .sidebar-toggle:hover {
-            background: linear-gradient(30deg, #0038ad, #3497ed); /* Slightly darker gradient on hover */
+            background: linear-gradient(30deg, #e0a85f, #1a4a52); /* Slightly darker gradient on hover */
         }
 
         /* Smooth scrolling behavior */
@@ -153,6 +153,8 @@
                 height: 200vh; /* Set sidebar height to 200vh */
                 position: fixed; /* Make sidebar fixed */
                 z-index: 1000; /* Ensure sidebar is on top */
+                background-image: linear-gradient(30deg, #fabd69, #205c64); /* New gradient color */
+                transition: transform 0.5s ease; /* Smooth transition for sidebar */
             }
             .sidebar.collapsed {
                 transform: translateX(-250px); /* Hide sidebar if toggled (optional) */
@@ -206,7 +208,7 @@
   width: 250px;
   padding-left: 20px;
   height: 200vh; /* Set sidebar height to 200vh */
-  background-image: linear-gradient(30deg , #0048bd, #44a7fd);
+  background-image: linear-gradient(30deg, #fabd69, #205c64); /* New gradient color */
   border-top-right-radius: 80px;
   position: fixed; /* Make sidebar fixed */
   left: 0;
