@@ -126,6 +126,10 @@
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-250px); /* Hide sidebar by default on mobile */
+                height: 100vh; /* Set sidebar height to 100vh */
+                transition: transform 0.5s ease; /* Smooth transition for sidebar */
+                position: fixed; /* Make sidebar fixed */
+                z-index: 1000; /* Ensure sidebar is on top */
             }
             .sidebar.collapsed {
                 transform: translateX(0); /* Show sidebar when toggled */
@@ -135,7 +139,7 @@
             }
             .sidebar-toggle {
                 left: 20px; /* Move button to the left when sidebar is hidden */
-                transition: left 0.3s ease; /* Smooth transition for button */
+                transition: left 0.5s ease; /* Smooth transition for button */
             }
             .sidebar.collapsed + .main-content .sidebar-toggle {
                 left: 270px; /* Move button to the right when sidebar is shown */
@@ -146,6 +150,9 @@
         @media (min-width: 769px) {
             .sidebar {
                 transform: translateX(0); /* Always show sidebar on desktops/tablets */
+                height: 100vh; /* Reset height to 100vh for desktops/tablets */
+                position: fixed; /* Make sidebar fixed */
+                z-index: 1000; /* Ensure sidebar is on top */
             }
             .sidebar.collapsed {
                 transform: translateX(-250px); /* Hide sidebar if toggled (optional) */
@@ -198,11 +205,13 @@
   color: #fff;
   width: 250px;
   padding-left: 20px;
-  height: 100vh;
+  height: 100vh; /* Set sidebar height to 100vh */
   background-image: linear-gradient(30deg , #0048bd, #44a7fd);
   border-top-right-radius: 80px;
-  position: absolute;
+  position: fixed; /* Make sidebar fixed */
   left: 0;
+  z-index: 1000; /* Ensure sidebar is on top */
+  transition: height 0.5s ease; /* Smooth transition for height */
 }
  
 aside a {
