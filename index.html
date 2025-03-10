@@ -126,7 +126,7 @@
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-250px); /* Hide sidebar by default on mobile */
-                height: 100vh; /* Set sidebar height to 100vh */
+                height: 200vh; /* Set sidebar height to 200vh */
                 transition: transform 0.5s ease; /* Smooth transition for sidebar */
                 position: fixed; /* Make sidebar fixed */
                 z-index: 1000; /* Ensure sidebar is on top */
@@ -150,7 +150,7 @@
         @media (min-width: 769px) {
             .sidebar {
                 transform: translateX(0); /* Always show sidebar on desktops/tablets */
-                height: 100vh; /* Reset height to 100vh for desktops/tablets */
+                height: 200vh; /* Set sidebar height to 200vh */
                 position: fixed; /* Make sidebar fixed */
                 z-index: 1000; /* Ensure sidebar is on top */
             }
@@ -167,8 +167,7 @@
 <body>
     <!-- Sidebar Navigation -->
     <div class="sidebar" id="sidebar">
-        <h1>PythOS 
-            Documentation</h1>
+        <h1>PythOS Documentation</h1>
         <nav>
             <aside>
                 <a href="#introduction">
@@ -206,7 +205,7 @@
   color: #fff;
   width: 250px;
   padding-left: 20px;
-  height: 100vh; /* Set sidebar height to 100vh */
+  height: 200vh; /* Set sidebar height to 200vh */
   background-image: linear-gradient(30deg , #0048bd, #44a7fd);
   border-top-right-radius: 80px;
   position: fixed; /* Make sidebar fixed */
