@@ -69,7 +69,7 @@
             padding: 10px 15px; /* Slightly wider padding */
             cursor: pointer;
             z-index: 1000; /* Ensure it's above other content */
-            transition: left 0.3s ease; /* Smooth transition for button */
+            transition: left 0.5s ease; /* Smooth transition for button */
             border-radius: 20px; /* Rounded corners */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
         }
@@ -157,10 +157,13 @@
                 transition: transform 0.5s ease; /* Smooth transition for sidebar */
             }
             .sidebar.collapsed {
-                transform: translateX(-250px); /* Hide sidebar if toggled (optional) */
+                transform: translateX(-250px); /* Hide sidebar if toggled */
             }
             .sidebar.collapsed + .main-content {
                 margin-left: 0; /* Adjust main content margin if sidebar is hidden */
+            }
+            .sidebar.collapsed + .main-content .sidebar-toggle {
+                left: 20px; /* Move button to the left when sidebar is hidden */
             }
         }
     </style>
@@ -306,7 +309,7 @@ body {
         <section id="introduction">
             <div class="introduction-image">
                 <img src="PythOS.png" alt="Logo of PythOS">
-                <h1 style="color: black;">PythOS Documentation</h1>
+                <h1>PythOS Documentation</h1>
             </div>
             <h2>Introduction</h2>
             <p>PythOS is a modern, lightweight operating system designed for efficiency and ease of use. Built with a focus on simplicity and performance, PythOS is perfect for both developers and everyday users.</p>
@@ -366,7 +369,7 @@ body {
             <h2>Downloads</h2>
             <p>Download the latest version of PythOS from the links below:</p>
             <ul>
-                <li><a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" target="_blank">PythOS ISO</a></li>
+                <li><a href="https:github.com/milo1004/PythonOS/releases/" target="_blank">PythOS ISO</a></li>
                 <br>
                 <a href="https://github.com/milo1004/PythonOS/" target="_blank" rel="noopener noreferrer" class="repo-link">
                     <strong>GitHub</strong>
