@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS Documentation</title>
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -167,27 +168,135 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar Navigation -->
     <div class="sidebar" id="sidebar">
         <h1>PythOS Documentation</h1>
         <nav>
             <aside>
-                <a href="#introduction">Introduction</a>
+                <a href="#introduction">
+                  Introduction
+                </a>
                 <br>
-                <a href="#features">Features</a>
+                <a href="#features">
+                  Features
+                </a>
                 <br>
-                <a href="#installation">Installation</a>
+                <a href="#installation">
+                  Installation
+                </a>
                 <br>
-                <a href="#usage">Usage</a>
+                <a href="#usage">
+                  Usage
+                </a>
                 <br>
-                <a href="#contributing">Contributing</a>
+                <a href="#contributing">
+                  Contributing
+                </a>
                 <br>
-                <a href="#developers">Our Developers</a>
+                <a href="#developers">
+                  Our Developers
+                </a>
                 <br>
-                <a href="#downloads">Downloads</a>
+                <a href="#downloads">
+                  Downloads
+                </a>
                 <br>
-            </aside>
+              </aside>
+              </div>
+              <style>
+                aside {
+  color: #fff;
+  width: 250px;
+  padding-left: 20px;
+  height: 200vh; /* Set sidebar height to 200vh */
+  background-image: linear-gradient(30deg, #fabd69, #205c64); /* New gradient color */
+  border-top-right-radius: 80px;
+  position: fixed; /* Make sidebar fixed */
+  left: 0;
+  z-index: 1000; /* Ensure sidebar is on top */
+  transition: height 0.5s ease; /* Smooth transition for height */
+}
+ 
+aside a {
+  font-size: 12px;
+  color: #fff;
+  display: block;
+  padding: 12px;
+  padding-left: 30px;
+  text-decoration: none;
+  -webkit-tap-highlight-color:transparent;
+}
+ 
+aside a:hover {
+  color: #3f5efb;
+  background: #fff;
+  outline: none;
+  position: relative;
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+ 
+aside a i {
+  margin-right: 5px;
+}
+ 
+aside a:hover::after {
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  bottom: 100%;
+  right: 0;
+  height: 35px;
+  width: 35px;
+  border-bottom-right-radius: 18px;
+  box-shadow: 0 20px 0 0 #fff;
+}
+ 
+aside a:hover::before {
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  top: 38px;
+  right: 0;
+  height: 35px;
+  width: 35px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 -20px 0 0 #fff;
+}
+ 
+aside p {
+  margin: 0;
+  padding: 40px 0;
+}
+ 
+body {
+  font-family: 'Roboto';
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+}
+ 
+.social {
+  height: 0;  
+}
+ 
+.social i:before {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  position: fixed;
+  color: #fff;
+  background: #0077B5;
+  padding: 10px;
+  border-radius: 50%;
+  top:5px;
+  right:5px;
+}
+                    </style>
+
         </nav>
     </div>
 
@@ -254,6 +363,7 @@
             </ul>
         </section>
 
+        
         <!-- New Section: Downloads -->
         <section id="downloads">
             <h2>Downloads</h2>
@@ -289,5 +399,7 @@
             sidebar.classList.toggle('collapsed');
         });
     </script>
+
+
 </body>
 </html>
