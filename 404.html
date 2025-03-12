@@ -1,0 +1,9 @@
+import FuzzyText from './FuzzyText';
+  
+<FuzzyText 
+  baseIntensity={0.2} 
+  hoverIntensity={hoverIntensity} 
+  enableHover={enableHover}
+>
+  404
+</FuzzyText>
