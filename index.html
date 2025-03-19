@@ -41,6 +41,16 @@
         .sidebar.collapsed {
             width: 60px; /* Width when collapsed */
         }
+        .sidebar.collapsed a {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+        .sidebar.collapsed .header-content h1 {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
         .sidebar a {
             display: block;
             color: #fff;
