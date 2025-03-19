@@ -81,9 +81,13 @@
             flex: 1;
             padding: 20px;
             background: #fff;
-            margin: 20px 20px 20px 270px; /* Adjust margin to account for the fixed sidebar */
+            margin-left: 270px; /* Default margin to account for the expanded sidebar */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: margin-left 0.3s; /* Smooth transition for container margin */
+        }
+        /* Adjust margin when sidebar is collapsed */
+        body.collapsed .container {
+            margin-left: 80px; /* Smaller margin when sidebar is collapsed */
         }
         h1, h2, h3 {
             color: #333;
