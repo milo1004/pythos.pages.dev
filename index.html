@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PythOS Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            transition: margin-left 0.3s; /* Smooth transition for body margin */
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-content img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #205c64, #fabd69);
+            padding: 20px;
+            height: 150vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: width 0.3s; /* Smooth transition for sidebar width */
+        }
+        .sidebar.collapsed {
+            width: 60px; /* Width when collapsed */
+        }
+        .sidebar a {
+            display: block;
+            color: #fff;
+            padding: 10px;
+            margin: 10px 0;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .collapse-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+            background: #fff;
+            margin: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: margin-left 0.3s; /* Smooth transition for container margin */
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #333;
+            color: #fff;
+            margin-top: 20px;
+        }
+        .github-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #fff;
+            background: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .github-link:hover {
+            background: #555;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const links = document.querySelectorAll('.sidebar a');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Collapse functionality
+            const collapseBtn = document.createElement('button');
+            collapseBtn.textContent = 'Collapse';
+            collapseBtn.classList.add('collapse-btn');
+            document.querySelector('.sidebar').insertBefore(collapseBtn, document.querySelector('.sidebar').firstChild);
+
+            collapseBtn.addEventListener('click', function() {
+                const sidebar = document.querySelector('.sidebar');
+                sidebar.classList.toggle('collapsed');
+                document.body.classList.toggle('collapsed');
+                collapseBtn.textContent = sidebar.classList.contains('collapsed') ? 'Expand' : 'Collapse';
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="header-content">
+            <img src="PythOS.png" alt="PythOS Logo">
+            <h1>PythOS</h1>
+        </div>
+        <a href="#introduction">Introduction</a>
+        <a href="#installation">Installation</a>
+        <a href="#downloads">Downloads</a>
+        <a href="#contributors">Contributors</a>
+        <a href="#license">MIT License</a>
+        <a href="https://github.com/pythos" target="_blank">GitHub</a>
+    </div>
+    <div class="container">
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>PythOS is a lightweight, Linux-based operating system designed for developers and system administrators. It provides a minimalistic environment with powerful tools for scripting, automation, and system management. Whether you're a beginner or an advanced user, PythOS offers a flexible and efficient platform for your needs.</p>
+        </section>
+        <section id="installation">
+            <h2>Installation</h2>
+            <p>To install PythOS, follow these steps:</p>
+            <ol>
+                <li>Download the latest ISO from the <a href="#downloads">Downloads</a> section.</li>
+                <li>Create a bootable USB drive using tools like <code>dd</code> or <code>Rufus</code>.</li>
+                <li>Boot from the USB drive and follow the on-screen instructions to install PythOS.</li>
+            </ol>
+        </section>
+        <section id="downloads">
+            <h2>Downloads</h2>
+            <p>Download the latest version of PythOS:</p>
+            <ul>
+                <li><a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" target="_blank">PythOS Latest ISO(QuantumLeap)</a></li>
+                <li><a href="" target="_blank">PythOS Legacy ISO(4.0)</a></li>
+                <li>check out older ones <a href="https://github.com/milo1004/PythonOS/releases">here.</a> (Not recommended cuz they have bugs hehe...)</li>
+            </ul>
+        </section>
+        <section id="contributors">
+            <h2>Contributors</h2>
+            <p>PythOS is made possible by the contributions of the following individuals and organizations:</p>
+            <ul>
+                <p><a href="https://github.com/milo1004">milo1004</a> - Founder and Core Developer</p>
+                <p> </p>
+                <p><a href="https://github.com/alexlam0206">alexlam0206</a> - Co-Founder, Core Tester and Idea Provider</p>
+            </ul>
+        </section>
+        <section id="license">
+            <h2>MIT License</h2>
+            <p>The MIT License of this project:</p>
+            <p>MIT License
+
+                Copyright (c) 2025 Milo Chan
+                
+                Permission is hereby granted, free of charge, to any person obtaining a copy
+                of this software and associated documentation files (the "Software"), to deal
+                in the Software without restriction, including without limitation the rights
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                copies of the Software, and to permit persons to whom the Software is
+                furnished to do so, subject to the following conditions:
+                
+                The above copyright notice and this permission notice shall be included in all
+                copies or substantial portions of the Software.
+                
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                SOFTWARE.
+                </p>
+        </section>
+        <section>
+            <h2>Official GitHub Page</h2>
+            <p>Visit the official PythOS GitHub repository to contribute, report issues, or explore the source code:</p>
+            <a href="https://github.com/milo1004/PythonOS" class="github-link" target="_blank">PythOS on GitHub</a></p>
+            <h1>Note:</h1>
+            <p>The GitHub repository provided above might not contain the bootable image. You can download it <a href="#downloads">here.</a></p>
+        </section>
+        <footer>
+            <p>&copy; 2025 PythOS. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
