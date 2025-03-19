@@ -77,17 +77,13 @@
             margin-bottom: 10px;
             width: 100%;
         }
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(180deg, #205c64, #fabd69);
+        .container {
+            flex: 1;
             padding: 20px;
-            height: 100vh; /* Full viewport height */
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: width 0.3s; /* Smooth transition for sidebar width */
-            position: fixed; /* Make the sidebar fixed */
-            top: 0; /* Align to the top */
-            left: 0; /* Align to the left */
-            overflow-y: auto; /* Add scroll if content overflows */
+            background: #fff;
+            margin: 20px 20px 20px 270px; /* Adjust margin to account for the fixed sidebar */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: margin-left 0.3s; /* Smooth transition for container margin */
         }
         h1, h2, h3 {
             color: #333;
