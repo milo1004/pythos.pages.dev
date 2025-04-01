@@ -13,7 +13,7 @@
             background-color: #f4f4f4;
             color: #333;
             display: flex;
-            transition: margin-left 0.3s; /* Smooth transition for body margin */
+            transition: margin-left 0.3s;
         }
         header {
             background: #333;
@@ -34,16 +34,16 @@
             width: 250px;
             background: linear-gradient(180deg, #205c64, #fabd69);
             padding: 20px;
-            height: 100vh; /* Full viewport height */
+            height: 100vh;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: width 0.3s; /* Smooth transition for sidebar width */
-            position: fixed; /* Make the sidebar fixed */
-            top: 0; /* Align to the top */
-            left: 0; /* Align to the left */
-            overflow-y: auto; /* Add scroll if content overflows */
+            transition: width 0.3s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
         }
         .sidebar.collapsed {
-            width: 60px; /* Width when collapsed */
+            width: 60px;
         }
         .sidebar.collapsed a {
             visibility: hidden;
@@ -79,18 +79,27 @@
         }
         .container {
             flex: 1;
-            padding: 20px;
+            padding: 20px 20px 20px 40px; /* Added left padding */
             background: #fff;
-            margin-left: 270px; /* Default margin to account for the expanded sidebar */
+            margin-left: 270px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: margin-left 0.3s; /* Smooth transition for container margin */
+            transition: margin-left 0.3s;
         }
-        /* Adjust margin when sidebar is collapsed */
+        /* Adjust margin and padding when sidebar is collapsed */
         body.collapsed .container {
-            margin-left: 80px; /* Smaller margin when sidebar is collapsed */
+            margin-left: 80px;
+            padding-left: 30px; /* Less padding when collapsed */
         }
         h1, h2, h3 {
             color: #333;
+        }
+        /* Add indentation for paragraphs and lists */
+        section p, section ul, section ol {
+            margin-left: 20px; /* Indent content */
+        }
+        /* But don't indent the first paragraph after headings */
+        section h2 + p, section h3 + p {
+            margin-left: 0;
         }
         code {
             background: #f4f4f4;
@@ -117,16 +126,27 @@
         .github-link:hover {
             background: #555;
         }
+        /* Special styling for license section */
+        #license p {
+            background: #f8f8f8;
+            padding: 15px;
+            border-left: 3px solid #205c64;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-left: 20px;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const links = document.querySelectorAll('.sidebar a');
             links.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                    if(this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetSection = document.querySelector(targetId);
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
                 });
             });
 
