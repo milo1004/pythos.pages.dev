@@ -36,11 +36,12 @@
             padding: 20px;
             height: 100vh;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: width 0.3s;
+            transition: transform 0.3s, width 0.3s;
             position: fixed;
             top: 0;
             left: 0;
             overflow-y: auto;
+            z-index: 1000;
         }
         .sidebar.collapsed {
             width: 60px;
@@ -79,25 +80,22 @@
         }
         .container {
             flex: 1;
-            padding: 20px 20px 20px 40px; /* Added left padding */
+            padding: 20px 20px 20px 40px;
             background: #fff;
             margin-left: 270px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: margin-left 0.3s;
         }
-        /* Adjust margin and padding when sidebar is collapsed */
         body.collapsed .container {
             margin-left: 80px;
-            padding-left: 30px; /* Less padding when collapsed */
+            padding-left: 30px;
         }
         h1, h2, h3 {
             color: #333;
         }
-        /* Add indentation for paragraphs and lists */
         section p, section ul, section ol {
-            margin-left: 20px; /* Indent content */
+            margin-left: 20px;
         }
-        /* But don't indent the first paragraph after headings */
         section h2 + p, section h3 + p {
             margin-left: 0;
         }
@@ -126,7 +124,6 @@
         .github-link:hover {
             background: #555;
         }
-        /* Special styling for license section */
         #license p {
             background: #f8f8f8;
             padding: 15px;
@@ -135,37 +132,52 @@
             white-space: pre-wrap;
             margin-left: 20px;
         }
+        .menu-toggle {
+            display: none;
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 20px;
+            cursor: pointer;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1100;
+            border-radius: 5px;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 250px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .container {
+                margin-left: 0;
+                padding-left: 20px;
+            }
+            body.collapsed .container {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .sidebar.collapsed {
+                width: 250px;
+                transform: translateX(-100%);
+            }
+            .sidebar.collapsed.open {
+                transform: translateX(0);
+            }
+        }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const links = document.querySelectorAll('.sidebar a');
-            links.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if(this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        const targetId = this.getAttribute('href');
-                        const targetSection = document.querySelector(targetId);
-                        targetSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                });
-            });
-
-            // Collapse functionality
-            const collapseBtn = document.createElement('button');
-            collapseBtn.textContent = 'Collapse';
-            collapseBtn.classList.add('collapse-btn');
-            document.querySelector('.sidebar').insertBefore(collapseBtn, document.querySelector('.sidebar').firstChild);
-
-            collapseBtn.addEventListener('click', function() {
-                const sidebar = document.querySelector('.sidebar');
-                sidebar.classList.toggle('collapsed');
-                document.body.classList.toggle('collapsed');
-                collapseBtn.textContent = sidebar.classList.contains('collapsed') ? 'Expand' : 'Collapse';
-            });
-        });
-    </script>
 </head>
 <body>
+    <button class="menu-toggle">☰</button>
     <div class="sidebar">
         <div class="header-content">
             <img src="PythOS.png" alt="PythOS Logo">
@@ -177,7 +189,7 @@
         <a href="#news">News</a>
         <a href="#contributors">Contributors</a>
         <a href="#license">MIT License</a>
-        <a href="#github" target="_blank">GitHub</a>
+        <a href="#github">GitHub</a>
     </div>
     <div class="container">
         <section id="introduction">
@@ -204,15 +216,15 @@
         </section>
         <section id="news">
             <h2>News</h2>
-            <p>We're going to remiake PythOS from scratch to imrove performance. We will release in the next 3 months (beta)</p>
-            <p>Name of new OS: PythOS 6.0Remastered</p>
+            <p>We're going to remake PythOS from scratch to improve performance. We will release in the next 3 months (beta)</p>
+            <p>Name of new OS: PythOS 6.0 Remastered</p>
             <p>Alex will be our maintainer for PythOS 5</p>
+        </section>
         <section id="contributors">
             <h2>Contributors</h2>
             <p>PythOS is made possible by the contributions of the following individuals and organizations:</p>
             <ul>
                 <p><a href="https://github.com/milo1004">milo1004</a> - Founder and Core Developer</p>
-                <p> </p>
                 <p><a href="https://github.com/alexlam0206">alexlam0206</a> - Co-Founder, Core Tester and Idea Provider</p>
             </ul>
         </section>
@@ -242,10 +254,10 @@
                 SOFTWARE.
                 </p>
         </section>
-        <section id=github>
+        <section id="github">
             <h2>Official GitHub Page</h2>
             <p>Visit the official PythOS GitHub repository to contribute, report issues, or explore the source code:</p>
-            <a href="https://github.com/milo1004/PythonOS" class="github-link" target="_blank">PythOS on GitHub</a></p>
+            <a href="https://github.com/milo1004/PythonOS" class="github-link" target="_blank">PythOS on GitHub</a>
             <h1>Note:</h1>
             <p>The GitHub repository provided above might not contain the bootable image. You can download it <a href="#downloads">here.</a></p>
         </section>
@@ -253,5 +265,68 @@
             <p>&copy; 2025 PythOS. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const links = document.querySelectorAll('.sidebar a');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if(this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetSection = document.querySelector(targetId);
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                        
+                        // Close sidebar on mobile after clicking a link
+                        if (window.innerWidth <= 768) {
+                            document.querySelector('.sidebar').classList.remove('open');
+                        }
+                    }
+                });
+            });
+
+            // Collapse functionality
+            const collapseBtn = document.createElement('button');
+            collapseBtn.textContent = 'Collapse';
+            collapseBtn.classList.add('collapse-btn');
+            document.querySelector('.sidebar').insertBefore(collapseBtn, document.querySelector('.sidebar').firstChild);
+
+            collapseBtn.addEventListener('click', function() {
+                const sidebar = document.querySelector('.sidebar');
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('collapsed');
+                    document.body.classList.toggle('collapsed');
+                    collapseBtn.textContent = sidebar.classList.contains('collapsed') ? 'Expand' : 'Collapse';
+                }
+            });
+
+            // Mobile menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+
+            // Auto-collapse on mobile
+            function handleResize() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('collapsed');
+                    document.body.classList.remove('collapsed');
+                    if (!sidebar.classList.contains('open')) {
+                        sidebar.style.transform = 'translateX(-100%)';
+                    }
+                } else {
+                    sidebar.style.transform = '';
+                }
+            }
+
+            // Initial check
+            handleResize();
+            
+            // Add resize listener
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
 </body>
 </html>
