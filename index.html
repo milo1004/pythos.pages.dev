@@ -296,7 +296,6 @@
             <p>&copy; 2025 PythOS. All rights reserved.</p>
         </footer>
     </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Detect if desktop or mobile
@@ -359,14 +358,12 @@
         const overlay = document.querySelector('.overlay');
         
         menuToggle.addEventListener('click', function() {
-            console.log("Menu toggle clicked");
             sidebar.classList.toggle('open');
             overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
         });
 
         // Close sidebar when clicking overlay
         overlay.addEventListener('click', function() {
-            console.log("Overlay clicked");
             sidebar.classList.remove('open');
             overlay.style.display = 'none';
         });
@@ -376,7 +373,6 @@
             if (window.innerWidth <= 768 && 
                 !sidebar.contains(e.target) && 
                 e.target !== menuToggle) {
-                console.log("Clicked outside sidebar");
                 sidebar.classList.remove('open');
                 overlay.style.display = 'none';
             }
