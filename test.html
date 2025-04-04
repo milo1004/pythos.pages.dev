@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PythOS Documentation</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+        min-height: 100vh;
+      }
+
+      .app {
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Mobile Menu Button */
+      .menu-button {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 50;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .menu-button {
+          display: block;
+        }
+      }
+
+      /* Sidebar */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: linear-gradient(180deg, #0f766e, #fbbf24);
+        transform: translateX(0);
+        transition: all 0.3s ease-in-out;
+        z-index: 40;
+        width: 16rem;
+      }
+
+      .sidebar.collapsed {
+        width: 4rem;
+      }
+
+      .sidebar.mobile-hidden {
+        transform: translateX(-100%);
+      }
+
+      .sidebar-content {
+        padding: 1rem;
+      }
+
+      /* Collapse Toggle Button */
+      .collapse-toggle {
+        position: absolute;
+        right: -0.75rem;
+        top: 1.5rem;
+        background: white;
+        border-radius: 9999px;
+        padding: 0.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .collapse-toggle {
+          display: none;
+        }
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .logo-text {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      .close-button {
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* Navigation */
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s;
+      }
+
+      .nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-text {
+        margin-left: 0.75rem;
+      }
+
+      /* Main Content */
+      .main {
+        transition: margin-left 0.3s;
+        margin-left: 16rem;
+      }
+
+      .main.collapsed {
+        margin-left: 4rem;
+      }
+
+      .main.full-width {
+        margin-left: 0;
+      }
+
+      .content {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      /* Sections */
+      .section {
+        margin-bottom: 3rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-title {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #111827;
+      }
+
+      .section-content {
+        color: #4b5563;
+        line-height: 1.625;
+      }
+
+      /* Lists */
+      .list {
+        list-style-position: inside;
+        margin-top: 1rem;
+      }
+
+      .list li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Code */
+      code {
+        background-color: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+      }
+
+      /* Links */
+      .link {
+        color: #0f766e;
+        text-decoration: none;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+
+      /* Contributors */
+      .contributor {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+      }
+
+      .contributor:hover {
+        background-color: #f3f4f6;
+      }
+
+      .contributor-avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 9999px;
+      }
+
+      /* Mobile Overlay */
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 30;
+      }
+
+      @media (max-width: 768px) {
+        .overlay.visible {
+          display: block;
+        }
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: #6b7280;
+      }
+
+      /* News Items */
+      .news-item {
+        border-left: 4px solid #0f766e;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .news-item-title {
+        font-weight: 600;
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* License */
+      .license-text {
+        white-space: pre-wrap;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <button class="menu-button" id="menuButton">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+          <button class="collapse-toggle" id="collapseToggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+
+          <div class="header">
+            <div class="logo-container">
+              <img src="https://raw.githubusercontent.com/milo1004/milo1004/main/pythos.png" alt="PythOS Logo" class="logo">
+              <span class="logo-text" id="logoText">PythOS</span>
+            </div>
+            <button class="close-button" id="closeButton">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <nav class="nav">
+            <a href="#introduction" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span class="nav-text">Introduction</span>
+            </a>
+            <a href="#installation" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+              </svg>
+              <span class="nav-text">Installation</span>
+            </a>
+            <a href="#downloads" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span class="nav-text">Downloads</span>
+            </a>
+            <a href="#news" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                <path d="M18 14h-8"></path>
+                <path d="M15 18h-5"></path>
+                <path d="M10 6h8v4h-8V6Z"></path>
+              </svg>
+              <span class="nav-text">News</span>
+            </a>
+            <a href="#contributors" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span class="nav-text">Contributors</span>
+            </a>
+            <a href="#license" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <line x1="10" y1="9" x2="8" y2="9"></line>
+              </svg>
+              <span class="nav-text">License</span>
+            </a>
+            <a href="https://github.com/milo1004/PythonOS" target="_blank" rel="noopener noreferrer" class="nav-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                <path d="M9 18c-4.51 2-5-2-7-2"></path>
+              </svg>
+              <span class="nav-text">GitHub</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay"></div>
+
+      <main class="main" id="main">
+        <div class="content">
+          <section id="introduction" class="section">
+            <h2 class="section-title">Introduction</h2>
+            <p class="section-content">
+              PythOS is a lightweight, Linux-based operating system designed for developers and system administrators. 
+              It provides a minimalistic environment with powerful tools for scripting, automation, and system management. 
+              Whether you're a beginner or an advanced user, PythOS offers a flexible and efficient platform for your needs.
+            </p>
+          </section>
+
+          <section id="installation" class="section">
+            <h2 class="section-title">Installation</h2>
+            <p class="section-content">To install PythOS, follow these steps:</p>
+            <ol class="list">
+              <li>Download the latest ISO from the Downloads section</li>
+              <li>Create a bootable USB drive using tools like <code>dd</code> or <code>Rufus</code></li>
+              <li>Boot from the USB drive and follow the on-screen instructions to install PythOS</li>
+            </ol>
+          </section>
+
+          <section id="downloads" class="section">
+            <h2 class="section-title">Downloads</h2>
+            <div class="section-content">
+              <a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="link">
+                PythOS Latest ISO (QuantumLeap)
+              </a>
+              <p>
+                Check out older versions on our 
+                <a href="https://github.com/milo1004/PythonOS/releases" target="_blank" rel="noopener noreferrer" class="link">
+                  GitHub releases page
+                </a>
+                (Not recommended due to known bugs)
+              </p>
+            </div>
+          </section>
+
+          <section id="news" class="section">
+            <h2 class="section-title">News</h2>
+            <div class="section-content">
+              <div class="news-item">
+                <h3 class="news-item-title">PythOS 6.0 Remastered Coming Soon</h3>
+                <p>
+                  We're going to remake PythOS from scratch to improve performance. 
+                  Expected beta release in the next 3 months.
+                </p>
+              </div>
+              <div class="news-item">
+                <h3 class="news-item-title">New Maintainer Announcement</h3>
+                <p>Alex will be our maintainer for PythOS 5</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="contributors" class="section">
+            <h2 class="section-title">Contributors</h2>
+            <div class="section-content">
+              <h3>Core Team</h3>
+              <div class="contributor">
+                <img src="https://github.com/milo1004.png" alt="milo1004" class="contributor-avatar">
+                <div>
+                  <h4>milo1004</h4>
+                  <p>Founder and Core Developer</p>
+                </div>
+              </div>
+              <div class="contributor">
+                <img src="https://github.com/alexlam0206.png" alt="alexlam0206" class="contributor-avatar">
+                <div>
+                  <h4>alexlam0206</h4>
+                  <p>Co-Founder, Core Tester and Idea Provider</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="license" class="section">
+            <h2 class="section-title">MIT License</h2>
+            <div class="license-text">
+MIT License
+
+Copyright (c) 2025 Milo Chan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+            </div>
+          </section>
+
+          <footer class="footer">
+            <p>&copy; 2025 PythOS. All rights reserved.</p>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const isDesktop = () => window.innerWidth > 768;
+      let isSidebarCollapsed = false;
+
+      const sidebar = document.getElementById('sidebar');
+      const main = document.getElementById('main');
+      const menuButton = document.getElementById('menuButton');
+      const closeButton = document.getElementById('closeButton');
+      const collapseToggle = document.getElementById('collapseToggle');
+      const overlay = document.getElementById('overlay');
+      const logoText = document.getElementById('logoText');
+      const navTexts = document.querySelectorAll('.nav-text');
+
+      function updateSidebarState() {
+        if (isDesktop()) {
+          sidebar.classList.remove('mobile-hidden');
+          main.classList.remove('full-width');
+          if (isSidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            main.classList.add('collapsed');
+            logoText.style.display = 'none';
+            navTexts.forEach(text => text.style.display = 'none');
+            collapseToggle.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+          } else {
+            sidebar.classList.remove('collapsed');
+            main.classList.remove('collapsed');
+            logoText.style.display = 'block';
+            navTexts.forEach(text => text.style.display = 'block');
+            collapseToggle.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+          }
+        } else {
+          sidebar.classList.add('mobile-hidden');
+          main.classList.add('full-width');
+          logoText.style.display = 'block';
+          navTexts.forEach(text => text.style.display = 'block');
+        }
+      }
+
+      function toggleSidebar() {
+        if (isDesktop()) {
+          isSidebarCollapsed = !isSidebarCollapsed;
+        } else {
+          sidebar.classList.toggle('mobile-hidden');
+          overlay.classList.toggle('visible');
+        }
+        updateSidebarState();
+      }
+
+      menuButton.addEventListener('click', toggleSidebar);
+      closeButton.addEventListener('click', toggleSidebar);
+      collapseToggle.addEventListener('click', toggleSidebar);
+      overlay.addEventListener('click', toggleSidebar);
+
+      window.addEventListener('resize', updateSidebarState);
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({
+              behavior: 'smooth'
+            });
+            if (!isDesktop()) {
+              toggleSidebar();
+            }
+          }
+        });
+      });
+
+      // Initial state
+      updateSidebarState();
+    </script>
+  </body>
+</html>
