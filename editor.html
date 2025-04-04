@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PythOS Web Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://milo1004.github.io/test.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #editor {
+      width: 300px;
+      background: #f9fafb;
+      border-right: 1px solid #e5e7eb;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    #editor h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .element {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      cursor: grab;
+    }
+    #workspace {
+      flex: 1;
+      background: white;
+      padding: 2rem;
+      overflow-y: auto;
+      border: 4px solid #e5e7eb;
+      border-radius: 0.75rem;
+      margin: 1rem;
+    }
+    .toolbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 1rem;
+      background: #f3f4f6;
+      border-bottom-left-radius: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border: none;
+      border-radius: 0.375rem;
+      background: #0f766e;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="editor">
+    <h2>Elements</h2>
+    <div class="element" draggable="true" data-html='<section class="section"><h2 class="section-title">Introduction</h2><p class="section-content">PythOS is a lightweight, Linux-based OS...</p></section>'>Introduction</div>
+    <div class="element" draggable="true" data-html='<section class="section"><h2 class="section-title">Installation</h2><ol class="list"><li>Download the ISO</li><li>Create bootable USB</li><li>Boot and install</li></ol></section>'>Installation</div>
+    <div class="element" draggable="true" data-html='<section class="section"><h2 class="section-title">Downloads</h2><p><a href="#" class="link">PythOS Latest ISO</a></p></section>'>Downloads</div>
+    <div class="element" draggable="true" data-html='<div class="news-item"><h3 class="news-item-title">News Title</h3><p>News content goes here.</p></div>'>News Item</div>
+    <div class="element" draggable="true" data-html='<div class="contributor"><img src="https://github.com/username.png" class="contributor-avatar"><div><h4>Username</h4><p>Role</p></div></div>'>Contributor</div>
+    <div class="element" draggable="true" data-html='<section class="section"><h2 class="section-title">MIT License</h2><div class="license-text">MIT License<br>Permission is hereby granted...<br>...</div></section>'>License</div>
+  </div>
+
+  <div id="workspace" contenteditable="true">
+    <section class="section">
+      <h2 class="section-title">Welcome to PythOS Web Editor</h2>
+      <p class="section-content">Drag elements from the left panel to start building your documentation page.</p>
+    </section>
+  </div>
+
+  <div class="toolbar">
+    <button onclick="execCommand('bold')">Bold (Ctrl+B)</button>
+    <button onclick="execCommand('italic')">Italic (Ctrl+I)</button>
+    <button onclick="execCommand('underline')">Underline (Ctrl+U)</button>
+    <button onclick="exportHTML()">Export</button>
+    <button onclick="confirmReset()">Reset</button>
+  </div>
+
+  <script>
+    const elements = document.querySelectorAll('.element');
+    const workspace = document.getElementById('workspace');
+
+    elements.forEach(el => {
+      el.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/html', el.dataset.html);
+      });
+    });
+
+    workspace.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
+
+    workspace.addEventListener('drop', e => {
+      e.preventDefault();
+      const html = e.dataTransfer.getData('text/html');
+      workspace.insertAdjacentHTML('beforeend', html);
+    });
+
+    function exportHTML() {
+      const content = workspace.innerHTML;
+      const fullHtml = `<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Exported Page</title><link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet'><link rel='stylesheet' href='https://milo1004.github.io/test.css'></head><body>${content}</body></html>`;
+      const blob = new Blob([fullHtml], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'pythos_page.html';
+      link.click();
+    }
+
+    function confirmReset() {
+      if (confirm("Are you sure you want to reset the workspace? This cannot be undone.")) {
+        workspace.innerHTML = `
+          <section class="section">
+            <h2 class="section-title">Welcome to PythOS Web Editor</h2>
+            <p class="section-content">Drag elements from the left panel to start building your documentation page.</p>
+          </section>
+        `;
+      }
+    }
+
+    function execCommand(command) {
+      document.execCommand(command);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey) {
+        switch (e.key.toLowerCase()) {
+          case 'b':
+            e.preventDefault();
+            execCommand('bold');
+            break;
+          case 'i':
+            e.preventDefault();
+            execCommand('italic');
+            break;
+          case 'u':
+            e.preventDefault();
+            execCommand('underline');
+            break;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
