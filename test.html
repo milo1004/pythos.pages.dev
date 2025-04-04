@@ -1,5 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<head>
+  <title>Device Detection</title>
+  <script>
+    function isMobileDevice() {
+      return /Mobi|Android|iPhone/i.test(navigator.userAgent);
+    }
+
+    window.onload = function () {
+      if (isMobileDevice()) {
+        document.getElementById('desktop').style.display = 'none';
+        document.getElementById('mobile').style.display = 'block';
+      } else {
+        document.getElementById('desktop').style.display = 'block';
+        document.getElementById('mobile').style.display = 'none';
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="desktop" style="display:none;">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -558,4 +579,339 @@ SOFTWARE.
       updateSidebarState();
     </script>
   </body>
+  </div>
+  <div id="mobile" style="display:none;">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>PythOS Documentation</title>
+    
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+        min-height: 100dvh;
+      }
+    
+      .app {
+        min-height: 100dvh;
+        position: relative;
+      }
+    
+      @media (max-width: 768px) {
+        .collapse-toggle {
+          display: none;
+        }
+      }
+    
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+    
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+    
+      .logo {
+        width: 2rem;
+        height: 2rem;
+      }
+    
+      .logo-text {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+    
+      .close-button {
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+    
+      /* Navigation */
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    
+      .nav-item {
+        display: flex;
+        align-items: center;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s;
+      }
+    
+      .nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    
+      .nav-text {
+        margin-left: 0.75rem;
+      }
+    
+      /* Main Content */
+      .main {
+        transition: margin-left 0.3s;
+        margin-left: 16rem;
+      }
+    
+      .main.collapsed {
+        margin-left: 4rem;
+      }
+    
+      .main.full-width {
+        margin-left: 0;
+      }
+    
+      .content {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+    
+      /* Sections */
+      .section {
+        margin-bottom: 3rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    
+      .section-title {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #111827;
+      }
+    
+      .section-content {
+        color: #4b5563;
+        line-height: 1.625;
+      }
+    
+      /* Lists */
+      .list {
+        list-style-position: inside;
+        margin-top: 1rem;
+      }
+    
+      .list li {
+        margin-bottom: 0.5rem;
+      }
+    
+      /* Code */
+      code {
+        background-color: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+      }
+    
+      /* Links */
+      .link {
+        color: #0f766e;
+        text-decoration: none;
+      }
+    
+      .link:hover {
+        text-decoration: underline;
+      }
+    
+      /* Contributors */
+      .contributor {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+      }
+    
+      .contributor:hover {
+        background-color: #f3f4f6;
+      }
+    
+      .contributor-avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 9999px;
+      }
+    
+      /* Mobile Overlay */
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 30;
+      }
+    
+      @media (max-width: 768px) {
+        .overlay.visible {
+          display: block;
+        }
+      }
+    
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: #6b7280;
+      }
+    
+      /* News Items */
+      .news-item {
+        border-left: 4px solid #0f766e;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+      }
+    
+      .news-item-title {
+        font-weight: 600;
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+      }
+    
+      /* License */
+      .license-text {
+        white-space: pre-wrap;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #4b5563;
+      }
+    </style>
+    
+    
+    <div class="content">
+      
+      <p>TEST Mobile</p>
+
+              <section id="introduction" class="section">
+                <h2 class="section-title">Introduction</h2>
+                <p class="section-content">
+                  PythOS is a lightweight, Linux-based operating system designed for developers and system administrators. 
+                  It provides a minimalistic environment with powerful tools for scripting, automation, and system management. 
+                  Whether you're a beginner or an advanced user, PythOS offers a flexible and efficient platform for your needs.
+                </p>
+              </section>
+    
+              <section id="installation" class="section">
+                <h2 class="section-title">Installation</h2>
+                <p class="section-content">To install PythOS, follow these steps:</p>
+                <ol class="list">
+                  <li>Download the latest ISO from the Downloads section</li>
+                  <li>Create a bootable USB drive using tools like <code>dd</code> or <code>Rufus</code></li>
+                  <li>Boot from the USB drive and follow the on-screen instructions to install PythOS</li>
+                </ol>
+              </section>
+    
+              <section id="downloads" class="section">
+                <h2 class="section-title">Downloads</h2>
+                <div class="section-content">
+                  <a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="link">
+                    PythOS Latest ISO (QuantumLeap)
+                  </a>
+                  <p>
+                    Check out older versions on our 
+                    <a href="https://github.com/milo1004/PythonOS/releases" target="_blank" rel="noopener noreferrer" class="link">
+                      GitHub releases page
+                    </a>
+                    (Not recommended due to known bugs)
+                  </p>
+                </div>
+              </section>
+    
+              <section id="news" class="section">
+                <h2 class="section-title">News</h2>
+                <div class="section-content">
+                  <div class="news-item">
+                    <h3 class="news-item-title">PythOS 6.0 Remastered Coming Soon</h3>
+                    <p>
+                      We're going to remake PythOS from scratch to improve performance. 
+                      Expected beta release in the next 3 months.
+                    </p>
+                  </div>
+                  <div class="news-item">
+                    <h3 class="news-item-title">New Maintainer Announcement</h3>
+                    <p>Alex will be our maintainer for PythOS 5</p>
+                  </div>
+                </div>
+              </section>
+    
+              <section id="contributors" class="section">
+                <h2 class="section-title">Contributors</h2>
+                <div class="section-content">
+                  <h3>Core Team</h3>
+                  <div class="contributor">
+                    <img src="https://github.com/milo1004.png" alt="milo1004" class="contributor-avatar">
+                    <div>
+                      <h4>milo1004</h4>
+                      <p>Founder and Core Developer</p>
+                    </div>
+                  </div>
+                  <div class="contributor">
+                    <img src="https://github.com/alexlam0206.png" alt="alexlam0206" class="contributor-avatar">
+                    <div>
+                      <h4>alexlam0206</h4>
+                      <p>Co-Founder, Core Tester and Idea Provider</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+    
+              <section id="license" class="section">
+                <h2 class="section-title">MIT License</h2>
+                <div class="license-text">
+    MIT License
+    
+    Copyright (c) 2025 Milo Chan
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+                </div>
+              </section>
+    
+              <footer class="footer">
+                <p>© 2025 PythOS. All rights reserved.</p>
+              </footer>
+            </div>
+
+  </div>
+</body>
 </html>
