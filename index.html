@@ -330,6 +330,68 @@
         section#github .github-link {
             margin-bottom: 1.5rem;
         }
+
+        .download-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .download-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 229, 0, 0.3);
+        }
+        
+        .download-card-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .download-card-desc {
+            color: #bbb;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            align-self: flex-start;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 229, 0, 0.2);
+        }
+        
+        .download-btn svg {
+            width: 18px;
+            height: 18px;
+        }
     </style>
 </head>
 <body>
@@ -409,11 +471,44 @@
         <section id="downloads">
             <h2>Downloads</h2>
             <p>Download the latest version of PythOS:</p>
-            <ul>
-                <li><a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" target="_blank">PythOS Latest ISO(QuantumLeap)</a></li>
-                <li><a href="" target="_blank">PythOS Legacy ISO(4.0)</a></li>
-                <li>check out older ones <a href="https://github.com/milo1004/PythonOS/releases">here.</a> (Not recommended cuz they have bugs hehe...)</li>
-            </ul>
+            <div class="download-cards">
+                <div class="download-card">
+                    <div class="download-card-title">PythOS QuantumLeap</div>
+                    <div class="download-card-desc">Latest stable release with improved performance and new features. Recommended for most users.</div>
+                    <a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download ISO
+                    </a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-card-title">PythOS Legacy (4.0)</div>
+                    <div class="download-card-desc">Previous stable version for systems with compatibility requirements.</div>
+                    <a href="#" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download Legacy
+                    </a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-card-title">All Versions</div>
+                    <div class="download-card-desc">Access all previous releases and beta versions on our GitHub releases page.</div>
+                    <a href="https://github.com/milo1004/PythonOS/releases" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                        View All Releases
+                    </a>
+                </div>
+            </div>
         </section>
 
         <section id="news">
@@ -482,6 +577,22 @@ SOFTWARE.</code></pre>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 平滑滾動導航
+            document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
             // 滾動動畫
             const sections = document.querySelectorAll('section');
             const observer = new IntersectionObserver((entries) => {
