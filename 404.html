@@ -317,8 +317,7 @@
             const text = document.querySelector('.main-message');
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
-            
-            // 打字機效果
+
             const typeWriter = (text, element, speed = 100) => {
                 let i = 0;
                 element.innerHTML = '';
@@ -334,15 +333,12 @@
                 type();
             };
 
-            // 啟動打字機效果
             typeWriter('Did you have a typo?', text);
 
-            // 移動端選單切換
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
             });
 
-            // 點擊連結時關閉選單
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     navLinks.classList.remove('active');
