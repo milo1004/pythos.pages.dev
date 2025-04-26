@@ -714,6 +714,89 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* Mobile-specific feature card styling */
+        @media (max-width: 768px) {
+            .feature-desc {
+                display: block;
+                margin-top: 0;
+                font-size: 0.9rem;
+                line-height: 1.4;
+                padding-left: 2.5rem;
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+                transition: all 0.3s ease-out;
+            }
+            
+            .feature-card {
+                padding: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+            
+            .feature-card.expanded {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .feature-card.expanded .feature-desc {
+                margin-top: 0.75rem;
+                max-height: 300px;
+                opacity: 1;
+            }
+            
+            .feature-info {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            
+            .feature-icon {
+                margin-bottom: 0;
+                width: 30px;
+                height: 30px;
+                min-width: 30px;
+                transition: transform 0.3s ease;
+            }
+            
+            .feature-card.expanded .feature-icon {
+                transform: scale(1.1);
+            }
+            
+            .feature-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .feature-title {
+                margin-bottom: 0;
+                font-size: 1rem;
+                position: relative;
+                padding-right: 1.5rem;
+                transition: color 0.3s ease;
+            }
+            
+            .feature-card.expanded .feature-title {
+                color: var(--accent);
+            }
+            
+            .feature-title::after {
+                content: '+';
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.2rem;
+                color: var(--accent);
+                transition: all 0.3s ease;
+            }
+            
+            .feature-card.expanded .feature-title::after {
+                content: '−';
+                transform: translateY(-50%) rotate(0deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1131,6 +1214,42 @@ SOFTWARE.</code></pre>
                     navbar.classList.remove('scrolled');
                 }
             });
+
+            // 只針對移動設備修改功能卡片
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.feature-card').forEach(card => {
+                    const icon = card.querySelector('.feature-icon');
+                    const title = card.querySelector('.feature-title');
+                    const desc = card.querySelector('.feature-desc');
+                    
+                    // 創建標題和圖標的容器
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'feature-info';
+                    
+                    // 保留原有內容，但重新組織結構
+                    if (icon) infoDiv.appendChild(icon);
+                    if (title) infoDiv.appendChild(title);
+                    
+                    // 清除卡片原有內容並重新添加
+                    const cardContent = card.innerHTML;
+                    card.innerHTML = '';
+                    card.appendChild(infoDiv);
+                    if (desc) card.appendChild(desc);
+                    
+                    // 添加點擊事件
+                    card.addEventListener('click', function() {
+                        // 關閉其他已展開的卡片
+                        document.querySelectorAll('.feature-card.expanded').forEach(expandedCard => {
+                            if (expandedCard !== this) {
+                                expandedCard.classList.remove('expanded');
+                            }
+                        });
+                        
+                        // 切換當前卡片狀態
+                        this.classList.toggle('expanded');
+                    });
+                });
+            }
         });
     </script>
 </body>
