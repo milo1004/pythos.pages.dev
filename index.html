@@ -267,21 +267,69 @@
                 font-size: 2rem;
                 font-weight: 700;
                 color: #ffe500;
-                margin-top: 1.5rem;
-                margin-bottom: 1.5rem;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
                 letter-spacing: 2px;
                 font-family: 'Roboto Mono', monospace;
             }
             .container {
-                padding: 5rem 1rem 4rem;
+                padding: 1rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 1rem;
+            }
+
+            .hero-content {
+                padding: 0;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+                max-width: 100%;
+            }
+            
+            .hero-features {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                margin-top: 0.75rem;
+            }
+            
+            .hero-logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 0.75rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+                width: 100%;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+            
+            .hero-btn {
+                width: 75%;
+                justify-content: center;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
             }
 
             section {
-                padding: 1.5rem;
+                padding: 1.25rem;
+                margin-bottom: 1.25rem;
             }
 
             h2 {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
             }
 
             pre {
@@ -495,10 +543,10 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-decoration: none;
             transition: all 0.3s ease;
         }
@@ -629,19 +677,25 @@
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
+                margin-bottom: 0.5rem;
             }
             
             .hero-subtitle {
                 font-size: 1.2rem;
+                margin-bottom: 1.5rem;
+                max-width: 95%;
             }
             
             .hero-features {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1rem;
             }
             
             .hero-logo {
                 width: 100px;
                 height: 100px;
+                margin-bottom: 1rem;
             }
             
             .hero-buttons {
@@ -649,11 +703,14 @@
                 gap: 1rem;
                 width: 100%;
                 align-items: center;
+                margin-bottom: 1.5rem;
             }
             
             .hero-btn {
-                width: 80%;
+                width: 75%;
                 justify-content: center;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
             }
         }
     </style>
