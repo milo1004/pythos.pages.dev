@@ -7,6 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="https://milo1004.github.io/" class="nav-logo">
+                <img src="http://milo1004.github.io/PythOS.png" alt="PythOS Logo" class="logo-img">
+                <span>PythOS</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://milo1004.github.io/#introduction">Introduction</a>
+                <a href="https://milo1004.github.io/#installation">Installation</a>
+                <a href="https://milo1004.github.io/#downloads">Downloads</a>
+                <a href="https://milo1004.github.io/#news">News</a>
+            </div>
+            <button class="menu-toggle">☰</button>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="error-container">
             <div class="error-code-wrapper">
@@ -39,16 +55,96 @@
             color: #ffffff;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        }
+
+        .nav-logo {
+            color: #ffe500;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover .logo-img {
+            transform: scale(1.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffe500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ffe500;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffe500;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
         }
 
         .container {
-            width: 100%;
-            max-width: 1200px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 2rem;
-            position: relative;
+            margin-top: 4rem;
         }
 
         .error-container {
@@ -166,6 +262,40 @@
         }
 
         @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(10px);
+                padding: 4rem 1rem 1rem;
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+                padding: 0.5rem;
+            }
+
+            .nav-links a::after {
+                bottom: -2px;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: relative;
+            }
+
             .error-code {
                 font-size: 6rem;
             }
@@ -185,7 +315,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const text = document.querySelector('.main-message');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
             
+            // 打字機效果
             const typeWriter = (text, element, speed = 100) => {
                 let i = 0;
                 element.innerHTML = '';
@@ -201,7 +334,20 @@
                 type();
             };
 
+            // 啟動打字機效果
             typeWriter('Did you have a typo?', text);
+
+            // 移動端選單切換
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // 點擊連結時關閉選單
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
         });
     </script>
 </body>
