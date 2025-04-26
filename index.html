@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PythOS</title>
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PythOS">
+    <link rel="apple-touch-icon" href="PythOS.png">
+    <link rel="apple-touch-startup-image" href="PythOS.png">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- End of iOS Web App Meta Tags -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -721,7 +730,7 @@
             <div class="hero-content">
                 <img src="PythOS.png" alt="PythOS Logo" class="hero-logo">
                 <h1 class="hero-title">PythOS</h1>
-                <p class="hero-subtitle">A lightweight, Linux and Python based operating system.</p>
+                <p class="hero-subtitle">A lightweight, Linux-based operating system designed for developers and system administrators, creating an efficient development environment</p>
                 
                 <div class="hero-buttons">
                     <a href="#downloads" class="hero-btn hero-btn-primary">
@@ -815,7 +824,7 @@
         
         <section id="introduction">
             <h2>Introduction</h2>
-            <p>PythOS is a lightweight, Linux and Python based operating system. It provides a minimalistic environment with powerful tools for scripting, automation, and system management. Whether you're a beginner or an advanced user, PythOS offers a flexible and efficient platform for your needs.</p>
+            <p>PythOS is a lightweight, Linux-based operating system designed for developers and system administrators. It provides a minimalistic environment with powerful tools for scripting, automation, and system management. Whether you're a beginner or an advanced user, PythOS offers a flexible and efficient platform for your needs.</p>
         </section>
 
         <section id="installation">
@@ -936,6 +945,28 @@ SOFTWARE.</code></pre>
     </footer>
 
     <script>
+        // Attempt to hide the address bar on iOS when added to home screen
+        window.addEventListener('load', function() {
+            // Check if the website is in standalone mode (added to home screen)
+            if (window.navigator.standalone) {
+                document.documentElement.style.height = '100vh';
+                document.body.style.height = '100vh';
+                document.body.style.overflowY = 'auto';
+                
+                // Prevent pull-to-refresh
+                document.body.addEventListener('touchstart', function(e) {
+                    if (e.touches.length === 1 && e.touches[0].screenY < 50) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+            }
+            
+            // For iOS devices less than 13
+            setTimeout(function() {
+                window.scrollTo(0, 1);
+            }, 100);
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // 平滑滾動導航
             document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
