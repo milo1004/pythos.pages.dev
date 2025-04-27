@@ -482,10 +482,11 @@
         
         .feature-icon {
             margin-bottom: 1.5rem;
-            font-size: 2.5rem;
+            font-size: 1.25rem;
             color: var(--primary);
             display: inline-block;
             transition: var(--transition);
+            line-height: 1;
         }
         
         .feature-card:hover .feature-icon {
@@ -776,8 +777,8 @@
     <section class="hero">
         <div class="hero-background">
             <div class="hero-scroller">
-                <span>PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS ·&nbsp;</span>
-                <span>PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS ·&nbsp;</span>
+                <span>PYTHOS · MODERN · PYTHOS · MODERN · PYTHOS · MODERN · PYTHOS · MODERN ·&nbsp;</span>
+                <span>PYTHOS · MODERN · PYTHOS · MODERN · PYTHOS · MODERN · PYTHOS · MODERN ·&nbsp;</span>
             </div>
             <div class="hero-scroller">
                 <span>DEVELOPER ORIENTED · DEVELOPER ORIENTED · DEVELOPER ORIENTED · DEVELOPER ORIENTED ·&nbsp;</span>
@@ -800,7 +801,7 @@
         </div>
         
         <div class="hero-content">
-            <h1 class="hero-title">Modern OS<br>for Everyone</h1>
+            <h1 class="hero-title">PythOS<br>Designedfor Everyone</h1>
             <p class="hero-subtitle">A lightweight, Linux and Python based operating system designed for everyone. It provides a minimalistic environment with powerful tools.</p>
             <div class="hero-cta">
                 <a href="https://milo1004.github.io/pythos#downloads" class="btn btn-primary">
@@ -976,9 +977,15 @@
                 }
                 
                 .feature-icon img.emoji {
-                    height: 2.5rem;
-                    width: 2.5rem;
-                    filter: drop-shadow(0 2px 4px rgba(77, 142, 255, 0.2));
+                    height: 1em;
+                    width: 1em;
+                    vertical-align: middle;
+                    margin-bottom: 0.2em;
+                }
+
+                .feature-icon {
+                    font-size: 1.25rem;
+                    line-height: 1;
                 }
             `;
             document.head.appendChild(style);
