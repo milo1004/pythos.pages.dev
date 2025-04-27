@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PythOS - Modern Operating System</title>
+    <meta name="description" content="A lightweight, Linux-based operating system designed for Everyone.">
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PythOS">
+    <link rel="apple-touch-icon" href="PythOS.png">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Twemoji - iOS風格Emoji -->
+    <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
+    <style>
+        :root {
+            --primary: #4d8eff;
+            --secondary: #721fff;
+            --accent: #ff4d8e;
+            --dark: #0a0a16;
+            --darker: #050510;
+            --light: #ffffff;
+            --gray: #8892b0;
+            --light-gray: #a8b2d1;
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            background: var(--darker);
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        /* NavBar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar.scrolled {
+            background: rgba(5, 5, 16, 0.85);
+            padding: 1rem 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 36px;
+            width: auto;
+            filter: drop-shadow(0 0 5px rgba(77, 142, 255, 0.5));
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--light);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.5;
+            transform: scale(1.1) rotate(-30deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 5% 0;
+        }
+        
+        .hero-scroller {
+            display: flex;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+            font-size: 7rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--primary);
+            filter: blur(0px);
+            height: 20%;
+            align-items: center;
+            text-shadow: 0 2px 10px rgba(77, 142, 255, 0.2);
+        }
+        
+        .hero-scroller span {
+            flex-shrink: 0;
+            padding: 0 2rem;
+            animation: scrollText 60s linear infinite;
+        }
+        
+        .hero-scroller:nth-of-type(2) {
+            margin-top: 0;
+        }
+        
+        .hero-scroller:nth-of-type(3) {
+            margin-top: 0;
+        }
+        
+        .hero-scroller:nth-of-type(4) {
+            margin-top: 0;
+        }
+        
+        /* 添加不同方向的捲動 */
+        .hero-scroller:nth-of-type(even) span {
+            animation-name: scrollTextReverse;
+        }
+        
+        .hero-scroller:nth-of-type(2) span {
+            animation-duration: 70s;
+        }
+        
+        .hero-scroller:nth-of-type(3) span {
+            animation-duration: 65s;
+        }
+        
+        .hero-scroller:nth-of-type(4) span {
+            animation-duration: 80s;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(77, 142, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+            z-index: 2;
+            position: relative;
+            background: rgba(10, 10, 22, 0.8);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: transparent;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeUp 0.8s forwards;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 650px;
+            margin-bottom: 2.5rem;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeUp 0.8s 0.2s forwards;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeUp 0.8s 0.4s forwards;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--light);
+            box-shadow: 0 4px 15px rgba(77, 142, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(77, 142, 255, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: skewX(-25deg);
+            transition: var(--transition);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Animated Shapes */
+        .shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.2;
+            animation: floating 15s infinite linear;
+        }
+        
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -200px;
+            right: -100px;
+            animation-duration: 35s;
+        }
+        
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            bottom: -150px;
+            left: -150px;
+            animation-duration: 45s;
+            animation-delay: 5s;
+        }
+        
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--secondary);
+            top: 50%;
+            left: 60%;
+            animation-duration: 25s;
+            animation-delay: 2s;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--dark));
+            z-index: 2;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--light);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .section-title.visible h2 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(77, 142, 255, 0.2);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: inline-block;
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: translateY(-5px);
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .feature-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        /* Animations */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes floating {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(30px, -30px) rotate(90deg);
+            }
+            50% {
+                transform: translate(-20px, 20px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-30px, -20px) rotate(270deg);
+            }
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: var(--dark);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: var(--transition);
+                z-index: 101;
+            }
+            
+            .nav-links.active {
+                right: 0;
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+            }
+            
+            .menu-btn {
+                display: block;
+                z-index: 102;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .features {
+                padding: 4rem 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero-background {
+                opacity: 0.5;
+                top: -10%;
+                left: -10%;
+                width: 120%;
+                height: 120%;
+            }
+            
+            .hero-scroller {
+                font-size: 3rem;
+                line-height: 1.2;
+                filter: blur(0px);
+            }
+            
+            .hero-content {
+                padding: 1.5rem;
+                margin: 0 1rem;
+                width: calc(100% - 2rem);
+            }
+            
+            .hero-scroller:nth-of-type(2),
+            .hero-scroller:nth-of-type(3),
+            .hero-scroller:nth-of-type(4) {
+                display: none;
+            }
+        }
+        
+        /* PythOS Text Parallax Effect */
+        .parallax {
+          display: none;
+        }
+        
+        .scroller, .scroller-reverse {
+          display: none;
+        }
+
+        @keyframes gradientText {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        .scroller span {
+          flex-shrink: 0;
+          padding: 0 2rem;
+          animation: scrollText 30s linear infinite;
+        }
+        
+        .scroller-reverse span {
+          animation: scrollTextReverse 25s linear infinite;
+        }
+
+        @keyframes scrollText {
+          from {
+            transform: translateX(0%);
+          }
+          to {
+            transform: translateX(-100%);
+          }
+        }
+        
+        @keyframes scrollTextReverse {
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(0%);
+          }
+        }
+
+        @media (min-width: 768px) {
+          .scroller, .scroller-reverse {
+            font-size: 5rem;
+            line-height: 5rem;
+          }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="https://milo1004.github.io/" class="logo">
+            <img src="PythOS.png" alt="PythOS Logo">
+            <span class="logo-text">PythOS</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="https://milo1004.github.io/#downloads">Download</a>
+            <a href="https://milo1004.github.io/#introduction">Documentation</a>
+            <a href="https://milo1004.github.io/#news">Blog</a>
+            <a href="https://milo1004.github.io/#contributors">Contact</a>
+        </div>
+        <button class="menu-btn">☰</button>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-scroller">
+                <span>PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS ·&nbsp;</span>
+                <span>PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS · PYTHOS · MODERN OS ·&nbsp;</span>
+            </div>
+            <div class="hero-scroller">
+                <span>DEVELOPER ORIENTED · DEVELOPER ORIENTED · DEVELOPER ORIENTED · DEVELOPER ORIENTED ·&nbsp;</span>
+                <span>DEVELOPER ORIENTED · DEVELOPER ORIENTED · DEVELOPER ORIENTED · DEVELOPER ORIENTED ·&nbsp;</span>
+            </div>
+            <div class="hero-scroller">
+                <span>LIGHTWEIGHT · EFFICIENT · POWERFUL · LIGHTWEIGHT · EFFICIENT · POWERFUL ·&nbsp;</span>
+                <span>LIGHTWEIGHT · EFFICIENT · POWERFUL · LIGHTWEIGHT · EFFICIENT · POWERFUL ·&nbsp;</span>
+            </div>
+            <div class="hero-scroller">
+                <span>CUSTOMIZABLE · OPEN SOURCE · CUSTOMIZABLE · OPEN SOURCE · CUSTOMIZABLE · OPEN SOURCE ·&nbsp;</span>
+                <span>CUSTOMIZABLE · OPEN SOURCE · CUSTOMIZABLE · OPEN SOURCE · CUSTOMIZABLE · OPEN SOURCE ·&nbsp;</span>
+            </div>
+        </div>
+        
+        <div class="shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">Modern OS<br>for Everyone</h1>
+            <p class="hero-subtitle">A lightweight, Linux and Python based operating system designed for everyone. It provides a minimalistic environment with powerful tools.</p>
+            <div class="hero-cta">
+                <a href="https://milo1004.github.io/#downloads" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Now
+                </a>
+                <a href="https://github.com/milo1004/PythonOS" class="btn btn-secondary" target="_blank">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                    View Source
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="features" class="features">
+        <div class="section-title">
+            <h2>Key Features</h2>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Lightweight & Efficient</h3>
+                <p class="feature-desc">PythOS removes unnecessary components, uses the fastest possible Linux-based OS to build. Focusing on providing a lightweight and efficient operating system environment that runs smoothly on lower hardware configurations.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🐍</div>
+                <h3 class="feature-title">Powerful Python Support</h3>
+                <p class="feature-desc">Pre-installed with the latest version of Python and commonly used libraries, supporting rapid development and deployment of Python applications in an optimized environment.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🛠️</div>
+                <h3 class="feature-title">Be an app developer!</h3>
+                <p class="feature-desc">Create your own apps using Python! Simply add a folder in the bin file with the same name as the .py file, just without the .py, and you're ready to go!</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3 class="feature-title">Automation & Deployment</h3>
+                <p class="feature-desc">Built-in scripts and automation tools that simplify system management and application deployment processes, supporting containerization and virtualization technologies.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3 class="feature-title">Highly Customizable</h3>
+                <p class="feature-desc">Flexible configuration options allow you to customize the system environment according to your needs, meeting requirements from lightweight devices to high-performance servers.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3 class="feature-title">Live Boot!</h3>
+                <p class="feature-desc">Experience the flexibility of PythOS with Live Bootable functionality—run the operating system directly from a USB or DVD without installation. Perfect for testing, troubleshooting, or portable computing on the go.</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-links">
+            <a href="#features">Features</a>
+            <a href="https://milo1004.github.io/#downloads">Download</a>
+            <a href="https://milo1004.github.io/#introduction">Documentation</a>
+            <a href="https://milo1004.github.io/#news">Blog</a>
+            <a href="https://milo1004.github.io/#contributors">Contact</a>
+        </div>
+        <p class="copyright">&copy; 2025 PythOS. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // Navigation bar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const menuBtn = document.querySelector('.menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    menuBtn.textContent = '☰';
+                }
+            });
+        });
+        
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.2
+        };
+        
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Add delay to feature cards
+                    if (entry.target.classList.contains('feature-card')) {
+                        const index = Array.from(entry.target.parentNode.children).indexOf(entry.target);
+                        entry.target.style.transitionDelay = `${index * 0.1}s`;
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        // Observe section titles
+        document.querySelectorAll('.section-title').forEach(title => {
+            observer.observe(title);
+        });
+        
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+        
+        // iOS Web App fullscreen support
+        if (window.navigator.standalone) {
+            document.documentElement.style.height = '100vh';
+            document.body.style.height = '100vh';
+            document.body.style.overflowY = 'auto';
+        }
+        
+        // 使用Twemoji處理所有emoji，轉換為iOS風格
+        document.addEventListener('DOMContentLoaded', function() {
+            // 將Emoji轉換為iOS風格
+            twemoji.parse(document.body, {
+                folder: 'svg',
+                ext: '.svg',
+                callback: function(icon, options, variant) {
+                    // 增加樣式以匹配網站設計
+                    return options.size + (variant === 'emoji' ? '.emoji' : '');
+                }
+            });
+            
+            // 為生成的emoji圖像添加樣式
+            const style = document.createElement('style');
+            style.textContent = `
+                img.emoji {
+                    height: 1em;
+                    width: 1em;
+                    margin: 0 .05em 0 .1em;
+                    vertical-align: -0.1em;
+                }
+                
+                .feature-icon img.emoji {
+                    height: 2.5rem;
+                    width: 2.5rem;
+                    filter: drop-shadow(0 2px 4px rgba(77, 142, 255, 0.2));
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
