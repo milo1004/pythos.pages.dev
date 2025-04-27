@@ -641,6 +641,18 @@
             .hero-scroller:nth-of-type(4) {
                 display: none;
             }
+            
+            .counter-value {
+                font-size: 2.5rem;
+            }
+            
+            .counter-label {
+                font-size: 1rem;
+            }
+            
+            .counter-title {
+                font-size: 1.2rem;
+            }
         }
         
         /* PythOS Text Parallax Effect */
@@ -697,6 +709,51 @@
             font-size: 5rem;
             line-height: 5rem;
           }
+        }
+        
+        /* 項目啟動天數計數器樣式 */
+        .project-stats {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+        
+        .days-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .counter-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        
+        .counter-label {
+            font-size: 1.2rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .counter-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--light);
         }
     </style>
 </head>
@@ -767,6 +824,17 @@
     <section id="features" class="features">
         <div class="section-title">
             <h2>Key Features</h2>
+        </div>
+        
+        <!-- 添加項目啟動天數計數器 -->
+        <div class="project-stats">
+            <h3 class="counter-title">This project has started for</h3>
+            <div class="days-counter">
+                <div>
+                    <div class="counter-value" id="days-count">0</div>
+                    <div class="counter-label">Days</div>
+                </div>
+            </div>
         </div>
         
         <div class="features-grid">
@@ -914,6 +982,47 @@
                 }
             `;
             document.head.appendChild(style);
+            
+            // 項目啟動天數計數器
+            const startDate = new Date('April 29, 2024');
+            const currentDate = new Date();
+            const diffTime = Math.abs(currentDate - startDate);
+            const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // 計數動畫
+            const counterElement = document.getElementById('days-count');
+            const duration = 2000; // 2秒內完成計數
+            let startTime = null;
+            
+            function animateCount(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = timestamp - startTime;
+                
+                // 計算當前應顯示的數字
+                const percentage = Math.min(progress / duration, 1);
+                const currentValue = Math.floor(totalDays * percentage);
+                
+                counterElement.textContent = currentValue;
+                
+                // 如果動畫尚未完成，繼續請求下一幀
+                if (percentage < 1) {
+                    requestAnimationFrame(animateCount);
+                } else {
+                    counterElement.textContent = totalDays;
+                }
+            }
+            
+            // 當元素進入視口時開始動畫
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        requestAnimationFrame(animateCount);
+                        counterObserver.unobserve(entry.target); // 只觸發一次
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            counterObserver.observe(counterElement);
         });
     </script>
 </body>
