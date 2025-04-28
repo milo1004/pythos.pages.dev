@@ -840,6 +840,12 @@
                   </span>
                   News
                 </a>
+                <a href="#beta-updates">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20v-6M6 12l6-6 6 6"/></svg>
+                  </span>
+                  Beta Updates
+                </a>
                 <a href="#contributors">
                   <span class="nav-icon">
                     <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -1033,6 +1039,19 @@
             <p>We're going to remake PythOS from scratch to improve performance. We will release in the next 3 months (beta)</p>
             <p>Name of new OS: PythOS 6.0 Remastered</p>
             <p>Alex will be our maintainer for PythOS 5</p>
+        </section>
+
+        <section id="beta-updates">
+            <h2>Beta Updates</h2>
+            <button id="toggle-beta-btn" class="license-toggle-btn" style="margin-bottom:1rem;">Show Beta Updates</button>
+            <div id="beta-content" class="license-content">
+                <ul style="list-style: disc inside; color: #ccc;">
+                    <li><strong>2024-06-01:</strong> Beta 1 for PythOS 6.0 Remastered released. Major UI overhaul, new installer, and improved Python environment.</li>
+                    <li><strong>2024-06-10:</strong> Beta 2: Added hardware compatibility fixes and enhanced Live Boot stability.</li>
+                    <li><strong>2024-06-20:</strong> Beta 3: Security patches, new app store preview, and performance improvements.</li>
+                </ul>
+                <p style="color:var(--accent);margin-top:1rem;">Want to try the latest beta? <a href="https://github.com/milo1004/PythonOS/releases" target="_blank">Download Beta Releases</a></p>
+            </div>
         </section>
 
         <section id="contributors">
@@ -1261,6 +1280,34 @@ SOFTWARE.</code></pre>
                         // 切換當前卡片狀態
                         this.classList.toggle('expanded');
                     });
+                });
+            }
+
+            // Beta Updates toggle
+            const betaBtn = document.getElementById('toggle-beta-btn');
+            const betaContent = document.getElementById('beta-content');
+            if (betaBtn && betaContent) {
+                function updateBetaToggle() {
+                    if (window.innerWidth <= 768) {
+                        betaBtn.style.display = 'block';
+                        betaContent.classList.remove('active');
+                        betaBtn.textContent = 'Show Beta Updates';
+                    } else {
+                        betaBtn.style.display = 'block';
+                        betaContent.classList.add('active');
+                        betaBtn.textContent = 'Hide Beta Updates';
+                    }
+                }
+                updateBetaToggle();
+                window.addEventListener('resize', updateBetaToggle);
+                betaBtn.addEventListener('click', function() {
+                    if (betaContent.classList.contains('active')) {
+                        betaContent.classList.remove('active');
+                        betaBtn.textContent = 'Show Beta Updates';
+                    } else {
+                        betaContent.classList.add('active');
+                        betaBtn.textContent = 'Hide Beta Updates';
+                    }
                 });
             }
         });
