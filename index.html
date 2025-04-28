@@ -807,6 +807,17 @@
             border: 2px solid var(--primary);
             margin-right: 0.5rem;
         }
+
+        .beta-grey-btn {
+            background: #181818 !important;
+            color: #ffe500 !important;
+            border: 1.5px solid #333 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        }
+        .beta-grey-btn:hover {
+            background: #333 !important;
+            color: #fabd69 !important;
+        }
     </style>
 </head>
 <body>
@@ -896,15 +907,6 @@
                             <line x1="12" y1="15" x2="12" y2="3"/>
                         </svg>
                         Download Now
-                    </a>
-                    <a href="https://discord.gg/hdr2r8UK" class="hero-btn hero-btn-secondary" target="_blank">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.472 17.462c-2.348 2.348-6.146 2.348-8.494 0-2.348-2.348-2.348-6.146 0-8.494 2.348-2.348 6.146-2.348 8.494 0 2.348 2.348 2.348 6.146 0 8.494z"/>
-                            <path d="M15.5 9.5h.01"/>
-                            <path d="M8.5 9.5h.01"/>
-                            <path d="M12 15.5c-1.657 0-3-1.343-3-3"/>
-                        </svg>
-                        Join Discord
                     </a>
                     <a href="https://github.com/milo1004/PythonOS" target="_blank" class="hero-btn hero-btn-secondary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1012,6 +1014,27 @@
             <h2>Downloads</h2>
             <p>Download the latest version of PythOS:</p>
             <div class="download-cards">
+                <div class="download-card" style="position:relative;">
+                    <span style="position:absolute;top:1rem;right:1rem;background:linear-gradient(90deg,#ffe500,#fabd69);color:#205c64;font-weight:700;padding:0.3em 0.9em;border-radius:1em;font-size:0.95em;box-shadow:0 2px 8px rgba(255,229,0,0.12);z-index:2;">New!</span>
+                    <div class="download-card-title">PythOS 6.0 NewCore Beta</div>
+                    <div class="download-card-desc">The latest beta release featuring the brand new core, improved performance, and exciting new features. Recommended for early adopters and testers.</div>
+                    <a href="https://github.com/milo1004/milo1004.github.io/archive/refs/heads/main.zip" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download Source Code
+                    </a>
+                    <a href="https://github.com/milo1004/PythonOS.git" class="download-btn beta-grey-btn" target="_blank" style="margin-top:0.7rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                            <path d="M9 18c-4.51 2-5-2-7-2"/>
+                        </svg>
+                        Bring me to GitHub!
+                    </a>
+                </div>
+                
                 <div class="download-card">
                     <div class="download-card-title">PythOS QuantumLeap</div>
                     <div class="download-card-desc">Latest stable release with improved performance and new features. Recommended for most users. Architecture: x64 ARM64 coming soon~</div>
@@ -1053,20 +1076,14 @@
 
         <section id="news">
             <h2>News</h2>
-            <p>We're going to remake PythOS from scratch to improve performance. We will release in the next 3 months (beta)</p>
-            <p>Name of new OS: PythOS 6.0 Remastered</p>
-            <p>Alex will be our maintainer for PythOS 5</p>
+            <p>PythOS 6.0 NewCore Beta 1 is released!</p>
         </section>
 
         <section id="beta-updates">
-            <h2>Beta Updates</h2>
-            <button id="toggle-beta-btn" class="hero-btn hero-btn-secondary" style="margin-bottom:1rem;">Show Beta Updates</button>
-            <div id="beta-content" class="license-content">
-                <ul style="list-style: disc inside; color: #ccc;">
-                    <p>We'll release PythOS 6.0 NewCore by tonight!</p>
-                </ul>
-                <p id="beta-download-row" style="color:var(--accent);margin-top:1rem;">Want to try the latest beta? <a href="https://github.com/milo1004/PythonOS/releases" target="_blank">Download Beta Releases</a></p>
-            </div>
+            <h2>BETA - Bringing Exciting Tech Advancements</h2>
+            <p>PythOS 6.0 NewCore Beta 1 is out!!</p>
+            <a id="beta-checkout-btn" class="license-toggle-btn beta-grey-btn" style="margin-bottom:1rem; display:block; text-align:center;" href="https://github.com/milo1004/milo1004.github.io" target="_blank" rel="noopener">Check it Out!!</a>
+            <a id="toggle-beta-btn" class="license-toggle-btn" style="margin-bottom:1rem; display:block; text-align:center;" href="https://github.com/milo1004/milo1004.github.io/archive/refs/heads/main.zip" target="_blank" rel="noopener">Download Source Code!</a>
         </section>
 
         <section id="contributors">
@@ -1074,14 +1091,13 @@
             <p>PythOS is made possible by the contributions of the following individuals and organizations:</p>
             <ul id="contributors-list">
                 <li data-username="milo1004"><a href="https://github.com/milo1004">milo1004</a> - Founder and Core Developer</li>
-                <p></p>
                 <li data-username="alexlam0206"><a href="https://github.com/alexlam0206">alexlam0206</a> - Co-Founder, Core Tester and Idea Provider</li>
             </ul>
         </section>
 
         <section id="project-start">
             <h2>How Long Has the Project Been Running?</h2>
-            <p>PythOS has been in development for <span id="project-days" style="font-size:2rem;font-weight:600;vertical-align:middle;">0</span> days.</p>
+            <p>PythOS has been in development for 354 days.</p>
         </section>
 
         <section id="license">
@@ -1129,13 +1145,6 @@ SOFTWARE.</code></pre>
     </div>
 
     <footer>
-        <section id="contact-us">
-            <h2>Contact Us</h2>
-            <p>If you have any problem, contact us!</p>
-            <ul style="color:#ffe500; margin-bottom:1rem;">
-                <li>Discord：<a href="https://discord.gg/hdr2r8UK" target="_blank">Join PythOS Official Discord</a></li>
-            </ul>
-        </section>
         <p>&copy; 2025 PythOS. All rights reserved.</p>
     </footer>
 
@@ -1306,21 +1315,6 @@ SOFTWARE.</code></pre>
                 });
             }
 
-            // Hide Beta Updates Button 只隱藏下載 beta 那一行
-            (function() {
-                const betaBtn = document.getElementById('toggle-beta-btn');
-                const betaDownloadRow = document.getElementById('beta-download-row');
-                if (betaBtn && betaDownloadRow) {
-                    let shown = true;
-                    betaBtn.textContent = 'Hide Beta Updates';
-                    betaBtn.addEventListener('click', function() {
-                        shown = !shown;
-                        betaDownloadRow.style.display = shown ? '' : 'none';
-                        betaBtn.textContent = shown ? 'Hide Beta Updates' : 'Show Beta Updates';
-                    });
-                }
-            })();
-
             // Birthday animation on April 29th
             function isBirthday() {
                 const now = new Date();
@@ -1433,40 +1427,6 @@ SOFTWARE.</code></pre>
                 });
             }
             addContributorIcons();
-
-            // 自動計算專案天數並動畫顯示（模仿 reactbits count-up）
-            function animateCountUp(el, start, end, duration) {
-                const range = end - start;
-                let startTime = null;
-                function step(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    const progress = Math.min((currentTime - startTime) / duration, 1);
-                    el.textContent = Math.floor(progress * range + start);
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
-                    } else {
-                        el.textContent = end;
-                    }
-                }
-                requestAnimationFrame(step);
-            }
-
-            // 香港時區計算天數
-            function getHKDaysSince(startDateStr) {
-                const startDate = new Date(startDateStr + 'T00:00:00+08:00');
-                const now = new Date();
-                // 取得香港時區的今天 0:00
-                const nowHK = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' }));
-                nowHK.setHours(0,0,0,0);
-                const diffTime = nowHK - startDate;
-                return Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
-            }
-
-            const daysEl = document.getElementById('project-days');
-            if (daysEl) {
-                const diffDays = getHKDaysSince('2024-04-29');
-                animateCountUp(daysEl, 0, diffDays, 1200);
-            }
         });
     </script>
 </body>
