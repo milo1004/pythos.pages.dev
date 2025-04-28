@@ -799,6 +799,14 @@
                 transform: translateY(-50%) rotate(0deg);
             }
         }
+
+        .contrib-avatar {
+            display: inline-block;
+            vertical-align: middle;
+            background: #fff;
+            border: 2px solid var(--primary);
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -1055,9 +1063,10 @@
         <section id="contributors">
             <h2>Contributors</h2>
             <p>PythOS is made possible by the contributions of the following individuals and organizations:</p>
-            <ul>
-                <p><a href="https://github.com/milo1004">milo1004</a> - Founder and Core Developer</p>
-                <p><a href="https://github.com/alexlam0206">alexlam0206</a> - Co-Founder, Core Tester and Idea Provider</p>
+            <ul id="contributors-list">
+                <li data-username="milo1004"><a href="https://github.com/milo1004">milo1004</a> - Founder and Core Developer</li>
+                <p></p>
+                <li data-username="alexlam0206"><a href="https://github.com/alexlam0206">alexlam0206</a> - Co-Founder, Core Tester and Idea Provider</li>
             </ul>
         </section>
 
@@ -1397,6 +1406,30 @@ SOFTWARE.</code></pre>
             if (isBirthday()) {
                 playBirthdayAnimation();
             }
+
+            // Fetch and display GitHub profile icons for contributors
+            function addContributorIcons() {
+                const list = document.getElementById('contributors-list');
+                if (!list) return;
+                list.querySelectorAll('li[data-username]').forEach(li => {
+                    const username = li.getAttribute('data-username');
+                    if (!username) return;
+                    // Only add if not already present
+                    if (li.querySelector('.contrib-avatar')) return;
+                    const img = document.createElement('img');
+                    img.src = `https://github.com/${username}.png?size=40`;
+                    img.alt = `${username} avatar`;
+                    img.className = 'contrib-avatar';
+                    img.style.width = '32px';
+                    img.style.height = '32px';
+                    img.style.borderRadius = '50%';
+                    img.style.marginRight = '0.5rem';
+                    img.style.verticalAlign = 'middle';
+                    img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+                    li.insertBefore(img, li.firstChild);
+                });
+            }
+            addContributorIcons();
         });
     </script>
 </body>
