@@ -1046,9 +1046,7 @@
             <button id="toggle-beta-btn" class="license-toggle-btn" style="margin-bottom:1rem;">Show Beta Updates</button>
             <div id="beta-content" class="license-content">
                 <ul style="list-style: disc inside; color: #ccc;">
-                    <li><strong>2024-06-01:</strong> Beta 1 for PythOS 6.0 Remastered released. Major UI overhaul, new installer, and improved Python environment.</li>
-                    <li><strong>2024-06-10:</strong> Beta 2: Added hardware compatibility fixes and enhanced Live Boot stability.</li>
-                    <li><strong>2024-06-20:</strong> Beta 3: Security patches, new app store preview, and performance improvements.</li>
+                    <p>We'll release PythOS 6.0 NewCore by tonight!</p>
                 </ul>
                 <p style="color:var(--accent);margin-top:1rem;">Want to try the latest beta? <a href="https://github.com/milo1004/PythonOS/releases" target="_blank">Download Beta Releases</a></p>
             </div>
@@ -1309,6 +1307,95 @@ SOFTWARE.</code></pre>
                         betaBtn.textContent = 'Hide Beta Updates';
                     }
                 });
+            }
+
+            // Birthday animation on April 29th
+            function isBirthday() {
+                const now = new Date();
+                return now.getMonth() === 3 && now.getDate() === 28; // April is month 3 (0-indexed)
+            }
+
+            function playBirthdayAnimation() {
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.id = 'birthday-overlay';
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100vw';
+                overlay.style.height = '100vh';
+                overlay.style.zIndex = '9999';
+                overlay.style.pointerEvents = 'none';
+                overlay.style.background = 'transparent';
+                document.body.appendChild(overlay);
+
+                // Create congrats text
+                const text = document.createElement('div');
+                text.textContent = '🎉 Happy Birthday PythOS! 🎉';
+                text.style.position = 'absolute';
+                text.style.top = '20%';
+                text.style.left = '50%';
+                text.style.transform = 'translateX(-50%)';
+                text.style.fontSize = '2.5rem';
+                text.style.fontWeight = 'bold';
+                text.style.color = 'var(--primary)';
+                text.style.textShadow = '0 2px 10px #000, 0 0 20px var(--accent)';
+                text.style.fontFamily = 'Roboto Mono, monospace';
+                text.style.opacity = '0.95';
+                overlay.appendChild(text);
+
+                // Ribbons
+                const colors = ['#ffe500', '#fabd69', '#205c64', '#ff69b4', '#00e6e6', '#fff'];
+                for (let i = 0; i < 30; i++) {
+                    const ribbon = document.createElement('div');
+                    ribbon.className = 'birthday-ribbon';
+                    const size = Math.random() * 16 + 16;
+                    ribbon.style.position = 'absolute';
+                    ribbon.style.left = Math.random() * 100 + 'vw';
+                    ribbon.style.top = '-40px';
+                    ribbon.style.width = size + 'px';
+                    ribbon.style.height = (size * 3) + 'px';
+                    ribbon.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    ribbon.style.borderRadius = '8px';
+                    ribbon.style.opacity = '0.85';
+                    ribbon.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+                    ribbon.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                    ribbon.style.animation = `ribbon-fall ${3 + Math.random() * 2}s cubic-bezier(.5,.8,.5,1) forwards`;
+                    ribbon.style.animationDelay = (Math.random() * 0.8) + 's';
+                    overlay.appendChild(ribbon);
+                }
+
+                // Remove overlay after 5 seconds
+                setTimeout(() => {
+                    overlay.remove();
+                }, 5000);
+            }
+
+            // Add keyframes for ribbons
+            const style = document.createElement('style');
+            style.textContent = `
+            @keyframes ribbon-fall {
+                0% { top: -40px; opacity: 0.9; }
+                80% { opacity: 0.85; }
+                100% { top: 100vh; opacity: 0; }
+            }
+            .birthday-ribbon {
+                pointer-events: none;
+                mix-blend-mode: lighten;
+            }
+            #birthday-overlay {
+                animation: fadeInBirthday 0.5s;
+            }
+            @keyframes fadeInBirthday {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            `;
+            document.head.appendChild(style);
+
+            // Play animation if today is April 29th
+            if (isBirthday()) {
+                playBirthdayAnimation();
             }
         });
     </script>
