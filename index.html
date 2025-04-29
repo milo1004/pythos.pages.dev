@@ -129,6 +129,53 @@
             width: 100%;
         }
 
+        .language-selector {
+            position: relative;
+            margin-left: 1rem;
+        }
+
+        .language-selector select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector::after {
+            content: '▼';
+            font-size: 0.8rem;
+            color: var(--primary);
+            position: absolute;
+            right: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .language-selector select:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .language-selector select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 229, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .language-selector {
+                margin: 0.5rem 0;
+            }
+            .language-selector select {
+                width: 100%;
+            }
+        }
+
         .nav-icon {
             display: flex;
             align-items: center;
@@ -887,6 +934,13 @@
                   GitHub
                 </a>
             </div>
+            <div class="language-selector">
+                <select id="language-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                </select>
+            </div>
         </div>
     </nav>
 
@@ -910,8 +964,8 @@
                     </a>
                     <a href="https://github.com/milo1004/PythonOS" target="_blank" class="hero-btn hero-btn-secondary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
-                          <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                          <path d="M9 18c-4.51 2-5-2-7-2"/>
                         </svg>
                         View Source
                     </a>
@@ -1018,7 +1072,7 @@
                     <span style="position:absolute;top:1rem;right:1rem;background:linear-gradient(90deg,#ffe500,#fabd69);color:#205c64;font-weight:700;padding:0.3em 0.9em;border-radius:1em;font-size:0.95em;box-shadow:0 2px 8px rgba(255,229,0,0.12);z-index:2;">New!</span>
                     <div class="download-card-title">PythOS 6.0 NewCore Beta</div>
                     <div class="download-card-desc">The latest beta release featuring the brand new core, improved performance, and exciting new features. Recommended for early adopters and testers.</div>
-                    <a href="https://github.com/milo1004/milo1004.github.io/archive/refs/heads/main.zip" class="download-btn" target="_blank">
+                    <a href="https://github.com/milo1004/PythonOS/archive/refs/heads/main.zip" class="download-btn" target="_blank">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/>
@@ -1081,7 +1135,12 @@
 
         <section id="beta-updates">
             <h2>BETA - Bringing Exciting Tech Advancements</h2>
-            <p>PythOS 6.0 NewCore Beta 1 is out!!</p>
+            <h2>PythOS 6.0 NewCore is Out!</h2>
+            <h3>PythOS 6.0 NewCore:</h3>
+            <h4>What's new?</h4>
+            <li>Everything! We have replaced everything in PythOS 6.0!</li>
+            <li>Convenient app development! If you want to make an app yourself, just create a .py script, drag it to the /bin folder and you're good to go!</li>
+            <p></p>
             <a class="beta-grey-btn" style="margin-bottom:1rem; display:block; text-align:center; padding:0.7rem 0; border-radius:6px; font-weight:700; font-size:1rem; text-decoration:none;" href="https://github.com/milo1004/PythonOS" target="_blank" rel="noopener">Bring me to GitHub</a>
         </section>
 
@@ -1090,6 +1149,7 @@
             <p>PythOS is made possible by the contributions of the following individuals and organizations:</p>
             <ul id="contributors-list">
                 <li data-username="milo1004"><a href="https://github.com/milo1004">milo1004</a> - Founder and Core Developer</li>
+                <p></p>
                 <li data-username="alexlam0206"><a href="https://github.com/alexlam0206">alexlam0206</a> - Co-Founder, Core Tester and Idea Provider</li>
             </ul>
         </section>
@@ -1421,6 +1481,32 @@ SOFTWARE.</code></pre>
                 });
             }
             addContributorIcons();
+        });
+
+        // Language selector functionality
+        function changeLanguage(lang) {
+            // Store the selected language in localStorage
+            localStorage.setItem('preferred_language', lang);
+            
+            // You can implement the actual language change logic here
+            // For now, we'll just log the selected language
+            console.log('Selected language:', lang);
+            
+            // In the future, you can add translation logic here
+            // This is a placeholder for future implementation
+        }
+
+        // Set initial language based on localStorage or browser preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferred_language');
+            const browserLang = navigator.language.split('-')[0];
+            const defaultLang = savedLang || browserLang || 'en';
+            
+            const langSelect = document.getElementById('language-select');
+            if (langSelect && langSelect.value !== defaultLang) {
+                langSelect.value = defaultLang;
+                changeLanguage(defaultLang);
+            }
         });
     </script>
 </body>
