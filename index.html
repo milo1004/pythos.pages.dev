@@ -129,53 +129,6 @@
             width: 100%;
         }
 
-        .language-selector {
-            position: relative;
-            margin-left: 1rem;
-        }
-
-        .language-selector select {
-            appearance: none;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 0.5rem 2rem 0.5rem 1rem;
-            border-radius: 6px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .language-selector::after {
-            content: '▼';
-            font-size: 0.8rem;
-            color: var(--primary);
-            position: absolute;
-            right: 0.8rem;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-
-        .language-selector select:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .language-selector select:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 229, 0, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            .language-selector {
-                margin: 0.5rem 0;
-            }
-            .language-selector select {
-                width: 100%;
-            }
-        }
-
         .nav-icon {
             display: flex;
             align-items: center;
@@ -854,17 +807,6 @@
             border: 2px solid var(--primary);
             margin-right: 0.5rem;
         }
-
-        .beta-grey-btn {
-            background: #181818 !important;
-            color: #ffe500 !important;
-            border: 1.5px solid #333 !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-        }
-        .beta-grey-btn:hover {
-            background: #333 !important;
-            color: #fabd69 !important;
-        }
     </style>
 </head>
 <body>
@@ -948,26 +890,26 @@
         <section id="hero" class="hero">
             <div class="floating-particles" id="particles"></div>
             
-<div class="hero-content">
+            <div class="hero-content">
                 <img src="PythOS.png" alt="PythOS Logo" class="hero-logo">
                 <h1 class="hero-title">PythOS</h1>
-                <p class="hero-subtitle">A lightweight, Linux &amp; Python based operating system designed for everyone.</p>
+                <p class="hero-subtitle">A lightweight, Linux & Python based operating system designed for everyone.</p>
                 
                 <div class="hero-buttons">
                     <a href="#downloads" class="hero-btn hero-btn-primary">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
                         </svg>
                         Download Now
                     </a>
                     <a href="https://discord.gg/hdr2r8UK" class="hero-btn hero-btn-secondary" target="_blank">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.472 17.462c-2.348 2.348-6.146 2.348-8.494 0-2.348-2.348-2.348-6.146 0-8.494 2.348-2.348 6.146-2.348 8.494 0 2.348 2.348 2.348 6.146 0 8.494z"></path>
-                            <path d="M15.5 9.5h.01"></path>
-                            <path d="M8.5 9.5h.01"></path>
-                            <path d="M12 15.5c-1.657 0-3-1.343-3-3"></path>
+                            <path d="M17.472 17.462c-2.348 2.348-6.146 2.348-8.494 0-2.348-2.348-2.348-6.146 0-8.494 2.348-2.348 6.146-2.348 8.494 0 2.348 2.348 2.348 6.146 0 8.494z"/>
+                            <path d="M15.5 9.5h.01"/>
+                            <path d="M8.5 9.5h.01"/>
+                            <path d="M12 15.5c-1.657 0-3-1.343-3-3"/>
                         </svg>
                         Join Discord
                     </a>
@@ -979,77 +921,6 @@
                         View Source
                     </a>
                 </div>
-                
-                <div class="hero-features">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M18 10h-4V4h-4v6H6l6 6 6-6z"></path>
-                                <path d="M6 20h12"></path>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Lightweight &amp; Efficient</h3>
-                        <p class="feature-desc">PythOS removes unnecessary components, uses the fastest possible Linux-based OS to build. Focusing on providing a lightweight and efficient operating system environment that runs smoothly on lower hardware configurations.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M12 6V4M12 6a2 2 0 100 4m0-4c-2.67 0-8 1.34-8 4v8c0 2.66 5.33 4 8 4m0-12a2 2 0 110 4m0 0c2.67 0 8-1.34 8-4v-8c0-2.66-5.33-4-8-4m0 12c-2.67 0-8 1.34-8 4m8-4c2.67 0 8-1.34 8-4"></path>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Powerful Python Support</h3>
-                        <p class="feature-desc">Pre-installed with the latest version of Python and commonly used libraries, supporting rapid development and deployment of Python applications in an optimized environment.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="3" y1="9" x2="21" y2="9"></line>
-                                <line x1="9" y1="21" x2="9" y2="9"></line>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Be an app developer!</h3>
-                        <p class="feature-desc">Create your own apps using Python! Simply add a folder in the bin file with the same name as the .py file, just without the .py, and you're ready to go!</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Automation &amp; Deployment</h3>
-                        <p class="feature-desc">Built-in scripts and automation tools that simplify system management and application deployment processes, supporting containerization and virtualization technologies.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <line x1="4" y1="9" x2="20" y2="9"></line>
-                                <line x1="4" y1="15" x2="20" y2="15"></line>
-                                <line x1="10" y1="3" x2="8" y2="21"></line>
-                                <line x1="16" y1="3" x2="14" y2="21"></line>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Highly Customizable</h3>
-                        <p class="feature-desc">Flexible configuration options allow you to customize the system environment according to your needs, meeting requirements from lightweight devices to high-performance servers.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M2 12h10M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"></path>
-                            </svg>
-                        </div>
-                        <h3 class="feature-title">Live Boot!</h3>
-                        <p class="feature-desc">Experience the flexibility of PythOS with Live Bootable functionality—run the operating system directly from a USB or DVD without installation. Perfect for testing, troubleshooting, or portable computing on the go.</p>
-                    </div>
-                </div>
-            </div>
                 
                 <div class="hero-features">
                     <div class="feature-card">
@@ -1150,7 +1021,7 @@
             <div class="download-cards">
                 <div class="download-card" style="position:relative;">
                     <span style="position:absolute;top:1rem;right:1rem;background:linear-gradient(90deg,#ffe500,#fabd69);color:#205c64;font-weight:700;padding:0.3em 0.9em;border-radius:1em;font-size:0.95em;box-shadow:0 2px 8px rgba(255,229,0,0.12);z-index:2;">New!</span>
-                    <div class="download-card-title">PythOS 6.0 NewCore Beta</div>
+                    <div class="download-card-title">PythOS 6.0 NewCore</div>
                     <div class="download-card-desc">The latest beta release featuring the brand new core, improved performance, and exciting new features. Recommended for early adopters and testers.</div>
                     <a href="https://github.com/milo1004/PythonOS/archive/refs/heads/main.zip" class="download-btn" target="_blank">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1210,7 +1081,9 @@
 
         <section id="news">
             <h2>News</h2>
-            <p>PythOS 6.0 NewCore Beta 1 is released!</p>
+            <p>We're going to remake PythOS from scratch to improve performance. We will release in the next 3 months (beta)</p>
+            <p>Name of new OS: PythOS 6.0 Remastered</p>
+            <p>Alex will be our maintainer for PythOS 5</p>
         </section>
 
         <section id="beta-updates">
@@ -1234,9 +1107,14 @@
             </ul>
         </section>
 
+        <section id="project-start">
+            <h2>How Long Has the Project Been Running?</h2>
+            <p>PythOS has been in development for <span id="project-days" style="font-size:2rem;font-weight:600;vertical-align:middle;">0</span> days.</p>
+        </section>
+
         <section id="license">
             <h2>MIT License</h2>
-            <button class="license-toggle-btn" style="display:block;">Show License</button>
+            <button class="license-toggle-btn" style="display:none;">Show License</button>
             <div class="license-content active">
                 <p>The MIT License of this project:</p>
                 <pre><code>MIT License
@@ -1277,12 +1155,13 @@ SOFTWARE.</code></pre>
             <p>The GitHub repository provided above might not contain the bootable image. You can download it <a href="#downloads">here.</a></p>
         </section>
     </div>
-<footer>
-        <section id="contact-us" style="opacity: 1; transform: translateY(0px);">
+
+    <footer>
+        <section id="contact-us">
             <h2>Contact Us</h2>
             <p>If you have any problem, contact us!</p>
             <ul style="color:#ffe500; margin-bottom:1rem;">
-                <li>Discord：<a href="https://discord.gg/hdr2r8UK" target="_blank">Join PythOS Official Discord</a></li>
+                <div>Discord：<a href="https://discord.gg/hdr2r8UK" target="_blank">Join PythOS Official Discord</a></div>
             </ul>
         </section>
         <p>&copy; 2025 PythOS. All rights reserved.</p>
@@ -1455,6 +1334,21 @@ SOFTWARE.</code></pre>
                 });
             }
 
+            // Hide Beta Updates Button 只隱藏下載 beta 那一行
+            (function() {
+                const betaBtn = document.getElementById('toggle-beta-btn');
+                const betaDownloadRow = document.getElementById('beta-download-row');
+                if (betaBtn && betaDownloadRow) {
+                    let shown = true;
+                    betaBtn.textContent = 'Hide Beta Updates';
+                    betaBtn.addEventListener('click', function() {
+                        shown = !shown;
+                        betaDownloadRow.style.display = shown ? '' : 'none';
+                        betaBtn.textContent = shown ? 'Hide Beta Updates' : 'Show Beta Updates';
+                    });
+                }
+            })();
+
             // Birthday animation on April 29th
             function isBirthday() {
                 const now = new Date();
@@ -1474,6 +1368,48 @@ SOFTWARE.</code></pre>
                 overlay.style.pointerEvents = 'none';
                 overlay.style.background = 'transparent';
                 document.body.appendChild(overlay);
+
+                // Create congrats text
+                const text = document.createElement('div');
+                text.textContent = '🎉 Happy Birthday PythOS! 🎉';
+                text.style.position = 'absolute';
+                text.style.top = '20%';
+                text.style.left = '50%';
+                text.style.transform = 'translateX(-50%)';
+                text.style.fontSize = '2.5rem';
+                text.style.fontWeight = 'bold';
+                text.style.color = 'var(--primary)';
+                text.style.textShadow = '0 2px 10px #000, 0 0 20px var(--accent)';
+                text.style.fontFamily = 'Roboto Mono, monospace';
+                text.style.opacity = '0.95';
+                overlay.appendChild(text);
+
+                // Ribbons
+                const colors = ['#ffe500', '#fabd69', '#205c64', '#ff69b4', '#00e6e6', '#fff'];
+                for (let i = 0; i < 30; i++) {
+                    const ribbon = document.createElement('div');
+                    ribbon.className = 'birthday-ribbon';
+                    const size = Math.random() * 16 + 16;
+                    ribbon.style.position = 'absolute';
+                    ribbon.style.left = Math.random() * 100 + 'vw';
+                    ribbon.style.top = '-40px';
+                    ribbon.style.width = size + 'px';
+                    ribbon.style.height = (size * 3) + 'px';
+                    ribbon.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    ribbon.style.borderRadius = '8px';
+                    ribbon.style.opacity = '0.85';
+                    ribbon.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+                    ribbon.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                    ribbon.style.animation = `ribbon-fall ${3 + Math.random() * 2}s cubic-bezier(.5,.8,.5,1) forwards`;
+                    ribbon.style.animationDelay = (Math.random() * 0.8) + 's';
+                    overlay.appendChild(ribbon);
+                }
+
+                // Remove overlay after 5 seconds
+                setTimeout(() => {
+                    overlay.remove();
+                }, 5000);
+            }
 
             // Add keyframes for ribbons
             const style = document.createElement('style');
@@ -1525,31 +1461,39 @@ SOFTWARE.</code></pre>
                 });
             }
             addContributorIcons();
-        });
 
-        // Language selector functionality
-        function changeLanguage(lang) {
-            // Store the selected language in localStorage
-            localStorage.setItem('preferred_language', lang);
-            
-            // You can implement the actual language change logic here
-            // For now, we'll just log the selected language
-            console.log('Selected language:', lang);
-            
-            // In the future, you can add translation logic here
-            // This is a placeholder for future implementation
-        }
+            // 自動計算專案天數並動畫顯示（模仿 reactbits count-up）
+            function animateCountUp(el, start, end, duration) {
+                const range = end - start;
+                let startTime = null;
+                function step(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    el.textContent = Math.floor(progress * range + start);
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = end;
+                    }
+                }
+                requestAnimationFrame(step);
+            }
 
-        // Set initial language based on localStorage or browser preference
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('preferred_language');
-            const browserLang = navigator.language.split('-')[0];
-            const defaultLang = savedLang || browserLang || 'en';
-            
-            const langSelect = document.getElementById('language-select');
-            if (langSelect && langSelect.value !== defaultLang) {
-                langSelect.value = defaultLang;
-                changeLanguage(defaultLang);
+            // 香港時區計算天數
+            function getHKDaysSince(startDateStr) {
+                const startDate = new Date(startDateStr + 'T00:00:00+08:00');
+                const now = new Date();
+                // 取得香港時區的今天 0:00
+                const nowHK = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' }));
+                nowHK.setHours(0,0,0,0);
+                const diffTime = nowHK - startDate;
+                return Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+            }
+
+            const daysEl = document.getElementById('project-days');
+            if (daysEl) {
+                const diffDays = getHKDaysSince('2024-04-29');
+                animateCountUp(daysEl, 0, diffDays, 1200);
             }
         });
     </script>
