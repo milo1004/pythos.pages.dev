@@ -1475,48 +1475,6 @@ SOFTWARE.</code></pre>
                 overlay.style.background = 'transparent';
                 document.body.appendChild(overlay);
 
-                // Create congrats text
-                const text = document.createElement('div');
-                text.textContent = '🎉 Happy Birthday PythOS! 🎉';
-                text.style.position = 'absolute';
-                text.style.top = '20%';
-                text.style.left = '50%';
-                text.style.transform = 'translateX(-50%)';
-                text.style.fontSize = '2.5rem';
-                text.style.fontWeight = 'bold';
-                text.style.color = 'var(--primary)';
-                text.style.textShadow = '0 2px 10px #000, 0 0 20px var(--accent)';
-                text.style.fontFamily = 'Roboto Mono, monospace';
-                text.style.opacity = '0.95';
-                overlay.appendChild(text);
-
-                // Ribbons
-                const colors = ['#ffe500', '#fabd69', '#205c64', '#ff69b4', '#00e6e6', '#fff'];
-                for (let i = 0; i < 30; i++) {
-                    const ribbon = document.createElement('div');
-                    ribbon.className = 'birthday-ribbon';
-                    const size = Math.random() * 16 + 16;
-                    ribbon.style.position = 'absolute';
-                    ribbon.style.left = Math.random() * 100 + 'vw';
-                    ribbon.style.top = '-40px';
-                    ribbon.style.width = size + 'px';
-                    ribbon.style.height = (size * 3) + 'px';
-                    ribbon.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    ribbon.style.borderRadius = '8px';
-                    ribbon.style.opacity = '0.85';
-                    ribbon.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
-                    ribbon.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-                    ribbon.style.animation = `ribbon-fall ${3 + Math.random() * 2}s cubic-bezier(.5,.8,.5,1) forwards`;
-                    ribbon.style.animationDelay = (Math.random() * 0.8) + 's';
-                    overlay.appendChild(ribbon);
-                }
-
-                // Remove overlay after 5 seconds
-                setTimeout(() => {
-                    overlay.remove();
-                }, 5000);
-            }
-
             // Add keyframes for ribbons
             const style = document.createElement('style');
             style.textContent = `
