@@ -23,9 +23,9 @@ PythOS 是一款基於 **Linux 與 Python** 的輕量級作業系統，專為開
 
 ## 📦 下載
 
-請至 GitHub Release 頁面取得最新版本與原始碼：
+請至 [GitHub Release](https://github.com/milo1004/PythonOS/releases) 頁面取得最新版本與原始碼：
 
-🔗 [GitHub 倉庫](https://github.com/milo1004/PythonOS)
+🔗 [GitHub Repo](https://github.com/milo1004/PythonOS)
 
 ## 🤝 貢獻者
 
