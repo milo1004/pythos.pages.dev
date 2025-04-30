@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PythOS</title>
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PythOS">
+    <link rel="apple-touch-icon" href="PythOS.png">
+    <link rel="apple-touch-startup-image" href="PythOS.png">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- End of iOS Web App Meta Tags -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        :root {
+            --primary: #ffe500;
+            --secondary: #205c64;
+            --accent: #fabd69;
+            --dark: #0a0a0a;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            line-height: 1.6;
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s;
+            position: relative;
+        }
+
+        .navbar {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            right: auto;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            transition: background 0.3s, box-shadow 0.3s;
+            border-radius: 1.5rem;
+            max-width: 98vw;
+            min-width: 320px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-logo {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover .logo-img {
+            transform: scale(1.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: nowrap;
+        }
+
+        .nav-links a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+
+        .container {
+            flex: 1;
+            padding: 6rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        pre {
+            background: rgba(255,255,255,0.08);
+            color: #ffe500;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 0.95rem;
+        }
+
+        code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--accent);
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .github-link svg {
+            min-width: 20px;
+            min-height: 20px;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        .github-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 229, 0, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 229, 0, 0.1);
+            position: static;
+            width: 100%;
+        }
+
+        .mobile-title {
+            display: none !important;
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                display: none;
+            }
+            .mobile-title {
+                display: block !important;
+                width: 100vw;
+                text-align: center;
+                font-size: 2rem;
+                font-weight: 700;
+                color: #ffe500;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+                letter-spacing: 2px;
+                font-family: 'Roboto Mono', monospace;
+            }
+            .container {
+                padding: 0.5rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 0.5rem;
+            }
+
+            .hero-content {
+                padding: 0;
+            }
+
+            .hero-title {
+                display: none; /* Hide the title on mobile */
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-top: 0;
+                margin-bottom: 0.75rem;
+                max-width: 100%;
+            }
+            
+            .hero-features {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+            
+            .hero-logo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 0.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+                align-items: center;
+                margin-bottom: 0.75rem;
+                margin-top: 0;
+            }
+            
+            .hero-btn {
+                width: 75%;
+                justify-content: center;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            section {
+                padding: 1.25rem;
+                margin-bottom: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            pre {
+                font-size: 0.85rem;
+                padding: 0.7rem;
+                word-break: break-all;
+            }
+
+            /* License 區塊展開/收合按鈕 */
+            .license-toggle-btn {
+                display: block;
+                width: 100%;
+                background: linear-gradient(90deg, #ffe500, #fabd69);
+                color: #205c64;
+                border: none;
+                border-radius: 6px;
+                font-size: 1rem;
+                font-weight: 700;
+                padding: 0.7rem 0;
+                margin-bottom: 0.7rem;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(255,229,0,0.08);
+                transition: background 0.2s, color 0.2s;
+            }
+            .license-toggle-btn:active {
+                background: #ffe500;
+                color: #0a0a0a;
+            }
+            .license-content {
+                display: none;
+                animation: fadeInUp 0.5s;
+            }
+            .license-content.active {
+                display: block;
+            }
+        }
+
+        section#installation ol {
+            margin-left: 1.5rem;
+            padding-left: 0.5rem;
+            color: #ccc;
+            font-size: 1rem;
+            list-style: decimal inside;
+        }
+
+        section#installation li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        section#github {
+            margin-bottom: 2.5rem;
+        }
+        section#github .github-link {
+            margin-bottom: 1.5rem;
+        }
+
+        .download-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .download-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 229, 0, 0.3);
+        }
+        
+        .download-card-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .download-card-desc {
+            color: #bbb;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            align-self: flex-start;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 229, 0, 0.2);
+        }
+        
+        .download-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* Hero Section Styles */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d0d10 0%, #171721 100%);
+            margin-bottom: 2rem;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255, 229, 0, 0.15) 0%, transparent 70%);
+            z-index: 0;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" width="50" height="50" stroke="rgba(255,229,0,0.03)" stroke-width="1"/></svg>');
+            background-size: 50px 50px;
+            opacity: 0.5;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+        }
+        
+        .hero-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px rgba(255, 229, 0, 0.3));
+            animation: pulse 4s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 15px rgba(255, 229, 0, 0.3));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 30px rgba(255, 229, 0, 0.5));
+            }
+        }
+        
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: var(--primary);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #bbb;
+            margin-bottom: 2.5rem;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .hero-btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .hero-btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(255, 229, 0, 0.2);
+            transform-origin: center;
+        }
+        
+        .hero-btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 229, 0, 0.3);
+        }
+        
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 229, 0, 0.3);
+            color: var(--primary);
+            backdrop-filter: blur(5px);
+        }
+        
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+        
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), transparent);
+            opacity: 0.7;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 229, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+        
+        .feature-desc {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive styles for hero section */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+                margin-bottom: 1.5rem;
+                max-width: 95%;
+            }
+            
+            .hero-features {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .hero-logo {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                align-items: center;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-btn {
+                width: 75%;
+                justify-content: center;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Mobile-specific feature card styling */
+        @media (max-width: 768px) {
+            .feature-desc {
+                display: block;
+                margin-top: 0;
+                font-size: 0.9rem;
+                line-height: 1.4;
+                padding-left: 2.5rem;
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+                transition: all 0.3s ease-out;
+            }
+            
+            .feature-card {
+                padding: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+            
+            .feature-card.expanded {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .feature-card.expanded .feature-desc {
+                margin-top: 0.75rem;
+                max-height: 300px;
+                opacity: 1;
+            }
+            
+            .feature-info {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            
+            .feature-icon {
+                margin-bottom: 0;
+                width: 30px;
+                height: 30px;
+                min-width: 30px;
+                transition: transform 0.3s ease;
+            }
+            
+            .feature-card.expanded .feature-icon {
+                transform: scale(1.1);
+            }
+            
+            .feature-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .feature-title {
+                margin-bottom: 0;
+                font-size: 1rem;
+                position: relative;
+                padding-right: 1.5rem;
+                transition: color 0.3s ease;
+            }
+            
+            .feature-card.expanded .feature-title {
+                color: var(--accent);
+            }
+            
+            .feature-title::after {
+                content: '+';
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.2rem;
+                color: var(--accent);
+                transition: all 0.3s ease;
+            }
+            
+            .feature-card.expanded .feature-title::after {
+                content: '−';
+                transform: translateY(-50%) rotate(0deg);
+            }
+        }
+
+        .contrib-avatar {
+            display: inline-block;
+            vertical-align: middle;
+            background: #fff;
+            border: 2px solid var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        /* 語言選擇器樣式 */
+        .language-selector {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .language-selector select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .language-selector::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        /* 改進按鈕樣式 */
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .hero-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .hero-btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(255, 229, 0, 0.2);
+            transform-origin: center;
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 229, 0, 0.3);
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 229, 0, 0.3);
+            color: var(--primary);
+            backdrop-filter: blur(5px);
+        }
+
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        /* Discord 按鈕樣式 */
+        .discord-btn {
+            background: #7289DA;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .discord-btn:hover {
+            background: #5b73c7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114,137,218,0.3);
+        }
+
+        /* 聯絡我們區塊樣式 */
+        #contact-us {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        #contact-us h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        #contact-us p {
+            color: #ccc;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-title">PythOS</div>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="https://milo1004.github.io" class="nav-logo">
+                <img src="PythOS.png" alt="PythOS Logo" class="logo-img">
+                <span>PythOS</span>
+            </a>
+            <div class="nav-links">
+                <a href="#hero">
+                  <span class="nav-icon"> 
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </span>
+                  Home
+                </a>
+                <a href="#introduction">
+                  <span class="nav-icon"> 
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 17V5.5A2.5 2.5 0 0 1 9 3h8.5A2.5 2.5 0 0 1 20 5.5v11.5"/></svg>
+                  </span>
+                  Introduction
+                </a>
+                <a href="#installation">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><rect x="4" y="17" width="16" height="4" rx="2"/></svg>
+                  </span>
+                  Installation
+                </a>
+                <a href="#downloads">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </span>
+                  Downloads
+                </a>
+                <a href="#news">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 1-6 6"/><circle cx="12" cy="12" r="10"/></svg>
+                  </span>
+                  News
+                </a>
+                <a href="#beta-updates">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20v-6M6 12l6-6 6 6"/></svg>
+                  </span>
+                  Beta Updates
+                </a>
+                <a href="#contributors">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </span>
+                  Contributors
+                </a>
+                <a href="#license">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M16 3v4a2 2 0 0 0 2 2h4"/></svg>
+                  </span>
+                  License
+                </a>
+                <a href="https://github.com/milo1004/PythonOS" target="_blank">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px;">
+                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                      <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                    </svg>
+                  </span>
+                  GitHub
+                </a>
+                <a href="https://discord.gg/hdr2r8UK" target="_blank" class="discord-nav-btn">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                    </svg>
+                  </span>
+                  Discord
+                </a>
+            </div>
+            <div class="language-selector">
+                <select id="language-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="zh" selected>正體中文</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="hero" class="hero">
+            <div class="floating-particles" id="particles"></div>
+            
+            <div class="hero-content">
+                <img src="PythOS.png" alt="PythOS Logo" class="hero-logo">
+                <h1 class="hero-title">PythOS</h1>
+                <p class="hero-subtitle">專為每個人設計的輕量級、基於 Linux 和 Python 的作業系統。</p>
+                
+                <div class="hero-buttons">
+                    <a href="#downloads" class="hero-btn hero-btn-primary">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        下載
+                    </a>
+                    <a href="https://discord.gg/hdr2r8UK" class="hero-btn hero-btn-secondary" target="_blank">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.472 17.462c-2.348 2.348-6.146 2.348-8.494 0-2.348-2.348-2.348-6.146 0-8.494 2.348-2.348 6.146-2.348 8.494 0 2.348 2.348 2.348 6.146 0 8.494z"/>
+                            <path d="M15.5 9.5h.01"/>
+                            <path d="M8.5 9.5h.01"/>
+                            <path d="M12 15.5c-1.657 0-3-1.343-3-3"/>
+                        </svg>
+                        加入 Discord
+                    </a>
+                    <a href="https://github.com/milo1004/PythonOS" target="_blank" class="hero-btn hero-btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                          <path d="M9 18c-4.51 2-5-2-7-2"/>
+                        </svg>
+                        查看原始碼
+                    </a>
+                </div>
+                
+                <div class="hero-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M18 10h-4V4h-4v6H6l6 6 6-6z"/>
+                                <path d="M6 20h12"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">輕量且高效</h3>
+                        <p class="feature-desc">PythOS 移除了不必要的組件，使用最快速的 Linux 系統為基礎。專注於提供一個輕量高效的作業系統環境，即使在較低配置的硬體上也能順暢運行。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M12 6V4M12 6a2 2 0 100 4m0-4c-2.67 0-8 1.34-8 4v8c0 2.66 5.33 4 8 4m0-12a2 2 0 110 4m0 0c2.67 0 8-1.34 8-4v-8c0-2.66-5.33-4-8-4m0 12c-2.67 0-8 1.34-8 4m8-4c2.67 0 8-1.34 8-4"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">強大的 Python 支援</h3>
+                        <p class="feature-desc">預安裝最新版本的 Python 和常用函式庫，在優化環境中支援快速開發和部署 Python 應用程式。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">成為應用開發者！</h3>
+                        <p class="feature-desc">使用 Python 創建您自己的應用！只需在 bin 資料夾中添加一個與 .py 檔同名的資料夾（不含 .py 副檔名），就可以開始了！</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">自動化與部署</h3>
+                        <p class="feature-desc">內建腳本和自動化工具，簡化系統管理和應用部署過程，支援容器化和虛擬化技術。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <line x1="4" y1="9" x2="20" y2="9"/>
+                                <line x1="4" y1="15" x2="20" y2="15"/>
+                                <line x1="10" y1="3" x2="8" y2="21"/>
+                                <line x1="16" y1="3" x2="14" y2="21"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">高度可自訂</h3>
+                        <p class="feature-desc">彈性的設定選項讓您能夠根據需求客製化系統環境，從輕量裝置到高效能伺服器都能滿足需求。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M2 12h10M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">即時啟動！</h3>
+                        <p class="feature-desc">體驗 PythOS 的靈活性，使用即時啟動功能直接從 USB 或 DVD 執行系統，無需安裝。完美適合測試、故障排除或隨時攜帶的運算需求。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="introduction">
+            <h2>介紹</h2>
+            <p>PythOS 是一個輕量級的基於 Linux 和 Python 的作業系統，專為每個人設計。它提供了一個極簡而強大的環境。</p>
+        </section>
+
+        <section id="installation">
+            <h2>安裝</h2>
+            <p>請依照以下步驟安裝 PythOS：</p>
+            <ol>
+                <li>從<a href="#downloads">下載</a>區獲取最新的 ISO 檔案。</li>
+                <li>使用工具如 <code>dd</code> 或 <code>Rufus</code> 製作啟動 USB。</li>
+                <li>從 USB 啟動電腦</li>
+                <li>在 SystemBack 啟動載入器中，您可以選擇：
+                    <p>&nbsp;1. 選項 1：如果您希望直接執行系統（選擇此選項後可跳過後續指示）</p>
+                    <p>&nbsp;2. 選項 2：如果您希望將系統安裝到磁碟（繼續執行後續指示）</p>
+                </li>
+                <div style="color:red;font-weight:bold;">選擇要安裝的目標儲存裝置（注意！這將清除所有資料）</div>
+                <div>按照螢幕上的指示操作</div>
+                <div>開始享用！</div>
+            </ol>
+        </section>
+
+        <section id="downloads">
+            <h2>下載</h2>
+            <p>下載最新版本的 PythOS：</p>
+            <div class="download-cards">
+                <div class="download-card" style="position:relative;">
+                    <span style="position:absolute;top:1rem;right:1rem;background:linear-gradient(90deg,#ffe500,#fabd69);color:#205c64;font-weight:700;padding:0.3em 0.9em;border-radius:1em;font-size:0.95em;box-shadow:0 2px 8px rgba(255,229,0,0.12);z-index:2;">最新！</span>
+                    <div class="download-card-title">PythOS 6.0 NewCore</div>
+                    <div class="download-card-desc">最新的測試版本，具有全新的核心、改進的性能和令人興奮的新功能。推薦給早期使用者和測試者。</div>
+                    <a href="https://github.com/milo1004/PythonOS/archive/refs/heads/main.zip" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        下載原始碼
+                    </a>
+                    <a href="https://github.com/milo1004/PythonOS.git" class="download-btn beta-grey-btn" target="_blank" style="margin-top:0.7rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                            <path d="M9 18c-4.51 2-5-2-7-2"/>
+                        </svg>
+                        前往 GitHub！
+                    </a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-card-title">PythOS QuantumLeap</div>
+                    <div class="download-card-desc">最新的穩定版本，具有改進的性能和新功能。推薦給大多數用戶。架構：x64（ARM64 即將推出）</div>
+                    <a href="https://drive.google.com/file/d/17AOxBJrRf4m-CDfeu9T3-IRsKgpXDgBT/view?usp=sharing" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        下載 ISO x64（推薦）
+                    </a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-card-title">PythOS 4.1 Stable</div>
+                    <div class="download-card-desc">Previous stable version for systems with compatibility requirements. (Does not provide ISO file. Only compatible for Windows. Therefore, I do not recommend using this. Unless needed.)</div>
+                    <a href="https://drive.google.com/file/d/13I3ErsLhpHFKnfs4vTuVtXiF-H89bxyq/view?usp=sharing" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        下載穩定版本
+                    </a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-card-title">All Versions</div>
+                    <div class="download-card-desc">Access all previous releases and beta versions on our GitHub releases page.</div>
+                    <a href="https://github.com/milo1004/PythonOS/releases" class="download-btn" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                        查看所有版本
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="news">
+            <h2>最新消息</h2>
+            <p>我們將從頭開始重新製作 PythOS 以提升性能。預計在未來三個月內發布（測試版）</p>
+            <p>新系統名稱：PythOS 6.0 Remastered</p>
+            <p>Alex 將成為 PythOS 5 的維護者</p>
+        </section>
+
+        <section id="beta-updates">
+            <h2>BETA - 帶來令人興奮的技術進展</h2>
+            <div class="beta-content">
+                <h2>PythOS 6.0 NewCore 已發布！</h2>
+                <h3>PythOS 6.0 NewCore：</h3>
+                <h4>有什麼新功能？</h4>
+                <ul>
+                    <li>一切都是全新的！我們已經完全重寫了 PythOS 6.0！</li>
+                    <li>便捷的應用程式開發！如果您想自己製作應用程式，只需創建一個 .py 腳本，將其拖到 /bin 資料夾即可！</li>
+                </ul>
+                <p></p>
+                <a class="hero-btn hero-btn-primary" href="https://github.com/milo1004/PythonOS" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                        <path d="M9 18c-4.51 2-5-2-7-2"/>
+                    </svg>
+                    前往 GitHub
+                </a>
+            </div>
+        </section>
+
+        <section id="contributors">
+            <h2>貢獻者</h2>
+            <p>PythOS 的開發得益於以下個人和組織的貢獻：</p>
+            <ul id="contributors-list">
+                <li data-username="milo1004"><a href="https://github.com/milo1004">milo1004</a> - 創始人和核心開發者</li>
+                <p></p>
+                <li data-username="alexlam0206"><a href="https://github.com/alexlam0206">alexlam0206</a> - 聯合創始人、核心測試者和創意提供者</li>
+            </ul>
+        </section>
+
+        <section id="project-start">
+            <h2>這個計畫已經啟動多久了？</h2>
+            <p>PythOS 已經啟動 <span id="project-days" style="font-size:2rem;font-weight:600;vertical-align:middle;color:var(--primary);">0</span> 日了！</p>
+        </section>
+
+        <section id="license">
+            <h2>MIT License</h2>
+            <button class="license-toggle-btn" style="display:none;">查看授權條款</button>
+            <div class="license-content active">
+                <p>MIT 授權條款</p>
+                <pre><code>MIT License
+
+Copyright (c) 2025 Milo Chan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</code></pre>
+            </div>
+        </section>
+
+        <section id="github">
+            <h2>官方 GitHub 版面</h2>
+            <p>在官方 PythOS GitHub 連結進行貢獻、報告問題或探索原始碼：</p>
+            <a href="https://github.com/milo1004/PythonOS" class="github-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px;">
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                  <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                </svg>
+                GitHub 上查看 PythOS
+            </a>
+            <h3>注意：</h3>
+            <p>上面提供的 GitHub 連結可能不包含可啟動映像。您可以在 <a href="#downloads">此處下載。</a></p>
+        </section>
+    </div>
+
+    <footer>
+        <section id="contact-us">
+            <h2>聯絡我們</h2>
+            <p>如有任何問題，歡迎聯絡我們！</p>
+            <div style="color:#ffe500; margin-bottom:1rem;">Discord：<a href="https://discord.gg/hdr2r8UK" target="_blank">加入 PythOS 官方 Discord</a></div>
+        </section>
+        <p>&copy; 2025 PythOS. 版權所有。</p>
+    </footer>
+
+    <script>
+        // 頁面載入和 iOS 相關程式碼
+        window.addEventListener('load', function() {
+            // iOS 相關代碼保持不變
+        });
+
+        // 語言切換功能
+        function changeLanguage(lang) {
+            if (lang === 'zh') {
+                window.location.href = 'zh_hk.html';
+            } else {
+                window.location.href = 'en.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 計算專案運行天數
+            function getProjectDays() {
+                const startDate = new Date('2024-04-29T00:00:00+08:00'); // 香港時區
+                const now = new Date();
+                // 轉換為毫秒差值
+                const diffTime = now.getTime() - startDate.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                console.log("計算的天數: " + diffDays); // 調試用
+                return diffDays > 0 ? diffDays : 0; // 確保至少顯示 0
+            }
+
+            // 數字增長動畫函數
+            function animateCountUp(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentNumber = Math.floor(progress * (end - start) + start);
+                    element.textContent = currentNumber;
+                    element.style.transform = `scale(${1 + progress * 0.1})`;
+                    element.style.opacity = 0.5 + progress * 0.5;
+                    
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        element.style.transform = 'scale(1)';
+                        element.style.opacity = 1;
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // 更新專案天數顯示
+            function updateProjectDays() {
+                const daysElement = document.getElementById('project-days');
+                if (daysElement) {
+                    const days = getProjectDays();
+                    console.log("設置天數: " + days); // 調試用
+                    animateCountUp(daysElement, 0, days, 2000);
+                } else {
+                    console.log("找不到 project-days 元素"); // 調試用
+                }
+            }
+
+            // 立即執行更新天數
+            updateProjectDays();
+            
+            // 平滑滾動導航功能
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100, // 考慮導航欄的偏移量
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
