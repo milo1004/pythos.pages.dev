@@ -1,5 +1,5 @@
-# milo1004.github.io
-[PythOS Official Website](https://milo1004.github.io): https://milo1004.github.io/
+## [milo1004.github.io](https://milo1004.github.io)
+[PythOS Official Website] https://milo1004.github.io/
 
 # PythOS
 
