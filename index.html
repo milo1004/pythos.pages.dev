@@ -807,6 +807,41 @@
             border: 2px solid var(--primary);
             margin-right: 0.5rem;
         }
+
+        /* 語言選擇器樣式 */
+        .language-selector {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .language-selector select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .language-selector::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -875,12 +910,19 @@
                   </span>
                   GitHub
                 </a>
+                <a href="https://discord.gg/hdr2r8UK" target="_blank" class="discord-nav-btn">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                    </svg>
+                  </span>
+                  Discord
+                </a>
             </div>
             <div class="language-selector">
                 <select id="language-select" onchange="changeLanguage(this.value)">
-                    <option value="en">English</option>
-                    <option value="zh">中文</option>
-                    <option value="ja">日本語</option>
+                    <option value="en" selected>English</option>
+                    <option value="zh">正體中文</option>
                 </select>
             </div>
         </div>
@@ -915,8 +957,8 @@
                     </a>
                     <a href="https://github.com/milo1004/PythonOS" target="_blank" class="hero-btn hero-btn-secondary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
-                          <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                          <path d="M9 18c-4.51 2-5-2-7-2"/>
                         </svg>
                         View Source
                     </a>
@@ -1088,13 +1130,23 @@
 
         <section id="beta-updates">
             <h2>BETA - Bringing Exciting Tech Advancements</h2>
-            <h2>PythOS 6.0 NewCore is Out!</h2>
-            <h3>PythOS 6.0 NewCore:</h3>
-            <h4>What's new?</h4>
-            <li>Everything! We have replaced everything in PythOS 6.0!</li>
-            <li>Convenient app development! If you want to make an app yourself, just create a .py script, drag it to the /bin folder and you're good to go!</li>
-            <p></p>
-            <a class="beta-grey-btn" style="margin-bottom:1rem; display:block; text-align:center; padding:0.7rem 0; border-radius:6px; font-weight:700; font-size:1rem; text-decoration:none;" href="https://github.com/milo1004/PythonOS" target="_blank" rel="noopener">Bring me to GitHub</a>
+            <div class="beta-content">
+                <h2>PythOS 6.0 NewCore is Out!</h2>
+                <h3>PythOS 6.0 NewCore:</h3>
+                <h4>What's new?</h4>
+                <ul>
+                    <li>Everything! We have replaced everything in PythOS 6.0!</li>
+                    <li>Convenient app development! If you want to make an app yourself, just create a .py script, drag it to the /bin folder and you're good to go!</li>
+                </ul>
+                <p></p>
+                <a class="hero-btn hero-btn-primary" href="https://github.com/milo1004/PythonOS" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                        <path d="M9 18c-4.51 2-5-2-7-2"/>
+                    </svg>
+                    Bring me to GitHub
+                </a>
+            </div>
         </section>
 
         <section id="contributors">
@@ -1109,7 +1161,7 @@
 
         <section id="project-start">
             <h2>How Long Has the Project Been Running?</h2>
-            <p>PythOS has been in development for <span id="project-days" style="font-size:2rem;font-weight:600;vertical-align:middle;">0</span> days.</p>
+            <p>PythOS has been in development for <span id="project-days" style="font-size:2rem;font-weight:600;vertical-align:middle;color:var(--primary);">0</span> days.</p>
         </section>
 
         <section id="license">
@@ -1160,9 +1212,7 @@ SOFTWARE.</code></pre>
         <section id="contact-us">
             <h2>Contact Us</h2>
             <p>If you have any problem, contact us!</p>
-            <ul style="color:#ffe500; margin-bottom:1rem;">
-                <div>Discord：<a href="https://discord.gg/hdr2r8UK" target="_blank">Join PythOS Official Discord</a></div>
-            </ul>
+            <div style="color:#ffe500; margin-bottom:1rem;">Discord：<a href="https://discord.gg/hdr2r8UK" target="_blank">Join PythOS Official Discord</a></div>
         </section>
         <p>&copy; 2025 PythOS. All rights reserved.</p>
     </footer>
@@ -1191,311 +1241,78 @@ SOFTWARE.</code></pre>
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // 平滑滾動導航
-            document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+            // Calculate project days
+            function getProjectDays() {
+                const startDate = new Date('2024-04-29T00:00:00+08:00'); // Hong Kong timezone
+                const now = new Date();
+                // Convert to millisecond difference
+                const diffTime = now.getTime() - startDate.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                console.log("Calculated days: " + diffDays); // For debugging
+                return diffDays > 0 ? diffDays : 0; // Ensure at least 0
+            }
+
+            // Number animation function
+            function animateCountUp(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentNumber = Math.floor(progress * (end - start) + start);
+                    element.textContent = currentNumber;
+                    element.style.transform = `scale(${1 + progress * 0.1})`;
+                    element.style.opacity = 0.5 + progress * 0.5;
+                    
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        element.style.transform = 'scale(1)';
+                        element.style.opacity = 1;
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // Update project days display
+            function updateProjectDays() {
+                const daysElement = document.getElementById('project-days');
+                if (daysElement) {
+                    const days = getProjectDays();
+                    console.log("Setting days: " + days); // For debugging
+                    animateCountUp(daysElement, 0, days, 2000);
+                } else {
+                    console.log("Cannot find project-days element"); // For debugging
+                }
+            }
+
+            // Execute update immediately
+            updateProjectDays();
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
                     const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
+                    const targetElement = document.querySelector(targetId);
                     
-                    if (targetSection) {
+                    if (targetElement) {
                         window.scrollTo({
-                            top: targetSection.offsetTop - 100,
+                            top: targetElement.offsetTop - 100, // Offset to account for navbar
                             behavior: 'smooth'
                         });
                     }
                 });
             });
-            
-            // 創建浮動粒子
-            const particlesContainer = document.getElementById('particles');
-            if (particlesContainer) {
-                for (let i = 0; i < 50; i++) {
-                    const particle = document.createElement('div');
-                    particle.classList.add('particle');
-                    
-                    // 隨機位置
-                    const posX = Math.random() * 100;
-                    const posY = Math.random() * 100;
-                    particle.style.left = `${posX}%`;
-                    particle.style.top = `${posY}%`;
-                    
-                    // 隨機大小
-                    const size = Math.random() * 4 + 1;
-                    particle.style.width = `${size}px`;
-                    particle.style.height = `${size}px`;
-                    
-                    // 隨機透明度
-                    const opacity = Math.random() * 0.5 + 0.1;
-                    particle.style.opacity = opacity;
-                    
-                    // 隨機動畫延遲
-                    const delay = Math.random() * 15;
-                    particle.style.animationDelay = `${delay}s`;
-                    
-                    // 隨機動畫時間
-                    const duration = Math.random() * 20 + 10;
-                    particle.style.animationDuration = `${duration}s`;
-                    
-                    particlesContainer.appendChild(particle);
-                }
-            }
-            
-            // 滾動動畫
-            const sections = document.querySelectorAll('section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-
-            // License 展開/收合（價手機）
-            function isMobile() {
-                return window.innerWidth <= 768;
-            }
-            const licenseBtn = document.querySelector('.license-toggle-btn');
-            const licenseContent = document.querySelector('.license-content');
-            if (licenseBtn && licenseContent) {
-                function updateLicenseToggle() {
-                    if (isMobile()) {
-                        licenseBtn.style.display = 'block';
-                        licenseContent.classList.remove('active');
-                        licenseBtn.textContent = 'Show License';
-                    } else {
-                        licenseBtn.style.display = 'none';
-                        licenseContent.classList.add('active');
-                    }
-                }
-                updateLicenseToggle();
-                window.addEventListener('resize', updateLicenseToggle);
-                licenseBtn.addEventListener('click', function() {
-                    if (licenseContent.classList.contains('active')) {
-                        licenseContent.classList.remove('active');
-                        licenseBtn.textContent = 'Show License';
-                    } else {
-                        licenseContent.classList.add('active');
-                        licenseBtn.textContent = 'Hide License';
-                    }
-                });
-            }
-
-            // Floating menu bar shadow effect on scroll
-            const navbar = document.querySelector('.navbar');
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 10) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-
-            // 只針對移動設備修改功能卡片
-            if (window.innerWidth <= 768) {
-                document.querySelectorAll('.feature-card').forEach(card => {
-                    const icon = card.querySelector('.feature-icon');
-                    const title = card.querySelector('.feature-title');
-                    const desc = card.querySelector('.feature-desc');
-                    
-                    // 創建標題和圖標的容器
-                    const infoDiv = document.createElement('div');
-                    infoDiv.className = 'feature-info';
-                    
-                    // 保留原有內容，但重新組織結構
-                    if (icon) infoDiv.appendChild(icon);
-                    if (title) infoDiv.appendChild(title);
-                    
-                    // 清除卡片原有內容並重新添加
-                    const cardContent = card.innerHTML;
-                    card.innerHTML = '';
-                    card.appendChild(infoDiv);
-                    if (desc) card.appendChild(desc);
-                    
-                    // 添加點擊事件
-                    card.addEventListener('click', function() {
-                        // 關閉其他已展開的卡片
-                        document.querySelectorAll('.feature-card.expanded').forEach(expandedCard => {
-                            if (expandedCard !== this) {
-                                expandedCard.classList.remove('expanded');
-                            }
-                        });
-                        
-                        // 切換當前卡片狀態
-                        this.classList.toggle('expanded');
-                    });
-                });
-            }
-
-            // Hide Beta Updates Button 只隱藏下載 beta 那一行
-            (function() {
-                const betaBtn = document.getElementById('toggle-beta-btn');
-                const betaDownloadRow = document.getElementById('beta-download-row');
-                if (betaBtn && betaDownloadRow) {
-                    let shown = true;
-                    betaBtn.textContent = 'Hide Beta Updates';
-                    betaBtn.addEventListener('click', function() {
-                        shown = !shown;
-                        betaDownloadRow.style.display = shown ? '' : 'none';
-                        betaBtn.textContent = shown ? 'Hide Beta Updates' : 'Show Beta Updates';
-                    });
-                }
-            })();
-
-            // Birthday animation on April 29th
-            function isBirthday() {
-                const now = new Date();
-                return now.getMonth() === 3 && now.getDate() === 29; // April is month 3 (0-indexed)
-            }
-
-            function playBirthdayAnimation() {
-                // Create overlay
-                const overlay = document.createElement('div');
-                overlay.id = 'birthday-overlay';
-                overlay.style.position = 'fixed';
-                overlay.style.top = '0';
-                overlay.style.left = '0';
-                overlay.style.width = '100vw';
-                overlay.style.height = '100vh';
-                overlay.style.zIndex = '9999';
-                overlay.style.pointerEvents = 'none';
-                overlay.style.background = 'transparent';
-                document.body.appendChild(overlay);
-
-                // Create congrats text
-                const text = document.createElement('div');
-                text.textContent = '🎉 Happy Birthday PythOS! 🎉';
-                text.style.position = 'absolute';
-                text.style.top = '20%';
-                text.style.left = '50%';
-                text.style.transform = 'translateX(-50%)';
-                text.style.fontSize = '2.5rem';
-                text.style.fontWeight = 'bold';
-                text.style.color = 'var(--primary)';
-                text.style.textShadow = '0 2px 10px #000, 0 0 20px var(--accent)';
-                text.style.fontFamily = 'Roboto Mono, monospace';
-                text.style.opacity = '0.95';
-                overlay.appendChild(text);
-
-                // Ribbons
-                const colors = ['#ffe500', '#fabd69', '#205c64', '#ff69b4', '#00e6e6', '#fff'];
-                for (let i = 0; i < 30; i++) {
-                    const ribbon = document.createElement('div');
-                    ribbon.className = 'birthday-ribbon';
-                    const size = Math.random() * 16 + 16;
-                    ribbon.style.position = 'absolute';
-                    ribbon.style.left = Math.random() * 100 + 'vw';
-                    ribbon.style.top = '-40px';
-                    ribbon.style.width = size + 'px';
-                    ribbon.style.height = (size * 3) + 'px';
-                    ribbon.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    ribbon.style.borderRadius = '8px';
-                    ribbon.style.opacity = '0.85';
-                    ribbon.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
-                    ribbon.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-                    ribbon.style.animation = `ribbon-fall ${3 + Math.random() * 2}s cubic-bezier(.5,.8,.5,1) forwards`;
-                    ribbon.style.animationDelay = (Math.random() * 0.8) + 's';
-                    overlay.appendChild(ribbon);
-                }
-
-                // Remove overlay after 5 seconds
-                setTimeout(() => {
-                    overlay.remove();
-                }, 5000);
-            }
-
-            // Add keyframes for ribbons
-            const style = document.createElement('style');
-            style.textContent = `
-            @keyframes ribbon-fall {
-                0% { top: -40px; opacity: 0.9; }
-                80% { opacity: 0.85; }
-                100% { top: 100vh; opacity: 0; }
-            }
-            .birthday-ribbon {
-                pointer-events: none;
-                mix-blend-mode: lighten;
-            }
-            #birthday-overlay {
-                animation: fadeInBirthday 0.5s;
-            }
-            @keyframes fadeInBirthday {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            `;
-            document.head.appendChild(style);
-
-            // Play animation if today is April 29th
-            if (isBirthday()) {
-                playBirthdayAnimation();
-            }
-
-            // Fetch and display GitHub profile icons for contributors
-            function addContributorIcons() {
-                const list = document.getElementById('contributors-list');
-                if (!list) return;
-                list.querySelectorAll('li[data-username]').forEach(li => {
-                    const username = li.getAttribute('data-username');
-                    if (!username) return;
-                    // Only add if not already present
-                    if (li.querySelector('.contrib-avatar')) return;
-                    const img = document.createElement('img');
-                    img.src = `https://github.com/${username}.png?size=40`;
-                    img.alt = `${username} avatar`;
-                    img.className = 'contrib-avatar';
-                    img.style.width = '32px';
-                    img.style.height = '32px';
-                    img.style.borderRadius = '50%';
-                    img.style.marginRight = '0.5rem';
-                    img.style.verticalAlign = 'middle';
-                    img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
-                    li.insertBefore(img, li.firstChild);
-                });
-            }
-            addContributorIcons();
-
-            // 自動計算專案天數並動畫顯示（模仿 reactbits count-up）
-            function animateCountUp(el, start, end, duration) {
-                const range = end - start;
-                let startTime = null;
-                function step(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    const progress = Math.min((currentTime - startTime) / duration, 1);
-                    el.textContent = Math.floor(progress * range + start);
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
-                    } else {
-                        el.textContent = end;
-                    }
-                }
-                requestAnimationFrame(step);
-            }
-
-            // 香港時區計算天數
-            function getHKDaysSince(startDateStr) {
-                const startDate = new Date(startDateStr + 'T00:00:00+08:00');
-                const now = new Date();
-                // 取得香港時區的今天 0:00
-                const nowHK = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' }));
-                nowHK.setHours(0,0,0,0);
-                const diffTime = nowHK - startDate;
-                return Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
-            }
-
-            const daysEl = document.getElementById('project-days');
-            if (daysEl) {
-                const diffDays = getHKDaysSince('2024-04-29');
-                animateCountUp(daysEl, 0, diffDays, 1200);
-            }
         });
+
+        // Language switching functionality
+        function changeLanguage(lang) {
+            if (lang === 'zh') {
+                window.location.href = 'zh_hk.html';
+            } else {
+                window.location.href = 'en.html';
+            }
+        }
     </script>
 </body>
 </html>
