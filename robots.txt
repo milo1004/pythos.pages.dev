@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /404.html
 Allow: /sitemap.xml
+Allow: /sitemap.txt
 Allow: /zh_hk.html
+Allow: /index.html
 Sitemap: https://milo1004.github.io/sitemap.xml
 Sitemap: https://milo1004.github.io/sitemap.txt
