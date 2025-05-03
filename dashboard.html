@@ -430,19 +430,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="settings-form">
-                <h2 class="card-title">設定</h2>
-                <form id="settingsForm">
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="newsletterCheckbox">
-                            接收 PythOS 最新消息
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-save">儲存設定</button>
-                </form>
-            </div>
         </main>
     </div>
 
@@ -528,7 +515,7 @@
                 console.log('用戶已登入：', user.email);
                 // 更新用戶資訊
                 const displayName = user.displayName || user.email.split('@')[0];
-                document.getElementById('userName').textContent = `${displayName}，歡迎回來`;
+                document.getElementById('userName').textContent = `${displayName}`;
                 document.getElementById('userEmail').textContent = user.email;
             } else {
                 console.log('用戶未登入，重定向到首頁...');
