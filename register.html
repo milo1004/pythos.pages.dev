@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS - 註冊</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
     <style>
+        /* 保持與 login.html 相同的樣式 */
         :root {
             --primary: #ffe500;
             --secondary: #205c64;
@@ -250,64 +247,84 @@
         <div id="error-message"></div>
     </div>
 
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase 配置 -->
+    <script src="firebase-config.js"></script>
+
+    <!-- 應用邏輯 -->
     <script>
+        // 顯示錯誤訊息函數
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
         // 密碼強度檢查
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const passwordChecklist = document.getElementById('passwordChecklist');
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
 
-        const requirements = {
-            length: password => password.length >= 8,
-            uppercase: password => /[A-Z]/.test(password),
-            lowercase: password => /[a-z]/.test(password),
-            number: password => /[0-9]/.test(password),
-            special: password => /[!@#$%^&*]/.test(password)
-        };
-
-        passwordInput.addEventListener('input', () => {
-            const password = passwordInput.value;
-            
-            for (const [requirement, validateFunc] of Object.entries(requirements)) {
-                const li = passwordChecklist.querySelector(`[data-requirement="${requirement}"]`);
-                if (validateFunc(password)) {
-                    li.classList.add('valid');
-                } else {
-                    li.classList.remove('valid');
+            // 更新密碼要求清單的視覺顯示
+            Object.entries(requirements).forEach(([requirement, isMet]) => {
+                const li = document.querySelector(`li[data-requirement="${requirement}"]`);
+                if (li) {
+                    if (isMet) {
+                        li.classList.add('valid');
+                    } else {
+                        li.classList.remove('valid');
+                    }
                 }
-            }
+            });
+
+            return Object.values(requirements).every(req => req);
+        }
+
+        // 密碼輸入監聽
+        document.getElementById('password').addEventListener('input', (e) => {
+            checkPasswordStrength(e.target.value);
         });
 
         // 註冊表單提交處理
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             const newsletter = document.getElementById('newsletter').checked;
 
-            // 驗證密碼
             if (password !== confirmPassword) {
                 showError('密碼不一致');
                 return;
             }
 
-            // 檢查密碼強度
-            for (const [requirement, validateFunc] of Object.entries(requirements)) {
-                if (!validateFunc(password)) {
-                    showError('密碼不符合要求');
-                    return;
-                }
+            if (!checkPasswordStrength(password)) {
+                showError('密碼不符合要求');
+                return;
             }
 
             try {
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
 
-                // 儲存用戶資料到 Firestore
+                // 儲存用戶資料
                 await db.collection('users').doc(user.uid).set({
                     email: email,
                     newsletter: newsletter,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: new Date()
                 });
 
                 window.location.href = 'dashboard.html';
@@ -322,11 +339,13 @@
                 const result = await auth.signInWithPopup(googleProvider);
                 const user = result.user;
                 
-                // 儲存用戶資料到 Firestore
+                // 儲存用戶資料
                 await db.collection('users').doc(user.uid).set({
                     email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
                     newsletter: document.getElementById('newsletter').checked,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: new Date()
                 });
 
                 window.location.href = 'dashboard.html';
@@ -334,13 +353,29 @@
                 showError(error.message);
             }
         });
-
-        // 顯示錯誤訊息
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
     </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+          authDomain: "pythos-website.firebaseapp.com",
+          projectId: "pythos-website",
+          storageBucket: "pythos-website.firebasestorage.app",
+          messagingSenderId: "781241739137",
+          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+          measurementId: "G-HE54S62K6K"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
 </body>
 </html> 
