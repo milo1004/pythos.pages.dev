@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS - 登入</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
     <style>
+        /* 保持原有的樣式 */
         :root {
             --primary: #ffe500;
             --secondary: #205c64;
@@ -214,7 +211,34 @@
         <div id="error-message"></div>
     </div>
 
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase 配置 -->
+    <script src="firebase-config.js"></script>
+
+    <!-- 應用邏輯 -->
     <script>
+        // 顯示錯誤訊息函數
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // 檢查是否已登入
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
         // 登入表單提交處理
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -243,15 +267,12 @@
                 const result = await auth.signInWithPopup(googleProvider);
                 const user = result.user;
                 
-                // 檢查用戶是否為首次登入
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (!userDoc.exists) {
-                    await db.collection('users').doc(user.uid).set({
-                        email: user.email,
-                        newsletter: document.getElementById('newsletter').checked,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                }
+                // 儲存用戶資料
+                await db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL
+                }, { merge: true });
 
                 window.location.href = 'dashboard.html';
             } catch (error) {
@@ -263,6 +284,7 @@
         document.getElementById('forgotPassword').addEventListener('click', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
+            
             if (!email) {
                 showError('請輸入電子郵件地址');
                 return;
@@ -270,18 +292,34 @@
 
             try {
                 await auth.sendPasswordResetEmail(email);
-                alert('密碼重置連結已發送到您的電子郵件');
+                alert('密碼重設連結已發送到您的電子郵件');
             } catch (error) {
                 showError(error.message);
             }
         });
-
-        // 顯示錯誤訊息
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
     </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+          authDomain: "pythos-website.firebaseapp.com",
+          projectId: "pythos-website",
+          storageBucket: "pythos-website.firebasestorage.app",
+          messagingSenderId: "781241739137",
+          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+          measurementId: "G-HE54S62K6K"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
 </body>
 </html> 
