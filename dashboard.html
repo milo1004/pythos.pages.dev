@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - Dashboard</title>
+    <title>PythOS - 儀表板</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -71,16 +71,15 @@
             border-bottom: 1px solid rgba(255, 229, 0, 0.1);
         }
 
-        .user-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-            border: 2px solid var(--primary);
+        .user-name {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            word-break: break-all;
         }
 
         .user-email {
-            color: var(--primary);
+            color: var(--accent);
             font-size: 0.9rem;
             word-break: break-all;
         }
@@ -338,7 +337,7 @@
     <div class="dashboard">
         <aside class="sidebar">
             <div class="user-info">
-                <img src="" alt="User Avatar" class="user-avatar" id="userAvatar">
+                <div class="user-name" id="userName">[username]</div>
                 <div class="user-email" id="userEmail"></div>
             </div>
             <nav>
@@ -528,8 +527,9 @@
             if (user) {
                 console.log('用戶已登入：', user.email);
                 // 更新用戶資訊
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('userName').textContent = `${displayName}，歡迎回來`;
                 document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userAvatar').src = user.photoURL || 'https://www.gravatar.com/avatar/' + md5(user.email) + '?d=identicon';
             } else {
                 console.log('用戶未登入，重定向到首頁...');
                 window.location.href = 'index.html';
