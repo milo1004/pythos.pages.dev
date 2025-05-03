@@ -135,6 +135,22 @@
             justify-content: center;
         }
 
+        .login-btn {
+            background: rgba(255, 229, 0, 0.1);
+            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: rgba(255, 229, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .login-btn::after {
+            display: none;
+        }
+
         .menu-toggle {
             display: none;
         }
@@ -853,6 +869,16 @@
                 <span>PythOS</span>
             </a>
             <div class="nav-links">
+                <a href="login.html" class="nav-link login-btn">
+                  <span class="nav-icon">
+                    <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                      <polyline points="10 17 15 12 10 7"/>
+                      <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                  </span>
+                  Login
+                </a>
                 <a href="#hero">
                   <span class="nav-icon"> 
                     <svg width="20" height="20" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
