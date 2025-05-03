@@ -128,6 +128,40 @@
             transform: translateY(-2px);
         }
 
+        .language-selector {
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        .language-selector select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .language-selector::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -319,7 +353,15 @@
         <main class="main-content">
             <header class="header">
                 <h1 class="welcome-message">歡迎回來！</h1>
-                <button class="btn btn-logout" id="logoutBtn">登出</button>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="language-selector">
+                        <select id="language-select" onchange="changeLanguage(this.value)">
+                            <option value="zh" selected>正體中文</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-logout" id="logoutBtn">登出</button>
+                </div>
             </header>
 
             <div class="dashboard-grid">
@@ -386,6 +428,68 @@
     </div>
 
     <script>
+        // 語言切換功能
+        function changeLanguage(lang) {
+            // 儲存語言偏好
+            localStorage.setItem('preferred_language', lang);
+            
+            // 更新頁面文字
+            const translations = {
+                'zh': {
+                    'welcome': '歡迎回來！',
+                    'logout': '登出',
+                    'overview': '概覽',
+                    'system_status': '系統狀態',
+                    'version': '版本',
+                    'update_time': '更新時間',
+                    'news': '最新消息',
+                    'developer_update': '開發者更新',
+                    'new_features': '全新的核心系統，提供更好的性能和更多新功能。',
+                    'dev_desc': '新增應用程式開發功能，現在可以更容易地創建自己的應用。'
+                },
+                'en': {
+                    'welcome': 'Welcome Back!',
+                    'logout': 'Logout',
+                    'overview': 'Overview',
+                    'system_status': 'System Status',
+                    'version': 'Version',
+                    'update_time': 'Last Update',
+                    'news': 'Latest News',
+                    'developer_update': 'Developer Update',
+                    'new_features': 'New core system with better performance and more features.',
+                    'dev_desc': 'Added app development features, making it easier to create your own applications.'
+                }
+            };
+
+            const t = translations[lang];
+
+            // 更新所有需要翻譯的元素
+            document.querySelector('.welcome-message').textContent = t.welcome;
+            document.getElementById('logoutBtn').textContent = t.logout;
+            document.querySelector('a[href="#overview"]').textContent = t.overview;
+            document.querySelector('a[href="#news"]').textContent = t.system_status;
+            document.querySelectorAll('.card-title')[0].textContent = t.system_status;
+            document.querySelectorAll('.card-title')[1].textContent = t.news;
+            document.querySelector('[style*="color: #ffe500"]').textContent = t.version;
+            document.querySelectorAll('[style*="color: #ffe500"]')[1].textContent = t.update_time;
+            
+            // 更新新聞內容
+            const newsItems = document.querySelectorAll('.news-title, .news-desc');
+            newsItems[0].textContent = 'PythOS 6.0 NewCore Release';
+            newsItems[1].textContent = t.new_features;
+            newsItems[2].textContent = t.developer_update;
+            newsItems[3].textContent = t.dev_desc;
+        }
+
+        // 頁面載入時檢查並應用已保存的語言偏好
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLanguage = localStorage.getItem('preferred_language');
+            if (savedLanguage) {
+                document.getElementById('language-select').value = savedLanguage;
+                changeLanguage(savedLanguage);
+            }
+        });
+
         // 檢查用戶登入狀態
         auth.onAuthStateChanged(async (user) => {
             if (user) {
