@@ -12,9 +12,10 @@ const firebaseConfig = {
 // 初始化 Firebase
 firebase.initializeApp(firebaseConfig);
 
-// 獲取 Auth 和 Firestore 實例
+// 獲取 Firebase 服務實例
 const auth = firebase.auth();
 const db = firebase.firestore();
+const analytics = firebase.analytics();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-// Google 登入提供者
-const googleProvider = new firebase.auth.GoogleAuthProvider(); 
+export { auth, db, googleProvider }; 
