@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PythOS - 註冊</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <style>
+        :root {
+            --primary: #ffe500;
+            --secondary: #205c64;
+            --accent: #fabd69;
+            --dark: #0a0a0a;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: #1a1a1a;
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 6px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-google {
+            background: #fff;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-google:hover {
+            background: #f1f1f1;
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: rgba(255, 229, 0, 0.2);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            color: var(--accent);
+        }
+
+        .newsletter-checkbox {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .newsletter-checkbox input[type="checkbox"] {
+            width: auto;
+        }
+
+        #error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+        }
+
+        .password-requirements ul {
+            list-style: none;
+            margin-top: 0.3rem;
+        }
+
+        .password-requirements li {
+            margin-bottom: 0.2rem;
+        }
+
+        .password-requirements li.valid {
+            color: #4CAF50;
+        }
+
+        .password-requirements li::before {
+            content: '•';
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">
+            <img src="PythOS.png" alt="PythOS Logo">
+        </div>
+        <h1>註冊 PythOS</h1>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="email">電子郵件</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密碼</label>
+                <input type="password" id="password" required>
+                <div class="password-requirements">
+                    密碼要求：
+                    <ul id="passwordChecklist">
+                        <li data-requirement="length">至少 8 個字元</li>
+                        <li data-requirement="uppercase">至少一個大寫字母</li>
+                        <li data-requirement="lowercase">至少一個小寫字母</li>
+                        <li data-requirement="number">至少一個數字</li>
+                        <li data-requirement="special">至少一個特殊字元</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">確認密碼</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+            <div class="newsletter-checkbox">
+                <input type="checkbox" id="newsletter" checked>
+                <label for="newsletter">訂閱 PythOS 最新消息</label>
+            </div>
+            <button type="submit" class="btn btn-primary">註冊</button>
+        </form>
+        <div class="divider">或</div>
+        <button id="googleRegister" class="btn btn-google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18">
+            使用 Google 帳號註冊
+        </button>
+        <div class="links">
+            <a href="login.html">已有帳號？立即登入</a>
+        </div>
+        <div id="error-message"></div>
+    </div>
+
+    <script>
+        // 密碼強度檢查
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordChecklist = document.getElementById('passwordChecklist');
+
+        const requirements = {
+            length: password => password.length >= 8,
+            uppercase: password => /[A-Z]/.test(password),
+            lowercase: password => /[a-z]/.test(password),
+            number: password => /[0-9]/.test(password),
+            special: password => /[!@#$%^&*]/.test(password)
+        };
+
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            
+            for (const [requirement, validateFunc] of Object.entries(requirements)) {
+                const li = passwordChecklist.querySelector(`[data-requirement="${requirement}"]`);
+                if (validateFunc(password)) {
+                    li.classList.add('valid');
+                } else {
+                    li.classList.remove('valid');
+                }
+            }
+        });
+
+        // 註冊表單提交處理
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const newsletter = document.getElementById('newsletter').checked;
+
+            // 驗證密碼
+            if (password !== confirmPassword) {
+                showError('密碼不一致');
+                return;
+            }
+
+            // 檢查密碼強度
+            for (const [requirement, validateFunc] of Object.entries(requirements)) {
+                if (!validateFunc(password)) {
+                    showError('密碼不符合要求');
+                    return;
+                }
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // 儲存用戶資料到 Firestore
+                await db.collection('users').doc(user.uid).set({
+                    email: email,
+                    newsletter: newsletter,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        // Google 註冊處理
+        document.getElementById('googleRegister').addEventListener('click', async () => {
+            try {
+                const result = await auth.signInWithPopup(googleProvider);
+                const user = result.user;
+                
+                // 儲存用戶資料到 Firestore
+                await db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                    newsletter: document.getElementById('newsletter').checked,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        // 顯示錯誤訊息
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html> 
