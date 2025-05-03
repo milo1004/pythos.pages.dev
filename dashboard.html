@@ -3,12 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - 儀表板</title>
+    <title>PythOS - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <script>
+        // Firebase 配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+            authDomain: "pythos-website.firebaseapp.com",
+            projectId: "pythos-website",
+            storageBucket: "pythos-website.firebasestorage.app",
+            messagingSenderId: "781241739137",
+            appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+            measurementId: "G-HE54S62K6K"
+        };
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // 獲取 Firebase 服務實例
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const analytics = firebase.analytics();
+    </script>
     <style>
         :root {
             --primary: #ffe500;
@@ -490,24 +510,29 @@
             }
         });
 
+        // 登出處理
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                console.log('開始登出程序...');
+                await firebase.auth().signOut();
+                console.log('登出成功，重定向到首頁...');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('登出錯誤：', error);
+                alert('登出時發生錯誤：' + error.message);
+            }
+        });
+
         // 檢查用戶登入狀態
-        auth.onAuthStateChanged(async (user) => {
+        firebase.auth().onAuthStateChanged((user) => {
             if (user) {
+                console.log('用戶已登入：', user.email);
                 // 更新用戶資訊
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('userAvatar').src = user.photoURL || 'https://www.gravatar.com/avatar/' + md5(user.email) + '?d=identicon';
             } else {
-                window.location.href = 'login.html';
-            }
-        });
-
-        // 登出處理
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            try {
-                await auth.signOut();
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error('登出錯誤：', error);
+                console.log('用戶未登入，重定向到首頁...');
+                window.location.href = 'index.html';
             }
         });
 
@@ -525,28 +550,5 @@
             });
         });
     </script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
-          authDomain: "pythos-website.firebaseapp.com",
-          projectId: "pythos-website",
-          storageBucket: "pythos-website.firebasestorage.app",
-          messagingSenderId: "781241739137",
-          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
-          measurementId: "G-HE54S62K6K"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>
 </body>
 </html> 
