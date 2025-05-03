@@ -223,8 +223,34 @@
     <!-- 應用邏輯 -->
     <script>
         // 顯示錯誤訊息函數
-        function showError(message) {
+        function showError(error) {
             const errorDiv = document.getElementById('error-message');
+            let message = '';
+            
+            // 根據錯誤代碼顯示對應的中文錯誤訊息
+            switch(error.code) {
+                case 'auth/invalid-email':
+                    message = '請輸入有效的電子郵件地址';
+                    break;
+                case 'auth/user-disabled':
+                    message = '此帳號已被停用';
+                    break;
+                case 'auth/user-not-found':
+                    message = '找不到此電子郵件對應的帳號';
+                    break;
+                case 'auth/wrong-password':
+                    message = '密碼錯誤';
+                    break;
+                case 'auth/network-request-failed':
+                    message = '網路連線失敗，請檢查您的網路連線';
+                    break;
+                case 'auth/popup-closed-by-user':
+                    message = 'Google 登入視窗被關閉，請重試';
+                    break;
+                default:
+                    message = error.message || '登入失敗，請稍後再試';
+            }
+            
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
             setTimeout(() => {
@@ -252,12 +278,14 @@
                 
                 // 更新用戶的訂閱狀態
                 await db.collection('users').doc(user.uid).set({
-                    newsletter: newsletter
+                    newsletter: newsletter,
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                showError(error.message);
+                console.error('登入錯誤：', error);
+                showError(error);
             }
         });
 
@@ -271,12 +299,14 @@
                 await db.collection('users').doc(user.uid).set({
                     email: user.email,
                     displayName: user.displayName,
-                    photoURL: user.photoURL
+                    photoURL: user.photoURL,
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                showError(error.message);
+                console.error('Google 登入錯誤：', error);
+                showError(error);
             }
         });
 
@@ -286,7 +316,7 @@
             const email = document.getElementById('email').value;
             
             if (!email) {
-                showError('請輸入電子郵件地址');
+                showError({ code: 'auth/invalid-email', message: '請輸入電子郵件地址' });
                 return;
             }
 
@@ -294,7 +324,8 @@
                 await auth.sendPasswordResetEmail(email);
                 alert('密碼重設連結已發送到您的電子郵件');
             } catch (error) {
-                showError(error.message);
+                console.error('重設密碼錯誤：', error);
+                showError(error);
             }
         });
     </script>
