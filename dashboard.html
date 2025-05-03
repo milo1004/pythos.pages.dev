@@ -130,9 +130,10 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1.5rem;
             margin-bottom: 2rem;
+            max-width: 1200px;
         }
 
         .dashboard-card {
@@ -140,18 +141,28 @@
             border-radius: 12px;
             padding: 1.5rem;
             border: 1px solid rgba(255, 229, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 229, 0, 0.3);
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
         }
 
         .card-title {
             color: var(--primary);
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            margin: 0;
         }
 
         .card-content {
@@ -160,11 +171,13 @@
 
         .news-list {
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .news-item {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -175,19 +188,21 @@
         }
 
         .news-date {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--accent);
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
         }
 
         .news-title {
             color: var(--light);
-            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
         }
 
         .news-desc {
-            font-size: 0.9rem;
             color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         .settings-form {
@@ -228,10 +243,39 @@
 
             .sidebar {
                 display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
 
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+            .sidebar.active {
+                display: block;
+                transform: translateX(0);
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .header {
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-message {
+                font-size: 1.2rem;
+            }
+
+            .dashboard-card {
+                padding: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -265,26 +309,7 @@
                                 <line x1="16" y1="17" x2="8" y2="17"/>
                                 <polyline points="10 9 9 9 8 9"/>
                             </svg>
-                            最新消息
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#downloads" class="nav-link">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="7 10 12 15 17 10"/>
-                                <line x1="12" y1="15" x2="12" y2="3"/>
-                            </svg>
-                            下載
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#settings" class="nav-link">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                            </svg>
-                            設定
+                            系統狀態
                         </a>
                     </li>
                 </ul>
@@ -303,38 +328,45 @@
                         <h2 class="card-title">系統狀態</h2>
                     </div>
                     <div class="card-content">
-                        <p>最新版本：PythOS 6.0 NewCore</p>
-                        <p>上次更新：2024/04/29</p>
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="24" height="24" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                                <span style="color: #ffe500;">版本</span>
+                            </div>
+                            <div>PythOS 6.0 NewCore</div>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="24" height="24" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span style="color: #ffe500;">更新時間</span>
+                            </div>
+                            <div>2024/04/29</div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="dashboard-card">
                     <div class="card-header">
-                        <h2 class="card-title">訂閱狀態</h2>
+                        <h2 class="card-title">最新消息</h2>
                     </div>
                     <div class="card-content">
-                        <p id="newsletterStatus">正在載入...</p>
+                        <ul class="news-list">
+                            <li class="news-item">
+                                <div class="news-date">2024/04/29</div>
+                                <h3 class="news-title">PythOS 6.0 NewCore 發布</h3>
+                                <p class="news-desc">全新的核心系統，提供更好的性能和更多新功能。</p>
+                            </li>
+                            <li class="news-item">
+                                <div class="news-date">2024/04/28</div>
+                                <h3 class="news-title">開發者更新</h3>
+                                <p class="news-desc">新增應用程式開發功能，現在可以更容易地創建自己的應用。</p>
+                            </li>
+                        </ul>
                     </div>
-                </div>
-            </div>
-
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <h2 class="card-title">最新消息</h2>
-                </div>
-                <div class="card-content">
-                    <ul class="news-list">
-                        <li class="news-item">
-                            <div class="news-date">2024/04/29</div>
-                            <h3 class="news-title">PythOS 6.0 NewCore 發布</h3>
-                            <p class="news-desc">全新的核心系統，提供更好的性能和更多新功能。</p>
-                        </li>
-                        <li class="news-item">
-                            <div class="news-date">2024/04/28</div>
-                            <h3 class="news-title">開發者更新</h3>
-                            <p class="news-desc">新增應用程式開發功能，現在可以更容易地創建自己的應用。</p>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
@@ -360,15 +392,6 @@
                 // 更新用戶資訊
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('userAvatar').src = user.photoURL || 'https://www.gravatar.com/avatar/' + md5(user.email) + '?d=identicon';
-
-                // 獲取用戶設定
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    document.getElementById('newsletterStatus').textContent = 
-                        userData.newsletter ? '已訂閱最新消息' : '未訂閱最新消息';
-                    document.getElementById('newsletterCheckbox').checked = userData.newsletter;
-                }
             } else {
                 window.location.href = 'login.html';
             }
@@ -381,27 +404,6 @@
                 window.location.href = 'login.html';
             } catch (error) {
                 console.error('登出錯誤：', error);
-            }
-        });
-
-        // 設定表單處理
-        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const newsletter = document.getElementById('newsletterCheckbox').checked;
-
-            try {
-                await db.collection('users').doc(user.uid).update({
-                    newsletter: newsletter
-                });
-                document.getElementById('newsletterStatus').textContent = 
-                    newsletter ? '已訂閱最新消息' : '未訂閱最新消息';
-                alert('設定已更新');
-            } catch (error) {
-                console.error('更新設定錯誤：', error);
-                alert('更新設定失敗');
             }
         });
 
