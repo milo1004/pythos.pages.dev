@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - register</title>
+    <title>PythOS - Register</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* 保持與 login.html 相同的樣式 */
@@ -199,6 +199,42 @@
             content: '•';
             margin-right: 0.5rem;
         }
+
+        .btn-google img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1001;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: var(--dark);
+        }
     </style>
 </head>
 <body>
@@ -206,43 +242,49 @@
         <div class="logo">
             <img src="PythOS.png" alt="PythOS Logo">
         </div>
-        <h1>註冊 PythOS</h1>
+        <h1>Register PythOS</h1>
+        <div class="language-selector">
+            <button onclick="langManager.setLanguage('en')" class="lang-btn" data-lang="en">English</button>
+            <button onclick="langManager.setLanguage('zh_hk')" class="lang-btn" data-lang="zh_hk">繁體中文</button>
+        </div>
         <form id="registerForm">
             <div class="form-group">
-                <label for="email">電子郵件</label>
+                <label for="email">Email</label>
                 <input type="email" id="email" required>
             </div>
             <div class="form-group">
-                <label for="password">密碼</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" required>
                 <div class="password-requirements">
-                    密碼要求：
+                    Password requirements:
                     <ul id="passwordChecklist">
-                        <li data-requirement="length">至少 8 個字元</li>
-                        <li data-requirement="uppercase">至少一個大寫字母</li>
-                        <li data-requirement="lowercase">至少一個小寫字母</li>
-                        <li data-requirement="number">至少一個數字</li>
-                        <li data-requirement="special">至少一個特殊字元</li>
+                        <li data-requirement="length">At least 8 characters</li>
+                        <li data-requirement="uppercase">At least one uppercase letter</li>
+                        <li data-requirement="lowercase">At least one lowercase letter</li>
+                        <li data-requirement="number">At least one number</li>
+                        <li data-requirement="special">At least one special character</li>
                     </ul>
                 </div>
             </div>
             <div class="form-group">
-                <label for="confirmPassword">確認密碼</label>
+                <label for="confirmPassword">Confirm Password</label>
                 <input type="password" id="confirmPassword" required>
             </div>
             <div class="newsletter-checkbox">
                 <input type="checkbox" id="newsletter" checked>
-                <label for="newsletter">訂閱 PythOS 最新消息</label>
+                <label for="newsletter">Subscribe to PythOS newsletter</label>
             </div>
-            <button type="submit" class="btn btn-primary">註冊</button>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
-        <div class="divider">或</div>
+        <div class="divider">or</div>
         <button id="googleRegister" class="btn btn-google">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18">
-            使用 Google 帳號註冊
+            Continue with Google
         </button>
         <div class="links">
-            <a href="login.html">已有帳號？立即登入</a>
+            <a href="login.html">Already have an account? Login</a>
+            <br>
+            <a href="login.html#reset">Forgot Password?</a>
         </div>
         <div id="error-message"></div>
     </div>
