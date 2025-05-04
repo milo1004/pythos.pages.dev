@@ -109,18 +109,29 @@
         }
 
         .btn-google {
-            background: #fff;
-            color: #333;
+            background: #ffffff;
+            color: #757575;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
             margin-top: 1rem;
+            padding: 0.6rem;
+            font-size: 0.9rem;
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         .btn-google:hover {
-            background: #f1f1f1;
-            transform: translateY(-2px);
+            background: #f8f9fa;
+            border-color: #dadce0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+
+        .btn-google img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
         }
 
         .divider {
@@ -284,7 +295,7 @@
         </form>
         <div class="divider">or</div>
         <button type="button" class="btn btn-google" id="googleLogin">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="16" height="16">
             Continue with Google
         </button>
         <div class="links">
