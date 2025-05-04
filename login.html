@@ -251,52 +251,7 @@
         }
 
         .language-selector {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-        }
-
-        .language-selector select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: rgba(26, 26, 26, 0.9);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 0.5rem 2rem 0.5rem 1rem;
-            border-radius: 6px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .language-selector select:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--accent);
-        }
-
-        .language-selector::after {
-            content: '▼';
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            pointer-events: none;
-            font-size: 0.8rem;
-        }
-
-        .language-selector select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(250, 189, 105, 0.2);
-        }
-
-        .btn-google img {
-            width: 18px;
-            height: 18px;
+            display: none;
         }
     </style>
 
@@ -307,58 +262,52 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
 </head>
 <body>
-    <div class="language-selector">
-        <select id="language-select" onchange="changeLanguage(this.value)">
-            <option value="zh" selected>正體中文</option>
-            <option value="en">English</option>
-        </select>
-    </div>
     <div class="login-container">
         <div class="logo">
             <img src="PythOS.png" alt="PythOS Logo">
         </div>
-        <h1 data-i18n="login.title">Login</h1>
+        <h1>Login</h1>
         <form id="loginForm">
             <div class="form-group">
-                <label for="email" data-i18n="login.email">Email</label>
-                <input type="email" id="email" data-i18n-placeholder="login.email" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Email" required>
             </div>
             <div class="form-group">
-                <label for="password" data-i18n="login.password">Password</label>
-                <input type="password" id="password" data-i18n-placeholder="login.password" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Password" required>
             </div>
             <div class="newsletter-checkbox">
                 <input type="checkbox" id="newsletter">
-                <label for="newsletter" data-i18n="login.newsletter">Subscribe to newsletter</label>
+                <label for="newsletter">Subscribe to newsletter</label>
             </div>
-            <button type="submit" class="btn btn-primary" data-i18n="login.loginButton">Login</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
-        <div class="divider" data-i18n="or">or</div>
+        <div class="divider">or</div>
         <button type="button" class="btn btn-google" id="googleLogin">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-            <span data-i18n="login.googleLogin">Continue with Google</span>
+            Continue with Google
         </button>
         <div class="links">
-            <button class="reset-password-btn" id="resetPasswordBtn" data-i18n="login.forgotPassword">Forgot Password?</button>
+            <button class="reset-password-btn" id="resetPasswordBtn">Forgot Password?</button>
             <p>
-                <span data-i18n="login.noAccount">Don't have an account?</span>
-                <a href="register.html" data-i18n="login.signUp">Sign up</a>
+                Don't have an account?
+                <a href="register.html">Sign up</a>
             </p>
         </div>
         <div id="error-message"></div>
     </div>
 
-    <!-- 密碼重設模態框 -->
+    <!-- Reset Password Modal -->
     <div id="resetPasswordModal" class="modal">
         <div class="modal-content">
-            <h2 data-i18n="resetPassword.title">Reset Password</h2>
+            <h2>Reset Password</h2>
             <form id="resetPasswordForm">
                 <div class="form-group">
-                    <label for="resetEmail" data-i18n="resetPassword.email">Email</label>
-                    <input type="email" id="resetEmail" data-i18n-placeholder="resetPassword.email" required>
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" placeholder="Email" required>
                 </div>
-                <button type="submit" class="btn btn-primary" data-i18n="resetPassword.sendButton">Send Reset Link</button>
-                <button type="button" class="btn btn-secondary" id="closeModal" data-i18n="resetPassword.backToLogin">Back to Login</button>
+                <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                <button type="button" class="btn btn-secondary" id="closeModal">Back to Login</button>
             </form>
         </div>
     </div>
