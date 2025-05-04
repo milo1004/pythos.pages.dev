@@ -59,12 +59,22 @@
             margin: 0 auto 1rem;
             border: 3px solid var(--primary);
             overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .user-avatar .initial {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
         }
 
         .user-name {
@@ -334,7 +344,8 @@
         <aside class="sidebar">
             <div class="user-info">
                 <div class="user-avatar">
-                    <img id="userAvatar" src="https://www.gravatar.com/avatar/default?s=200" alt="User Avatar">
+                    <div class="initial" id="userInitial"></div>
+                    <img id="userAvatar" style="display: none;" alt="User Avatar">
                 </div>
                 <div class="user-name" id="userName">[username]</div>
                 <div class="user-email" id="userEmail"></div>
@@ -533,13 +544,25 @@
                 console.log('用戶已登入：', user.email);
                 // 更新用戶資訊
                 const displayName = user.displayName || user.email.split('@')[0];
-                document.getElementById('userName').textContent = `${displayName}`;
+                document.getElementById('userName').textContent = displayName;
                 document.getElementById('userEmail').textContent = user.email;
                 
                 // 更新用戶頭像
-                const emailHash = CryptoJS.MD5(user.email.toLowerCase()).toString();
-                const avatarUrl = `https://www.gravatar.com/avatar/${emailHash}?s=200&d=identicon`;
-                document.getElementById('userAvatar').src = avatarUrl;
+                const avatarElement = document.getElementById('userAvatar');
+                const initialElement = document.getElementById('userInitial');
+                
+                if (user.photoURL) {
+                    // 如果用戶有頭像（例如從 Google 登入），顯示頭像
+                    avatarElement.src = user.photoURL;
+                    avatarElement.style.display = 'block';
+                    initialElement.style.display = 'none';
+                } else {
+                    // 如果沒有頭像，顯示名字首字母
+                    const initial = displayName.charAt(0);
+                    initialElement.textContent = initial;
+                    initialElement.style.display = 'flex';
+                    avatarElement.style.display = 'none';
+                }
             } else {
                 console.log('用戶未登入，重定向到首頁...');
                 window.location.href = 'index.html';
