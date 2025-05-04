@@ -151,6 +151,23 @@
             display: none;
         }
 
+        .staff-btn {
+            background: rgba(250, 189, 105, 0.1);
+            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+            color: var(--accent) !important;
+        }
+
+        .staff-btn:hover {
+            background: rgba(250, 189, 105, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .staff-btn::after {
+            display: none;
+        }
+
         .menu-toggle {
             display: none;
         }
@@ -858,6 +875,24 @@
             pointer-events: none;
             font-size: 0.8rem;
         }
+
+        .news-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .edit-link {
+            color: var(--accent);
+            text-decoration: none;
+            margin-left: 1rem;
+        }
+
+        .edit-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -943,6 +978,15 @@
                     </svg>
                   </span>
                   Discord
+                </a>
+                <a href="staff.html" class="staff-btn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    Staff
                 </a>
             </div>
             <div class="language-selector">
