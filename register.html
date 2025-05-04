@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - 登入</title>
+    <title>PythOS - register</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 保持原有的樣式 */
+        /* 保持與 login.html 相同的樣式 */
         :root {
             --primary: #ffe500;
             --secondary: #205c64;
@@ -31,7 +31,7 @@
             align-items: center;
         }
 
-        .login-container {
+        .register-container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             padding: 2rem;
@@ -175,15 +175,39 @@
             margin-top: 1rem;
             display: none;
         }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+        }
+
+        .password-requirements ul {
+            list-style: none;
+            margin-top: 0.3rem;
+        }
+
+        .password-requirements li {
+            margin-bottom: 0.2rem;
+        }
+
+        .password-requirements li.valid {
+            color: #4CAF50;
+        }
+
+        .password-requirements li::before {
+            content: '•';
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="register-container">
         <div class="logo">
             <img src="PythOS.png" alt="PythOS Logo">
         </div>
-        <h1>登入 PythOS</h1>
-        <form id="loginForm">
+        <h1>註冊 PythOS</h1>
+        <form id="registerForm">
             <div class="form-group">
                 <label for="email">電子郵件</label>
                 <input type="email" id="email" required>
@@ -191,22 +215,34 @@
             <div class="form-group">
                 <label for="password">密碼</label>
                 <input type="password" id="password" required>
+                <div class="password-requirements">
+                    密碼要求：
+                    <ul id="passwordChecklist">
+                        <li data-requirement="length">至少 8 個字元</li>
+                        <li data-requirement="uppercase">至少一個大寫字母</li>
+                        <li data-requirement="lowercase">至少一個小寫字母</li>
+                        <li data-requirement="number">至少一個數字</li>
+                        <li data-requirement="special">至少一個特殊字元</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">確認密碼</label>
+                <input type="password" id="confirmPassword" required>
             </div>
             <div class="newsletter-checkbox">
-                <input type="checkbox" id="newsletter">
+                <input type="checkbox" id="newsletter" checked>
                 <label for="newsletter">訂閱 PythOS 最新消息</label>
             </div>
-            <button type="submit" class="btn btn-primary">登入</button>
+            <button type="submit" class="btn btn-primary">註冊</button>
         </form>
         <div class="divider">或</div>
-        <button id="googleLogin" class="btn btn-google">
+        <button id="googleRegister" class="btn btn-google">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18">
-            使用 Google 帳號繼續
+            使用 Google 帳號註冊
         </button>
         <div class="links">
-            <a href="register.html">還沒有帳號？立即註冊</a>
-            <br>
-            <a href="#" id="forgotPassword">忘記密碼？</a>
+            <a href="login.html">已有帳號？立即登入</a>
         </div>
         <div id="error-message"></div>
     </div>
@@ -228,27 +264,31 @@
             let message = '';
             
             // 根據錯誤代碼顯示對應的中文錯誤訊息
-            switch(error.code) {
-                case 'auth/invalid-email':
-                    message = '請輸入有效的電子郵件地址';
-                    break;
-                case 'auth/user-disabled':
-                    message = '此帳號已被停用';
-                    break;
-                case 'auth/user-not-found':
-                    message = '找不到此電子郵件對應的帳號';
-                    break;
-                case 'auth/wrong-password':
-                    message = '密碼錯誤';
-                    break;
-                case 'auth/network-request-failed':
-                    message = '網路連線失敗，請檢查您的網路連線';
-                    break;
-                case 'auth/popup-closed-by-user':
-                    message = 'Google 登入視窗被關閉，請重試';
-                    break;
-                default:
-                    message = error.message || '登入失敗，請稍後再試';
+            if (typeof error === 'string') {
+                message = error;
+            } else {
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        message = '此電子郵件已被註冊';
+                        break;
+                    case 'auth/invalid-email':
+                        message = '請輸入有效的電子郵件地址';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        message = '電子郵件/密碼註冊功能未啟用';
+                        break;
+                    case 'auth/weak-password':
+                        message = '密碼強度不足';
+                        break;
+                    case 'auth/network-request-failed':
+                        message = '網路連線失敗，請檢查您的網路連線';
+                        break;
+                    case 'auth/popup-closed-by-user':
+                        message = 'Google 註冊視窗被關閉，請重試';
+                        break;
+                    default:
+                        message = error.message || '註冊失敗，請稍後再試';
+                }
             }
             
             errorDiv.textContent = message;
@@ -258,41 +298,82 @@
             }, 5000);
         }
 
-        // 檢查是否已登入
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                window.location.href = 'dashboard.html';
-            }
+        // 密碼強度檢查
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            // 更新密碼要求清單的視覺顯示
+            Object.entries(requirements).forEach(([requirement, isMet]) => {
+                const li = document.querySelector(`li[data-requirement="${requirement}"]`);
+                if (li) {
+                    if (isMet) {
+                        li.classList.add('valid');
+                    } else {
+                        li.classList.remove('valid');
+                    }
+                }
+            });
+
+            return Object.values(requirements).every(req => req);
+        }
+
+        // 密碼輸入監聽
+        document.getElementById('password').addEventListener('input', (e) => {
+            checkPasswordStrength(e.target.value);
         });
 
-        // 登入表單提交處理
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // 註冊表單提交處理
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             const newsletter = document.getElementById('newsletter').checked;
 
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                // 更新用戶的訂閱狀態
-                await db.collection('users').doc(user.uid).set({
-                    newsletter: newsletter,
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+            if (password !== confirmPassword) {
+                showError('密碼不一致');
+                return;
+            }
 
+            if (!checkPasswordStrength(password)) {
+                showError('密碼不符合要求');
+                return;
+            }
+
+            try {
+                console.log('開始註冊程序...');
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                console.log('註冊成功，正在建立用戶資料...');
+                const user = userCredential.user;
+
+                // 儲存用戶資料
+                await db.collection('users').doc(user.uid).set({
+                    email: email,
+                    newsletter: newsletter,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                console.log('用戶資料建立完成，重定向到儀表板...');
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error('登入錯誤：', error);
+                console.error('註冊錯誤：', error);
                 showError(error);
             }
         });
 
-        // Google 登入處理
-        document.getElementById('googleLogin').addEventListener('click', async () => {
+        // Google 註冊處理
+        document.getElementById('googleRegister').addEventListener('click', async () => {
             try {
+                console.log('開始 Google 註冊程序...');
                 const result = await auth.signInWithPopup(googleProvider);
+                console.log('Google 註冊成功，正在建立用戶資料...');
                 const user = result.user;
                 
                 // 儲存用戶資料
@@ -300,31 +381,15 @@
                     email: user.email,
                     displayName: user.displayName,
                     photoURL: user.photoURL,
+                    newsletter: document.getElementById('newsletter').checked,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                });
 
+                console.log('用戶資料建立完成，重定向到儀表板...');
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error('Google 登入錯誤：', error);
-                showError(error);
-            }
-        });
-
-        // 忘記密碼處理
-        document.getElementById('forgotPassword').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            
-            if (!email) {
-                showError({ code: 'auth/invalid-email', message: '請輸入電子郵件地址' });
-                return;
-            }
-
-            try {
-                await auth.sendPasswordResetEmail(email);
-                alert('密碼重設連結已發送到您的電子郵件');
-            } catch (error) {
-                console.error('重設密碼錯誤：', error);
+                console.error('Google 註冊錯誤：', error);
                 showError(error);
             }
         });
