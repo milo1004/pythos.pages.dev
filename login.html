@@ -252,17 +252,16 @@
 
         .language-selector {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1001;
-            position: relative;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
         }
 
         .language-selector select {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(26, 26, 26, 0.9);
             border: 1px solid var(--primary);
             color: var(--primary);
             padding: 0.5rem 2rem 0.5rem 1rem;
@@ -314,7 +313,6 @@
             <option value="en">English</option>
         </select>
     </div>
-
     <div class="login-container">
         <div class="logo">
             <img src="PythOS.png" alt="PythOS Logo">
@@ -370,14 +368,81 @@
     <script src="js/translations.js"></script>
     <script src="js/languageManager.js"></script>
     <script>
-        // 初始化語言管理器
-        document.addEventListener('DOMContentLoaded', () => {
-            // 設置當前語言按鈕的活動狀態
-            const currentLang = localStorage.getItem('language') || 'en';
-            document.querySelector(`[value="${currentLang}"]`).selected = true;
+        // 語言切換功能
+        function changeLanguage(lang) {
+            // 儲存語言偏好
+            localStorage.setItem('preferred_language', lang);
             
-            // 更新頁面內容
-            langManager.updatePageContent();
+            // 更新頁面文字
+            const translations = {
+                'zh': {
+                    'login.title': '登入',
+                    'login.email': '電子郵件',
+                    'login.password': '密碼',
+                    'login.loginButton': '登入',
+                    'login.newsletter': '訂閱電子報',
+                    'login.googleLogin': '使用 Google 帳號繼續',
+                    'login.forgotPassword': '忘記密碼？',
+                    'login.noAccount': '還沒有帳號？',
+                    'login.signUp': '註冊',
+                    'or': '或',
+                    'resetPassword.title': '重設密碼',
+                    'resetPassword.email': '電子郵件',
+                    'resetPassword.sendButton': '發送重設連結',
+                    'resetPassword.backToLogin': '返回登入',
+                    'resetPassword.success': '重設密碼連結已發送到您的電子郵件',
+                    'login.errors.auth/user-not-found': '找不到此用戶',
+                    'login.errors.auth/wrong-password': '密碼錯誤',
+                    'login.errors.default': '登入失敗，請稍後再試'
+                },
+                'en': {
+                    'login.title': 'Login',
+                    'login.email': 'Email',
+                    'login.password': 'Password',
+                    'login.loginButton': 'Login',
+                    'login.newsletter': 'Subscribe to newsletter',
+                    'login.googleLogin': 'Continue with Google',
+                    'login.forgotPassword': 'Forgot Password?',
+                    'login.noAccount': "Don't have an account?",
+                    'login.signUp': 'Sign up',
+                    'or': 'or',
+                    'resetPassword.title': 'Reset Password',
+                    'resetPassword.email': 'Email',
+                    'resetPassword.sendButton': 'Send Reset Link',
+                    'resetPassword.backToLogin': 'Back to Login',
+                    'resetPassword.success': 'Password reset link has been sent to your email',
+                    'login.errors.auth/user-not-found': 'User not found',
+                    'login.errors.auth/wrong-password': 'Wrong password',
+                    'login.errors.default': 'Login failed, please try again later'
+                }
+            };
+
+            const t = translations[lang];
+            
+            // 更新所有需要翻譯的元素
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    element.textContent = t[key];
+                }
+            });
+
+            // 更新所有需要翻譯的佔位符
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                if (t[key]) {
+                    element.placeholder = t[key];
+                }
+            });
+
+            // 更新語言選擇器的選中項
+            document.getElementById('language-select').value = lang;
+        }
+
+        // 頁面載入時檢查並應用已保存的語言偏好
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLanguage = localStorage.getItem('preferred_language') || 'zh';
+            changeLanguage(savedLanguage);
         });
 
         // 登入表單處理
