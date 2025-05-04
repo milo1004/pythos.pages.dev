@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - 登入</title>
+    <title>PythOS - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* 保持原有的樣式 */
@@ -182,31 +182,31 @@
         <div class="logo">
             <img src="PythOS.png" alt="PythOS Logo">
         </div>
-        <h1>登入 PythOS</h1>
+        <h1>Sign in to PythOS</h1>
         <form id="loginForm">
             <div class="form-group">
-                <label for="email">電子郵件</label>
+                <label for="email">Email</label>
                 <input type="email" id="email" required>
             </div>
             <div class="form-group">
-                <label for="password">密碼</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" required>
             </div>
             <div class="newsletter-checkbox">
                 <input type="checkbox" id="newsletter">
-                <label for="newsletter">訂閱 PythOS 最新消息</label>
+                <label for="newsletter">Subscribe to PythOS News</label>
             </div>
-            <button type="submit" class="btn btn-primary">登入</button>
+            <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
-        <div class="divider">或</div>
+        <div class="divider">or</div>
         <button id="googleLogin" class="btn btn-google">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18">
-            使用 Google 帳號繼續
+            Continue with Google
         </button>
         <div class="links">
-            <a href="register.html">還沒有帳號？立即註冊</a>
+            <a href="register.html">Don't have an account? Register now</a>
             <br>
-            <a href="#" id="forgotPassword">忘記密碼？</a>
+            <a href="#" id="forgotPassword">Forgot password?</a>
         </div>
         <div id="error-message"></div>
     </div>
@@ -222,35 +222,33 @@
 
     <!-- 應用邏輯 -->
     <script>
-        // 顯示錯誤訊息函數
+        // Show error message function
         function showError(error) {
             const errorDiv = document.getElementById('error-message');
             let message = '';
-            
-            // 根據錯誤代碼顯示對應的中文錯誤訊息
+            // Show corresponding English error message based on error code
             switch(error.code) {
                 case 'auth/invalid-email':
-                    message = '請輸入有效的電子郵件地址';
+                    message = 'Please enter a valid email address';
                     break;
                 case 'auth/user-disabled':
-                    message = '此帳號已被停用';
+                    message = 'This account has been disabled';
                     break;
                 case 'auth/user-not-found':
-                    message = '找不到此電子郵件對應的帳號';
+                    message = 'No account found with this email address';
                     break;
                 case 'auth/wrong-password':
-                    message = '密碼錯誤';
+                    message = 'Incorrect password';
                     break;
                 case 'auth/network-request-failed':
-                    message = '網路連線失敗，請檢查您的網路連線';
+                    message = 'Network error, please check your connection';
                     break;
                 case 'auth/popup-closed-by-user':
-                    message = 'Google 登入視窗被關閉，請重試';
+                    message = 'Google sign-in window was closed, please try again';
                     break;
                 default:
-                    message = error.message || '登入失敗，請稍後再試';
+                    message = error.message || 'Sign in failed, please try again later';
             }
-            
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
             setTimeout(() => {
@@ -284,7 +282,7 @@
 
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error('登入錯誤：', error);
+                console.error('Login error：', error);
                 showError(error);
             }
         });
@@ -305,26 +303,24 @@
 
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error('Google 登入錯誤：', error);
+                console.error('Google Login error：', error);
                 showError(error);
             }
         });
 
-        // 忘記密碼處理
+        // Forgot password handler
         document.getElementById('forgotPassword').addEventListener('click', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
-            
             if (!email) {
-                showError({ code: 'auth/invalid-email', message: '請輸入電子郵件地址' });
+                showError({ code: 'auth/invalid-email', message: 'Please enter your email address' });
                 return;
             }
-
             try {
                 await auth.sendPasswordResetEmail(email);
-                alert('密碼重設連結已發送到您的電子郵件');
+                alert('A password reset link has been sent to your email');
             } catch (error) {
-                console.error('重設密碼錯誤：', error);
+                console.error('Password reset error:', error);
                 showError(error);
             }
         });
