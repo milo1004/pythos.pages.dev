@@ -255,6 +255,30 @@
             top: 1rem;
             right: 1rem;
             z-index: 1001;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: var(--dark);
         }
 
         .language-selector select {
@@ -284,6 +308,11 @@
             color: var(--primary);
             pointer-events: none;
             font-size: 0.8rem;
+        }
+
+        .btn-google img {
+            width: 18px;
+            height: 18px;
         }
     </style>
 
