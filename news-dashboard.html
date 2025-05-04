@@ -167,10 +167,74 @@
             text-align: center;
             padding: 2rem;
         }
+
+        /* 新增登入表單樣式 */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .login-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 6px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .login-error {
+            color: #ff4444;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .btn-google {
+            background: #4285f4;
+            color: white;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-google img {
+            width: 18px;
+            height: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 登入表單 -->
+        <div id="loginContent" class="login-container">
+            <h2 class="login-title">News Dashboard Login</h2>
+            <div id="login-error" class="login-error"></div>
+            <button id="googleSignIn" class="btn btn-google">
+                <img src="https://www.google.com/favicon.ico" alt="Google">
+                Sign in with Google
+            </button>
+        </div>
+
+        <!-- 主要內容區域 -->
         <div id="authContent" style="display: none;">
             <div class="header">
                 <h1 class="title">News Dashboard</h1>
@@ -196,33 +260,60 @@
                 <!-- News items will be dynamically added here -->
             </div>
         </div>
-
-        <div id="loginContent" class="auth-check">
-            <h2 style="color: var(--primary); margin-bottom: 1rem;">Access Denied</h2>
-            <p>You don't have permission to access this page.</p>
-        </div>
     </div>
 
     <script>
+        // 允許的電子郵件列表
+        const ALLOWED_EMAILS = [
+            'pythos.teams@gmail.com',
+            'nok@pgmiv.com',
+            'milocchan1313@gmail.com'
+        ];
+
+        // Google 登入
+        document.getElementById('googleSignIn').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .catch((error) => {
+                    const errorDiv = document.getElementById('login-error');
+                    errorDiv.textContent = error.message;
+                    errorDiv.style.display = 'block';
+                });
+        });
+
         // 檢查用戶權限
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                // 檢查是否為管理員
-                db.collection('admins').doc(user.uid).get().then((doc) => {
-                    if (doc.exists && doc.data().isAdmin) {
-                        document.getElementById('authContent').style.display = 'block';
-                        document.getElementById('loginContent').style.display = 'none';
-                        loadNews();
-                    } else {
-                        document.getElementById('authContent').style.display = 'none';
-                        document.getElementById('loginContent').style.display = 'block';
-                    }
-                });
+                if (ALLOWED_EMAILS.includes(user.email)) {
+                    // 允許訪問的用戶
+                    document.getElementById('authContent').style.display = 'block';
+                    document.getElementById('loginContent').style.display = 'none';
+                    loadNews();
+                } else {
+                    // 未授權的用戶
+                    const errorDiv = document.getElementById('login-error');
+                    errorDiv.textContent = 'You do not have permission to access this dashboard.';
+                    errorDiv.style.display = 'block';
+                    // 自動登出未授權用戶
+                    firebase.auth().signOut();
+                }
             } else {
                 document.getElementById('authContent').style.display = 'none';
                 document.getElementById('loginContent').style.display = 'block';
             }
         });
+
+        // 登出功能
+        function logout() {
+            firebase.auth().signOut()
+                .then(() => {
+                    document.getElementById('authContent').style.display = 'none';
+                    document.getElementById('loginContent').style.display = 'block';
+                })
+                .catch((error) => {
+                    console.error('Error signing out:', error);
+                });
+        }
 
         // 載入新聞
         function loadNews() {
@@ -285,15 +376,6 @@
                     alert('Error deleting news. Please try again.');
                 }
             }
-        }
-
-        // 登出
-        function logout() {
-            firebase.auth().signOut().then(() => {
-                window.location.href = 'login.html';
-            }).catch((error) => {
-                console.error('Error signing out:', error);
-            });
         }
     </script>
 </body>
