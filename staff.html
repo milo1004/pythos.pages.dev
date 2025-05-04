@@ -114,103 +114,49 @@
         }
 
         .nothing-text {
-            font-size: 4rem;
+            font-size: 3.5rem;
             color: var(--primary);
             text-align: center;
-            margin-bottom: 2rem;
-            animation: glitch 1s linear infinite;
-            position: relative;
-            text-shadow: 2px 2px var(--accent);
+            margin-bottom: 3rem;
+            font-weight: 700;
+            transform: rotate(-5deg);
+            text-shadow: 4px 4px var(--accent);
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
         }
 
-        @keyframes glitch {
-            2%, 64% {
-                transform: translate(2px, 0) skew(0deg);
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: rotate(-5deg) translateY(-20px);
             }
-            4%, 60% {
-                transform: translate(-2px, 0) skew(0deg);
-            }
-            62% {
-                transform: translate(0, 0) skew(5deg);
-            }
-        }
-
-        .nothing-text:before,
-        .nothing-text:after {
-            content: 'Nothing here...';
-            position: absolute;
-            left: 0;
-        }
-
-        .nothing-text:before {
-            animation: glitchTop 1s linear infinite;
-            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-            -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-        }
-
-        @keyframes glitchTop {
-            2%, 64% {
-                transform: translate(2px, -2px);
-            }
-            4%, 60% {
-                transform: translate(-2px, 2px);
-            }
-            62% {
-                transform: translate(13px, -1px) skew(-13deg);
-            }
-        }
-
-        .nothing-text:after {
-            animation: glitchBottom 1.5s linear infinite;
-            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-            -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-        }
-
-        @keyframes glitchBottom {
-            2%, 64% {
-                transform: translate(-2px, 0);
-            }
-            4%, 60% {
-                transform: translate(-2px, 0);
-            }
-            62% {
-                transform: translate(-22px, 5px) skew(21deg);
+            to {
+                opacity: 1;
+                transform: rotate(-5deg) translateY(0);
             }
         }
 
         .back-home {
-            margin-top: 2rem;
-            padding: 1rem 2rem;
+            position: absolute;
+            left: 50%;
+            top: 60%;
+            transform: translate(-50%, -50%);
+            padding: 1.2rem 2.5rem;
             background: transparent;
             border: 2px solid var(--primary);
             color: var(--primary);
             font-family: 'Roboto Mono', monospace;
             font-size: 1.2rem;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
-            z-index: 1;
-        }
-
-        .back-home:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            background: var(--primary);
-            transition: all 0.3s ease;
-            z-index: -1;
+            border-radius: 50px;
         }
 
         .back-home:hover {
+            background: var(--primary);
             color: #1a1a1a;
-        }
-
-        .back-home:hover:before {
-            width: 100%;
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 229, 0, 0.3);
         }
 
         .logout-btn {
@@ -245,7 +191,7 @@
 
     <!-- 登入後的黑色頁面 -->
     <div id="authContent" class="content">
-        <div class="nothing-text">Nothing here...</div>
+        <div class="nothing-text">¯\_(ツ)_/¯<br>Nothing here...</div>
         <button onclick="window.location.href='index.html'" class="back-home">Return to Home</button>
         <button onclick="logout()" class="logout-btn">Logout</button>
     </div>
