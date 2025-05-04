@@ -255,33 +255,13 @@
             top: 1rem;
             right: 1rem;
             z-index: 1001;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--accent);
-        }
-
-        .lang-btn.active {
-            background: var(--primary);
-            color: var(--dark);
+            position: relative;
         }
 
         .language-selector select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--primary);
             color: var(--primary);
@@ -291,7 +271,6 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            appearance: none;
         }
 
         .language-selector select:hover {
@@ -310,6 +289,12 @@
             font-size: 0.8rem;
         }
 
+        .language-selector select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(250, 189, 105, 0.2);
+        }
+
         .btn-google img {
             width: 18px;
             height: 18px;
@@ -324,8 +309,10 @@
 </head>
 <body>
     <div class="language-selector">
-        <button onclick="langManager.setLanguage('en')" class="lang-btn" data-lang="en">English</button>
-        <button onclick="langManager.setLanguage('zh_hk')" class="lang-btn" data-lang="zh_hk">繁體中文</button>
+        <select id="language-select" onchange="changeLanguage(this.value)">
+            <option value="zh" selected>正體中文</option>
+            <option value="en">English</option>
+        </select>
     </div>
 
     <div class="login-container">
@@ -387,7 +374,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 設置當前語言按鈕的活動狀態
             const currentLang = localStorage.getItem('language') || 'en';
-            document.querySelector(`[data-lang="${currentLang}"]`).classList.add('active');
+            document.querySelector(`[value="${currentLang}"]`).selected = true;
             
             // 更新頁面內容
             langManager.updatePageContent();
