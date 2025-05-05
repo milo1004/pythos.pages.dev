@@ -319,6 +319,29 @@
         .delete-btn:hover {
             background: rgba(255, 0, 0, 0.3);
         }
+        
+        .edit-btn {
+            background: rgba(255, 229, 0, 0.2);
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        
+        .edit-btn:hover {
+            background: rgba(255, 229, 0, 0.3);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
 
         .success-message {
             background: rgba(0, 255, 0, 0.1);
@@ -373,6 +396,7 @@
             <h2 class="section-title">新聞發布系統</h2>
             
             <form id="newsForm" class="news-form">
+                <input type="hidden" id="editNewsId" value="">
                 <div class="form-group">
                     <label for="newsTitle">標題</label>
                     <input type="text" id="newsTitle" required placeholder="輸入新聞標題...">
@@ -383,7 +407,10 @@
                     <textarea id="newsDesc" rows="5" required placeholder="輸入新聞內容..."></textarea>
                 </div>
                 
-                <button type="submit" class="publish-btn">發布新聞</button>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="publish-btn" id="publishBtn">發布新聞</button>
+                    <button type="button" class="publish-btn" id="cancelEditBtn" style="background: #666; display: none;">取消編輯</button>
+                </div>
             </form>
             
             <div id="successMessage" class="success-message">新聞發布成功！</div>
@@ -405,7 +432,7 @@
     <script>
         // 初始化Firestore
         const db = firebase.firestore();
-
+        
         // 允許的電子郵件列表
         const ALLOWED_EMAILS = [
             'pythos.team@gmail.com',
@@ -415,18 +442,34 @@
 
         // Google 登入
         document.getElementById('googleSignIn').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider)
-                .catch((error) => {
-                    const errorDiv = document.getElementById('login-error');
-                    errorDiv.textContent = error.message;
-                    errorDiv.style.display = 'block';
-                });
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                
+                // 確保使用彈出方式登入
+                firebase.auth().signInWithPopup(provider)
+                    .then((result) => {
+                        // 成功登入
+                        console.log('Google 登入成功', result.user.email);
+                    })
+                    .catch((error) => {
+                        // 登入失敗
+                        console.error('Google 登入錯誤:', error);
+                        const errorDiv = document.getElementById('login-error');
+                        errorDiv.textContent = error.message;
+                        errorDiv.style.display = 'block';
+                    });
+            } catch (error) {
+                console.error('Google 登入初始化錯誤:', error);
+                const errorDiv = document.getElementById('login-error');
+                errorDiv.textContent = '登入服務初始化錯誤，請稍後再試';
+                errorDiv.style.display = 'block';
+            }
         });
 
         // 檢查用戶權限
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
+                console.log('用戶已登入:', user.email);
                 if (ALLOWED_EMAILS.includes(user.email)) {
                     // 允許訪問的用戶
                     document.getElementById('authContent').style.display = 'flex';
@@ -434,13 +477,15 @@
                     loadNews(); // 載入已發布的新聞
                 } else {
                     // 未授權的用戶
+                    console.log('用戶無權限訪問:', user.email);
                     const errorDiv = document.getElementById('login-error');
-                    errorDiv.textContent = 'You do not have permission to access this portal.';
+                    errorDiv.textContent = '您沒有權限訪問此管理頁面';
                     errorDiv.style.display = 'block';
                     // 自動登出未授權用戶
                     firebase.auth().signOut();
                 }
             } else {
+                console.log('用戶未登入');
                 document.getElementById('authContent').style.display = 'none';
                 document.getElementById('loginContent').style.display = 'flex';
             }
@@ -450,57 +495,120 @@
         function logout() {
             firebase.auth().signOut()
                 .then(() => {
+                    console.log('成功登出');
                     document.getElementById('authContent').style.display = 'none';
                     document.getElementById('loginContent').style.display = 'flex';
                 })
                 .catch((error) => {
-                    console.error('Error signing out:', error);
+                    console.error('登出錯誤:', error);
                 });
         }
+        
+        // 取消編輯
+        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+            resetForm();
+        });
 
-        // 發布新聞
+        // 發布或更新新聞
         document.getElementById('newsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             // 獲取表單數據
+            const newsId = document.getElementById('editNewsId').value;
             const title = document.getElementById('newsTitle').value;
             const desc = document.getElementById('newsDesc').value;
             const date = new Date().toISOString().split('T')[0]; // 格式：YYYY-MM-DD
             
             try {
-                // 添加到Firestore
-                await db.collection('news').add({
-                    title: title,
-                    desc: desc,
-                    date: date,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                // 檢查是新增還是更新
+                if (newsId) {
+                    // 更新已有的新聞
+                    await db.collection('news').doc(newsId).update({
+                        title: title,
+                        desc: desc,
+                        lastEdited: date
+                    });
+                    
+                    // 顯示成功訊息
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.textContent = '新聞更新成功！';
+                    successMsg.style.display = 'block';
+                } else {
+                    // 添加新的新聞
+                    await db.collection('news').add({
+                        title: title,
+                        desc: desc,
+                        date: date,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // 顯示成功訊息
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.textContent = '新聞發布成功！';
+                    successMsg.style.display = 'block';
+                }
                 
                 // 清空表單
-                document.getElementById('newsTitle').value = '';
-                document.getElementById('newsDesc').value = '';
+                resetForm();
                 
-                // 顯示成功訊息
-                const successMsg = document.getElementById('successMessage');
-                successMsg.style.display = 'block';
+                // 成功訊息自動消失
                 setTimeout(() => {
-                    successMsg.style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'none';
                 }, 3000);
                 
                 // 重新載入新聞列表
                 loadNews();
                 
             } catch (error) {
-                console.error('Error publishing news:', error);
+                console.error('Error with news:', error);
                 // 顯示錯誤訊息
                 const errorMsg = document.getElementById('errorMessage');
-                errorMsg.textContent = `發布失敗：${error.message}`;
+                errorMsg.textContent = `操作失敗：${error.message}`;
                 errorMsg.style.display = 'block';
                 setTimeout(() => {
                     errorMsg.style.display = 'none';
                 }, 5000);
             }
         });
+
+        // 重置表單
+        function resetForm() {
+            document.getElementById('editNewsId').value = '';
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsDesc').value = '';
+            document.getElementById('publishBtn').textContent = '發布新聞';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+        
+        // 編輯新聞
+        async function editNews(event) {
+            const newsId = event.target.getAttribute('data-id');
+            
+            try {
+                // 獲取新聞數據
+                const doc = await db.collection('news').doc(newsId).get();
+                if (doc.exists) {
+                    const newsData = doc.data();
+                    
+                    // 填充表單
+                    document.getElementById('editNewsId').value = newsId;
+                    document.getElementById('newsTitle').value = newsData.title;
+                    document.getElementById('newsDesc').value = newsData.desc;
+                    
+                    // 改變按鈕文字
+                    document.getElementById('publishBtn').textContent = '更新新聞';
+                    
+                    // 顯示取消按鈕
+                    document.getElementById('cancelEditBtn').style.display = 'block';
+                    
+                    // 滾動到表單
+                    document.querySelector('.news-form').scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error('Error getting news for edit:', error);
+                alert(`獲取新聞數據失敗：${error.message}`);
+            }
+        }
 
         // 載入已發布的新聞
         async function loadNews() {
@@ -526,21 +634,34 @@
                     const news = doc.data();
                     const newsId = doc.id;
                     
+                    // 處理新聞日期顯示
+                    let displayDate = news.date;
+                    if (news.lastEdited) {
+                        displayDate += ` (已編輯: ${news.lastEdited})`;
+                    }
+                    
                     const newsElement = document.createElement('div');
                     newsElement.className = 'news-item';
                     newsElement.innerHTML = `
                         <div class="news-header">
                             <h4 class="news-title">${news.title}</h4>
-                            <span class="news-date">${news.date}</span>
+                            <span class="news-date">${displayDate}</span>
                         </div>
                         <p class="news-desc">${news.desc}</p>
-                        <button class="delete-btn" data-id="${newsId}">刪除</button>
+                        <div class="action-buttons">
+                            <button class="edit-btn" data-id="${newsId}">編輯</button>
+                            <button class="delete-btn" data-id="${newsId}">刪除</button>
+                        </div>
                     `;
                     
                     newsContainer.appendChild(newsElement);
                 });
                 
-                // 新增刪除事件監聽
+                // 新增編輯和刪除事件監聽
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', editNews);
+                });
+                
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', deleteNews);
                 });
