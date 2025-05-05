@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Web App Meta Tags for iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Web Viewer">
-    <meta name="application-name" content="Web Viewer">
-    <link rel="icon" sizes="192x192" href="/path-to-your-icon.png"> <!-- Replace with your icon path -->
-    <title>Web Viewer</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My WebViewer App">
+
+    <title>WebViewer</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Web Viewer for copilot.microsoft.com</h1>
-    <iframe 
-        src="https://copilot.microsoft.com" 
-        style="width: 100%; height: 90vh; border: none;">
-    </iframe>
+    <!-- WebViewer using an iframe -->
+    <iframe src="https://copilot.microsoft.com"></iframe>
 </body>
 </html>
