@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Dashboard - PythOS</title>
+    <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <!-- Firebase 配置 -->
     <script src="firebase-config.js"></script>
+    <!-- Marked.js for Markdown support -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #ffe500;
@@ -569,14 +572,47 @@
             // Don't update news content, keep as is
         }
 
+        // Check user login status
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User logged in:', user.email);
+                // Update user info
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('userEmail').textContent = user.email;
+                
+                // Update user avatar
+                const avatarElement = document.getElementById('userAvatar');
+                const initialElement = document.getElementById('userInitial');
+                
+                if (user.photoURL) {
+                    // If user has an avatar (e.g., from Google login), display it
+                    avatarElement.src = user.photoURL;
+                    avatarElement.style.display = 'block';
+                    initialElement.style.display = 'none';
+                } else {
+                    // If no avatar, display first letter of name
+                    const initial = displayName.charAt(0).toUpperCase();
+                    initialElement.textContent = initial;
+                    initialElement.style.display = 'flex';
+                    avatarElement.style.display = 'none';
+                }
+                
+                // Load latest news now that we know user is logged in
+                loadLatestNews();
+            } else {
+                console.log('User not logged in, redirecting to home page...');
+                window.location.href = 'index.html';
+            }
+        });
+
         // Check and apply saved language preference on page load
         document.addEventListener('DOMContentLoaded', () => {
             const savedLanguage = localStorage.getItem('preferred_language') || 'en';
             document.getElementById('language-select').value = savedLanguage;
             changeLanguage(savedLanguage);
-
-            // Load latest news
-            loadLatestNews();
+            
+            // Note: Moved loadLatestNews() to onAuthStateChanged to ensure user is authenticated first
         });
 
         // Load latest news
@@ -594,9 +630,9 @@
                         // 詳細記錄權限錯誤
                         if (error.code === 'permission-denied') {
                             console.warn('Firebase permission issue: Check security rules.');
-                            console.warn('Suggested rule: allow read; allow write: if request.auth != null && request.auth.token.email in ["authorized@email.com"]');
+                            console.warn('Suggested rule: allow read; allow write: if request.auth != null && request.auth.token.email in ["pythos.team@gmail.com", "nok@pgmiv.com", "milochan1313@gmail.com"]');
                         }
-                        return { empty: true };  // Return a mock empty result to gracefully handle the error
+                        throw error; // Re-throw to be caught by outer try/catch
                     });
                 
                 if (!snapshot.empty) {
@@ -673,37 +709,6 @@
             } catch (error) {
                 console.error('Logout error:', error);
                 alert('Error during logout: ' + error.message);
-            }
-        });
-
-        // Check user login status
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                console.log('User logged in:', user.email);
-                // Update user info
-                const displayName = user.displayName || user.email.split('@')[0];
-                document.getElementById('userName').textContent = displayName;
-                document.getElementById('userEmail').textContent = user.email;
-                
-                // Update user avatar
-                const avatarElement = document.getElementById('userAvatar');
-                const initialElement = document.getElementById('userInitial');
-                
-                if (user.photoURL) {
-                    // If user has an avatar (e.g., from Google login), display it
-                    avatarElement.src = user.photoURL;
-                    avatarElement.style.display = 'block';
-                    initialElement.style.display = 'none';
-                } else {
-                    // If no avatar, display first letter of name
-                    const initial = displayName.charAt(0);
-                    initialElement.textContent = initial;
-                    initialElement.style.display = 'flex';
-                    avatarElement.style.display = 'none';
-                }
-            } else {
-                console.log('User not logged in, redirecting to home page...');
-                window.location.href = 'index.html';
             }
         });
 
