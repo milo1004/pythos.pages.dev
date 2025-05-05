@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythOS - Staff Portal</title>
+    <title>PythOS - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <!-- 直接初始化 Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
     <script>
-        // Firebase 配置
+        // Firebase Configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
-          authDomain: "pythos-website.firebaseapp.com",
-          projectId: "pythos-website",
-          storageBucket: "pythos-website.firebasestorage.app",
-          messagingSenderId: "781241739137",
-          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
-          measurementId: "G-HE54S62K6K"
+            apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+            authDomain: "pythos-website.firebaseapp.com",
+            projectId: "pythos-website",
+            storageBucket: "pythos-website.firebasestorage.app",
+            messagingSenderId: "781241739137",
+            appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+            measurementId: "G-HE54S62K6K"
         };
-    
-        // 初始化 Firebase
+
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
     </script>
     <style>
@@ -44,723 +44,610 @@
             background: #1a1a1a;
             color: var(--light);
             min-height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-right: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar .initial {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .user-email {
+            color: var(--accent);
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 229, 0, 0.1);
+            color: var(--primary);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .welcome-message {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .language-selector {
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        .language-selector select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .language-selector::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 229, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .card-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .card-content {
+            color: #aaa;
+        }
+
+        .news-list {
+            list-style: none;
             margin: 0;
             padding: 0;
         }
 
-        .login-container {
-            max-width: 400px;
-            width: 90%;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 229, 0, 0.1);
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-title {
-            color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            width: 100%;
-            text-align: center;
-        }
-
-        .login-error {
-            color: #ff4444;
-            margin-bottom: 1rem;
-            display: none;
-            text-align: center;
-        }
-
-        .btn-google {
-            background: #4285f4;
-            color: white;
-            width: 100%;
-            max-width: 300px;
-            padding: 1rem;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            margin: 0 auto;
-        }
-
-        .btn-google:hover {
-            background: #357abd;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
-        }
-
-        .btn-google img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .content {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            background: #1a1a1a;
-            position: fixed;
-            top: 0;
-            left: 0;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            overflow: auto;
-            padding: 2rem 1rem;
-        }
-
-        .nothing-text {
-            font-size: 3.5rem;
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 3rem;
-            font-weight: 700;
-            transform: rotate(-5deg);
-            text-shadow: 4px 4px var(--accent);
-            opacity: 0;
-            animation: fadeIn 1s ease forwards;
-            display: none;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: rotate(-5deg) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: rotate(-5deg) translateY(0);
-            }
-        }
-
-        .back-home {
-            padding: 1rem 2rem;
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            font-family: 'Roboto Mono', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 50px;
-            margin-top: 2rem;
-        }
-
-        .back-home:hover {
-            background: var(--primary);
-            color: #1a1a1a;
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 229, 0, 0.3);
-        }
-
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--light);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Roboto Mono', monospace;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* 新聞發布系統樣式 */
-        .news-publisher {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 229, 0, 0.1);
-        }
-
-        .section-title {
-            color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            width: 100%;
-            text-align: center;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .news-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            color: var(--primary);
-            font-size: 1rem;
-        }
-
-        .form-group input, 
-        .form-group textarea {
-            padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 229, 0, 0.3);
-            border-radius: 6px;
-            color: var(--light);
-            font-family: 'Roboto Mono', monospace;
-            resize: none;
-        }
-
-        .form-group input:focus, 
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(255, 229, 0, 0.2);
-        }
-
-        .publish-btn {
-            padding: 1rem 2rem;
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            border-radius: 6px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .publish-btn:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 229, 0, 0.3);
-        }
-
-        .news-list {
-            margin-top: 3rem;
-        }
-
-        .news-list-title {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
         .news-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 229, 0, 0.1);
-            border-radius: 6px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .news-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+        .news-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .news-date {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
         }
 
         .news-title {
             color: var(--light);
             font-size: 1.2rem;
-        }
-
-        .news-date {
-            color: var(--accent);
-            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
         }
 
         .news-desc {
             color: #aaa;
-            line-height: 1.5;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
-        .delete-btn {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff4444;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-            margin-left: auto;
+        .settings-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
             display: block;
-            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
         }
 
-        .delete-btn:hover {
-            background: rgba(255, 0, 0, 0.3);
-        }
-        
-        .edit-btn {
-            background: rgba(255, 229, 0, 0.2);
-            color: var(--primary);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
+        .form-group input[type="checkbox"] {
             margin-right: 0.5rem;
         }
-        
-        .edit-btn:hover {
-            background: rgba(255, 229, 0, 0.3);
-        }
-        
-        .action-buttons {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 0.5rem;
+
+        .btn-save {
+            background: var(--primary);
+            color: var(--dark);
         }
 
-        .success-message {
-            background: rgba(0, 255, 0, 0.1);
-            color: #4cff4c;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            display: none;
+        .btn-save:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
         }
 
-        .error-message {
-            background: rgba(255, 0, 0, 0.1);
-            color: #ff4444;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            display: none;
-        }
-
-        /* 響應式設計 */
         @media (max-width: 768px) {
-            .news-publisher {
-                padding: 1.5rem;
+            .dashboard {
+                grid-template-columns: 1fr;
             }
 
-            .section-title {
-                font-size: 1.5rem;
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
 
-            .news-item {
+            .sidebar.active {
+                display: block;
+                transform: translateX(0);
+            }
+
+            .main-content {
                 padding: 1rem;
+            }
+
+            .header {
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-message {
+                font-size: 1.2rem;
+            }
+
+            .dashboard-card {
+                padding: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 登入容器 -->
-    <div id="loginContent" class="login-container">
-        <h2 class="login-title">Staff Portal</h2>
-        <div id="login-error" class="login-error"></div>
-        <button id="googleSignIn" class="btn-google">
-            <img src="https://www.google.com/favicon.ico" alt="Google">
-            Sign in with Google
-        </button>
-    </div>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <div class="initial" id="userInitial"></div>
+                    <img id="userAvatar" style="display: none;" alt="User Avatar">
+                </div>
+                <div class="user-name" id="userName">[username]</div>
+                <div class="user-email" id="userEmail"></div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#overview" class="nav-link active">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            Overview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#news" class="nav-link">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            System Status
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-    <!-- 登入後的內容 -->
-    <div id="authContent" class="content">
-        <div class="nothing-text">¯\_(ツ)_/¯<br>Nothing here...</div>
-        
-        <div class="news-publisher">
-            <h2 class="section-title">新聞發布系統</h2>
-            
-            <form id="newsForm" class="news-form">
-                <input type="hidden" id="editNewsId" value="">
-                <div class="form-group">
-                    <label for="newsTitle">標題</label>
-                    <input type="text" id="newsTitle" required placeholder="輸入新聞標題...">
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-message">Welcome Back!</h1>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="language-selector">
+                        <select id="language-select" onchange="changeLanguage(this.value)">
+                            <option value="zh">正體中文</option>
+                            <option value="en" selected>English</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-logout" id="logoutBtn">Logout</button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="newsDesc">內容</label>
-                    <textarea id="newsDesc" rows="5" required placeholder="輸入新聞內容..."></textarea>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">System Status</h2>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="24" height="24" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                                <span style="color: #ffe500;">Version</span>
+                            </div>
+                            <div>PythOS 6.0 NewCore</div>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="24" height="24" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span style="color: #ffe500;">Update Time</span>
+                            </div>
+                            <div>2024/04/29</div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="publish-btn" id="publishBtn">發布新聞</button>
-                    <button type="button" class="publish-btn" id="cancelEditBtn" style="background: #666; display: none;">取消編輯</button>
-                </div>
-            </form>
-            
-            <div id="successMessage" class="success-message">新聞發布成功！</div>
-            <div id="errorMessage" class="error-message">發布失敗，請稍後再試。</div>
-            
-            <div class="news-list">
-                <h3 class="news-list-title">已發布的新聞</h3>
-                <div id="newsList">
-                    <!-- 新聞項目將在這裡動態加載 -->
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Latest News</h2>
+                    </div>
+                    <div class="card-content">
+                        <ul class="news-list" id="dashboardNewsList">
+                            <li class="news-item loading-placeholder">
+                                <div class="news-date">Loading...</div>
+                                <h3 class="news-title">Loading Latest News</h3>
+                                <p class="news-desc">Please wait, loading latest news from server.</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <button onclick="window.location.href='index.html'" class="back-home">返回首頁</button>
-        <button onclick="logout()" class="logout-btn">登出</button>
+        </main>
     </div>
 
     <script>
-        // 獲取 Firebase 服務實例
+        // Get Firebase service instances
         const auth = firebase.auth();
         const db = firebase.firestore();
-        
-        // 允許的電子郵件列表
-        const ALLOWED_EMAILS = [
-            'pythos.team@gmail.com',
-            'nok@pgmiv.com',
-            'milochan1313@gmail.com'
-        ];
+        const analytics = firebase.analytics();
 
-        // Google 登入
-        document.getElementById('googleSignIn').addEventListener('click', () => {
-            try {
-                // 創建 Google 登入提供者
-                const provider = new firebase.auth.GoogleAuthProvider();
-                
-                // 設定 Google 登入選項，強制使用者選擇帳號
-                provider.setCustomParameters({
-                  prompt: 'select_account'
-                });
-                
-                // 使用彈出方式登入
-                auth.signInWithPopup(provider)
-                    .then((result) => {
-                        // 成功登入
-                        console.log('Google 登入成功', result.user.email);
-                    })
-                    .catch((error) => {
-                        // 登入失敗
-                        console.error('Google 登入錯誤:', error);
-                        const errorDiv = document.getElementById('login-error');
-                        errorDiv.textContent = error.message;
-                        errorDiv.style.display = 'block';
-                    });
-            } catch (error) {
-                console.error('Google 登入初始化錯誤:', error);
-                const errorDiv = document.getElementById('login-error');
-                errorDiv.textContent = '登入服務初始化錯誤，請稍後再試';
-                errorDiv.style.display = 'block';
-            }
-        });
-
-        // 檢查用戶權限
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                console.log('用戶已登入:', user.email);
-                if (ALLOWED_EMAILS.includes(user.email)) {
-                    // 允許訪問的用戶
-                    document.getElementById('authContent').style.display = 'flex';
-                    document.getElementById('loginContent').style.display = 'none';
-                    loadNews(); // 載入已發布的新聞
-                } else {
-                    // 未授權的用戶
-                    console.log('用戶無權限訪問:', user.email);
-                    const errorDiv = document.getElementById('login-error');
-                    errorDiv.textContent = '您沒有權限訪問此管理頁面';
-                    errorDiv.style.display = 'block';
-                    // 自動登出未授權用戶
-                    auth.signOut();
-                }
-            } else {
-                console.log('用戶未登入');
-                document.getElementById('authContent').style.display = 'none';
-                document.getElementById('loginContent').style.display = 'flex';
-            }
-        });
-
-        // 登出功能
-        function logout() {
-            auth.signOut()
-                .then(() => {
-                    console.log('成功登出');
-                    document.getElementById('authContent').style.display = 'none';
-                    document.getElementById('loginContent').style.display = 'flex';
-                })
-                .catch((error) => {
-                    console.error('登出錯誤:', error);
-                });
-        }
-        
-        // 取消編輯
-        document.getElementById('cancelEditBtn').addEventListener('click', () => {
-            resetForm();
-        });
-
-        // 發布或更新新聞
-        document.getElementById('newsForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Language switching functionality
+        function changeLanguage(lang) {
+            // Save language preference
+            localStorage.setItem('preferred_language', lang);
             
-            // 獲取表單數據
-            const newsId = document.getElementById('editNewsId').value;
-            const title = document.getElementById('newsTitle').value;
-            const desc = document.getElementById('newsDesc').value;
-            const date = new Date().toISOString().split('T')[0]; // 格式：YYYY-MM-DD
-            
-            try {
-                // 確保用戶已登入
-                const currentUser = auth.currentUser;
-                if (!currentUser) {
-                    throw new Error('請先登入才能進行此操作');
+            // Update page text
+            const translations = {
+                'zh': {
+                    'welcome': '歡迎回來！',
+                    'logout': '登出',
+                    'overview': '概覽',
+                    'system_status': '系統狀態',
+                    'version': '版本',
+                    'update_time': '更新時間',
+                    'news': '最新消息',
+                    'developer_update': '開發者更新',
+                    'new_features': '全新的核心系統，提供更好的性能和更多新功能。',
+                    'dev_desc': '新增應用程式開發功能，現在可以更容易地創建自己的應用。'
+                },
+                'en': {
+                    'welcome': 'Welcome Back!',
+                    'logout': 'Logout',
+                    'overview': 'Overview',
+                    'system_status': 'System Status',
+                    'version': 'Version',
+                    'update_time': 'Last Update',
+                    'news': 'Latest News',
+                    'developer_update': 'Developer Update',
+                    'new_features': 'New core system with better performance and more features.',
+                    'dev_desc': 'Added app development features, making it easier to create your own applications.'
                 }
-                
-                // 檢查是新增還是更新
-                if (newsId) {
-                    // 更新已有的新聞
-                    await db.collection('news').doc(newsId).update({
-                        title: title,
-                        desc: desc,
-                        lastEdited: date,
-                        lastEditedBy: currentUser.email,
-                        lastEditTimestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // 顯示成功訊息
-                    const successMsg = document.getElementById('successMessage');
-                    successMsg.textContent = '新聞更新成功！';
-                    successMsg.style.display = 'block';
-                } else {
-                    // 添加新的新聞
-                    await db.collection('news').add({
-                        title: title,
-                        desc: desc,
-                        date: date,
-                        createdBy: currentUser.email,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // 顯示成功訊息
-                    const successMsg = document.getElementById('successMessage');
-                    successMsg.textContent = '新聞發布成功！';
-                    successMsg.style.display = 'block';
-                }
-                
-                // 清空表單
-                resetForm();
-                
-                // 成功訊息自動消失
-                setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
-                }, 3000);
-                
-                // 重新載入新聞列表
-                loadNews();
-                
-            } catch (error) {
-                console.error('Error with news:', error);
-                // 檢查是否是權限錯誤
-                let errorMessage = '操作失敗';
-                
-                if (error.code === 'permission-denied') {
-                    errorMessage += '：您沒有權限執行此操作。請確認您的登入狀態和權限設置。';
-                } else {
-                    errorMessage += `：${error.message}`;
-                }
-                
-                // 顯示錯誤訊息
-                const errorMsg = document.getElementById('errorMessage');
-                errorMsg.textContent = errorMessage;
-                errorMsg.style.display = 'block';
-                setTimeout(() => {
-                    errorMsg.style.display = 'none';
-                }, 5000);
-            }
-        });
+            };
 
-        // 重置表單
-        function resetForm() {
-            document.getElementById('editNewsId').value = '';
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsDesc').value = '';
-            document.getElementById('publishBtn').textContent = '發布新聞';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-        
-        // 編輯新聞
-        async function editNews(event) {
-            const newsId = event.target.getAttribute('data-id');
+            const t = translations[lang];
+
+            // Update all elements that need translation
+            document.querySelector('.welcome-message').textContent = t.welcome;
+            document.getElementById('logoutBtn').textContent = t.logout;
+            document.querySelector('a[href="#overview"]').textContent = t.overview;
+            document.querySelector('a[href="#news"]').textContent = t.system_status;
+            document.querySelectorAll('.card-title')[0].textContent = t.system_status;
+            document.querySelectorAll('.card-title')[1].textContent = t.news;
+            document.querySelector('[style*="color: #ffe500"]').textContent = t.version;
+            document.querySelectorAll('[style*="color: #ffe500"]')[1].textContent = t.update_time;
             
-            try {
-                // 獲取新聞數據
-                const doc = await db.collection('news').doc(newsId).get();
-                if (doc.exists) {
-                    const newsData = doc.data();
-                    
-                    // 填充表單
-                    document.getElementById('editNewsId').value = newsId;
-                    document.getElementById('newsTitle').value = newsData.title;
-                    document.getElementById('newsDesc').value = newsData.desc;
-                    
-                    // 改變按鈕文字
-                    document.getElementById('publishBtn').textContent = '更新新聞';
-                    
-                    // 顯示取消按鈕
-                    document.getElementById('cancelEditBtn').style.display = 'block';
-                    
-                    // 滾動到表單
-                    document.querySelector('.news-form').scrollIntoView({ behavior: 'smooth' });
-                }
-            } catch (error) {
-                console.error('Error getting news for edit:', error);
-                let errorMessage = '獲取新聞數據失敗';
-                
-                if (error.code === 'permission-denied') {
-                    errorMessage += '：您沒有權限查看此新聞。請確認您的登入狀態。';
-                } else {
-                    errorMessage += `：${error.message}`;
-                }
-                
-                alert(errorMessage);
-            }
+            // Don't update news content, keep as is
         }
 
-        // 載入已發布的新聞
-        async function loadNews() {
-            const newsContainer = document.getElementById('newsList');
-            newsContainer.innerHTML = '<p style="text-align:center;color:#aaa;">載入中...</p>';
+        // Check and apply saved language preference on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLanguage = localStorage.getItem('preferred_language') || 'en';
+            document.getElementById('language-select').value = savedLanguage;
+            changeLanguage(savedLanguage);
+
+            // Load latest news
+            loadLatestNews();
+        });
+
+        // Load latest news
+        async function loadLatestNews() {
+            const newsContainer = document.getElementById('dashboardNewsList');
             
             try {
-                // 確保用戶已登入
-                const currentUser = auth.currentUser;
-                if (!currentUser) {
-                    newsContainer.innerHTML = '<p style="text-align:center;color:#ff4444;">請先登入後再查看新聞列表</p>';
-                    return;
-                }
-                
-                // 從Firestore獲取新聞數據，按時間戳降序排序
+                // Try to get latest news from Firestore
                 const snapshot = await db.collection('news')
                     .orderBy('timestamp', 'desc')
-                    .get();
+                    .limit(5) // Only show the latest 5
+                    .get()
+                    .catch(error => {
+                        console.warn('Firebase read error:', error.message);
+                        // 詳細記錄權限錯誤
+                        if (error.code === 'permission-denied') {
+                            console.warn('Firebase permission issue: Check security rules.');
+                            console.warn('Suggested rule: allow read; allow write: if request.auth != null && request.auth.token.email in ["authorized@email.com"]');
+                        }
+                        return { empty: true };  // Return a mock empty result to gracefully handle the error
+                    });
                 
-                if (snapshot.empty) {
-                    newsContainer.innerHTML = '<p style="text-align:center;color:#aaa;">尚未發布任何新聞</p>';
-                    return;
-                }
-                
-                // 清空容器
-                newsContainer.innerHTML = '';
-                
-                // 顯示所有新聞
-                snapshot.forEach(doc => {
-                    const news = doc.data();
-                    const newsId = doc.id;
+                if (!snapshot.empty) {
+                    // Clear container
+                    newsContainer.innerHTML = '';
                     
-                    // 處理新聞日期顯示
-                    let displayDate = news.date;
-                    if (news.lastEdited) {
-                        displayDate += ` (已編輯: ${news.lastEdited})`;
-                    }
-                    
-                    const newsElement = document.createElement('div');
-                    newsElement.className = 'news-item';
-                    newsElement.innerHTML = `
-                        <div class="news-header">
-                            <h4 class="news-title">${news.title}</h4>
-                            <span class="news-date">${displayDate}</span>
-                        </div>
-                        <p class="news-desc">${news.desc}</p>
-                        <div class="action-buttons">
-                            <button class="edit-btn" data-id="${newsId}">編輯</button>
-                            <button class="delete-btn" data-id="${newsId}">刪除</button>
-                        </div>
+                    // Display all news
+                    snapshot.forEach(doc => {
+                        const news = doc.data();
+                        
+                        // 格式化日期顯示：將 YYYY-MM-DD 轉換為 YYYY/MM/DD
+                        const formattedDate = news.date ? news.date.replace(/-/g, '/') : '日期未指定';
+                        
+                        const newsElement = document.createElement('li');
+                        newsElement.className = 'news-item';
+                        newsElement.innerHTML = `
+                            <div class="news-date">${formattedDate}</div>
+                            <h3 class="news-title">${news.title}</h3>
+                            <p class="news-desc">${news.desc}</p>
+                        `;
+                        
+                        newsContainer.appendChild(newsElement);
+                    });
+                } else {
+                    // Display no news prompt
+                    newsContainer.innerHTML = `
+                        <li class="news-item no-news">
+                            <h3 class="news-title">No News Available</h3>
+                            <p class="news-desc">There are currently no news to display.</p>
+                        </li>
                     `;
-                    
-                    newsContainer.appendChild(newsElement);
-                });
-                
-                // 新增編輯和刪除事件監聽
-                document.querySelectorAll('.edit-btn').forEach(btn => {
-                    btn.addEventListener('click', editNews);
-                });
-                
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', deleteNews);
-                });
-                
+                    console.log('No news available');
+                }
             } catch (error) {
+                // Improved error handling
                 console.error('Error loading news:', error);
                 
-                // 檢查是否是權限錯誤
+                let errorTitle = 'Unable to Load News';
+                let errorMessage = 'Cannot connect to server. Please try again later.';
+                
+                // 判斷錯誤類型並提供相應訊息
                 if (error.code === 'permission-denied') {
-                    newsContainer.innerHTML = '<p style="text-align:center;color:#ff4444;">您沒有權限查看新聞列表。請確認您的登入狀態和權限設置。</p>';
-                } else {
-                    newsContainer.innerHTML = `<p style="text-align:center;color:#ff4444;">載入失敗：${error.message}</p>`;
+                    errorTitle = 'Access Restricted';
+                    errorMessage = 'You do not have permission to view this content.';
+                    console.warn('Firebase permission issue: Using local fallback data');
+                } else if (error.code === 'unavailable') {
+                    errorTitle = 'Server Unavailable';
+                    errorMessage = 'The server is currently unavailable. Please try again later.';
+                } else if (error.code === 'not-found') {
+                    errorTitle = 'Resource Not Found';
+                    errorMessage = 'The requested data cannot be found.';
                 }
+                
+                // Display error prompt with improved messaging
+                newsContainer.innerHTML = `
+                    <li class="news-item error">
+                        <h3 class="news-title">${errorTitle}</h3>
+                        <p class="news-desc">${errorMessage}</p>
+                    </li>
+                `;
             }
         }
 
-        // 刪除新聞
-        async function deleteNews(event) {
-            const newsId = event.target.getAttribute('data-id');
-            
-            if (confirm('確定要刪除這條新聞嗎？此操作無法撤銷。')) {
-                try {
-                    // 確保用戶已登入
-                    const currentUser = auth.currentUser;
-                    if (!currentUser) {
-                        throw new Error('請先登入才能進行此操作');
-                    }
-                    
-                    await db.collection('news').doc(newsId).delete();
-                    loadNews(); // 重新載入新聞列表
-                } catch (error) {
-                    console.error('Error deleting news:', error);
-                    
-                    let errorMessage = '刪除失敗';
-                    if (error.code === 'permission-denied') {
-                        errorMessage += '：您沒有權限刪除此新聞。請確認您的登入狀態和權限設置。';
-                    } else {
-                        errorMessage += `：${error.message}`;
-                    }
-                    
-                    alert(errorMessage);
-                }
+        // Logout handling
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                console.log('Starting logout process...');
+                await firebase.auth().signOut();
+                console.log('Logout successful, redirecting to home page...');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Error during logout: ' + error.message);
             }
-        }
+        });
+
+        // Check user login status
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User logged in:', user.email);
+                // Update user info
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('userEmail').textContent = user.email;
+                
+                // Update user avatar
+                const avatarElement = document.getElementById('userAvatar');
+                const initialElement = document.getElementById('userInitial');
+                
+                if (user.photoURL) {
+                    // If user has an avatar (e.g., from Google login), display it
+                    avatarElement.src = user.photoURL;
+                    avatarElement.style.display = 'block';
+                    initialElement.style.display = 'none';
+                } else {
+                    // If no avatar, display first letter of name
+                    const initial = displayName.charAt(0);
+                    initialElement.textContent = initial;
+                    initialElement.style.display = 'flex';
+                    avatarElement.style.display = 'none';
+                }
+            } else {
+                console.log('User not logged in, redirecting to home page...');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Navigation handling
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                document.querySelector('.nav-link.active').classList.remove('active');
+                e.currentTarget.classList.add('active');
+            });
+        });
     </script>
 </body>
 </html> 
