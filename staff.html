@@ -644,16 +644,9 @@
                 const errorDiv = document.getElementById('login-error');
                 errorDiv.style.display = 'none';
                 
-                // 創建 Google 登入提供者
-                const provider = new firebase.auth.GoogleAuthProvider();
-                
-                // 設定 Google 登入選項，強制使用者選擇帳號
-                provider.setCustomParameters({
-                  prompt: 'select_account'
-                });
-                
+                // 使用全局定義的 Google 登入提供者
                 // 使用彈出方式登入
-                auth.signInWithPopup(provider)
+                auth.signInWithPopup(googleProvider)
                     .then((result) => {
                         // 成功登入
                         console.log('Google 登入成功', result.user.email);
