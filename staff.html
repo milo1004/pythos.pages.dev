@@ -5,15 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS - Staff Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-    <!-- Firebase 配置 -->
-    <script src="firebase-config.js"></script>
-    <!-- Marked.js for Markdown support -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 直接初始化 Firebase -->
+    <script>
+        // Firebase 配置
+        const firebaseConfig = {
+          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+          authDomain: "pythos-website.firebaseapp.com",
+          projectId: "pythos-website",
+          storageBucket: "pythos-website.firebasestorage.app",
+          messagingSenderId: "781241739137",
+          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+          measurementId: "G-HE54S62K6K"
+        };
+    
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <style>
         :root {
             --primary: #ffe500;
@@ -213,11 +223,9 @@
         }
 
         .news-form {
-            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            margin-bottom: 2rem;
         }
 
         .form-group {
@@ -228,122 +236,25 @@
 
         .form-group label {
             color: var(--primary);
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
-        .form-group label small {
-            color: #ccc;
-            font-size: 0.8rem;
-        }
-
-        .form-group input, .form-group textarea {
+        .form-group input, 
+        .form-group textarea {
             padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.3);
             border-radius: 6px;
             color: var(--light);
             font-family: 'Roboto Mono', monospace;
-            font-size: 0.9rem;
+            resize: none;
         }
 
-        .form-group input:focus, .form-group textarea:focus {
+        .form-group input:focus, 
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 5px rgba(255, 229, 0, 0.3);
-        }
-        
-        .markdown-tips {
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-        }
-        
-        .markdown-tips summary {
-            color: #aaa;
-            cursor: pointer;
-        }
-        
-        .tips-content {
-            margin-top: 0.5rem;
-            padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 0.5rem;
-        }
-        
-        .tips-content p {
-            margin: 0;
-            color: #ddd;
-            font-family: monospace;
-        }
-        
-        .markdown-preview {
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-height: 150px;
-            color: #ccc;
-            line-height: 1.5;
-        }
-        
-        .markdown-preview h1, 
-        .markdown-preview h2, 
-        .markdown-preview h3 {
-            color: #fff;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .markdown-preview h1 {
-            font-size: 1.5rem;
-        }
-        
-        .markdown-preview h2 {
-            font-size: 1.3rem;
-        }
-        
-        .markdown-preview h3 {
-            font-size: 1.1rem;
-        }
-        
-        .markdown-preview p {
-            margin-bottom: 0.8rem;
-        }
-        
-        .markdown-preview a {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-        
-        .markdown-preview code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.85rem;
-        }
-        
-        .markdown-preview pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.8rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-bottom: 1rem;
-        }
-        
-        .markdown-preview ul, 
-        .markdown-preview ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .markdown-preview blockquote {
-            border-left: 3px solid var(--primary);
-            padding-left: 1rem;
-            margin-left: 0.5rem;
-            color: #aaa;
+            box-shadow: 0 0 10px rgba(255, 229, 0, 0.2);
         }
 
         .publish-btn {
@@ -377,120 +288,33 @@
         }
 
         .news-item {
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .news-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .news-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
         }
 
         .news-title {
-            color: var(--primary);
+            color: var(--light);
             font-size: 1.2rem;
-            margin: 0;
         }
 
         .news-date {
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-        
-        .news-content {
-            color: var(--light);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-        
-        .news-content h1, 
-        .news-content h2, 
-        .news-content h3 {
-            color: #fff;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .news-content h1 {
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-        
-        .news-content h2 {
-            font-size: 1.3rem;
-        }
-        
-        .news-content h3 {
-            font-size: 1.1rem;
-        }
-        
-        .news-content p {
-            margin-bottom: 0.8rem;
-        }
-        
-        .news-content a {
             color: var(--accent);
-            text-decoration: underline;
-            transition: color 0.2s ease;
-        }
-        
-        .news-content a:hover {
-            color: var(--primary);
-        }
-        
-        .news-content code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.85rem;
-        }
-        
-        .news-content pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.8rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-bottom: 1rem;
-        }
-        
-        .news-content ul, 
-        .news-content ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .news-content blockquote {
-            border-left: 3px solid var(--accent);
-            padding-left: 1rem;
-            margin-left: 0.5rem;
-            color: #ccc;
-        }
-        
-        .news-content img {
-            max-width: 100%;
-            border-radius: 5px;
-            margin: 1rem 0;
+            font-size: 0.9rem;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
+        .news-desc {
+            color: #aaa;
+            line-height: 1.5;
         }
 
         .delete-btn {
@@ -529,6 +353,12 @@
             background: rgba(255, 229, 0, 0.3);
         }
         
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+
         .success-message {
             background: rgba(0, 255, 0, 0.1);
             color: #4cff4c;
@@ -594,14 +424,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="newsDesc">內容 (支援 Markdown 格式)</label>
+                    <label for="newsDesc">內容</label>
                     <textarea id="newsDesc" rows="5" required placeholder="輸入新聞內容..."></textarea>
-                    <div class="markdown-help">支援 Markdown 格式: **粗體**, *斜體*, [連結](URL), # 標題, - 列表, ```代碼```</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="markdownPreview">預覽</label>
-                    <div id="markdownPreview" class="markdown-preview"></div>
                 </div>
                 
                 <div style="display: flex; gap: 1rem;">
@@ -644,9 +468,16 @@
                 const errorDiv = document.getElementById('login-error');
                 errorDiv.style.display = 'none';
                 
-                // 使用全局定義的 Google 登入提供者
+                // 創建 Google 登入提供者
+                const provider = new firebase.auth.GoogleAuthProvider();
+                
+                // 設定 Google 登入選項，強制使用者選擇帳號
+                provider.setCustomParameters({
+                  prompt: 'select_account'
+                });
+                
                 // 使用彈出方式登入
-                auth.signInWithPopup(googleProvider)
+                auth.signInWithPopup(provider)
                     .then((result) => {
                         // 成功登入
                         console.log('Google 登入成功', result.user.email);
@@ -902,9 +733,6 @@
                         displayDate += ` (Edited: ${formattedLastEdited})`;
                     }
                     
-                    // 將 Markdown 轉換為 HTML
-                    const parsedContent = marked.parse(news.desc);
-                    
                     const newsElement = document.createElement('div');
                     newsElement.className = 'news-item';
                     newsElement.innerHTML = `
@@ -912,7 +740,7 @@
                             <h4 class="news-title">${news.title}</h4>
                             <span class="news-date">${displayDate}</span>
                         </div>
-                        <div class="news-content">${parsedContent}</div>
+                        <p class="news-desc">${news.desc}</p>
                         <div class="action-buttons">
                             <button class="edit-btn" data-id="${newsId}">Edit</button>
                             <button class="delete-btn" data-id="${newsId}">Delete</button>
@@ -976,14 +804,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 設置今天的日期作為預設值
             document.getElementById('newsDate').value = new Date().toISOString().split('T')[0];
-            
-            // 為新聞內容添加實時 Markdown 預覽
-            const descInput = document.getElementById('newsDesc');
-            const previewDiv = document.getElementById('markdownPreview');
-            
-            descInput.addEventListener('input', () => {
-                previewDiv.innerHTML = marked.parse(descInput.value);
-            });
         });
     </script>
 </body>
