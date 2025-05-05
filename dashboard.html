@@ -9,21 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
-            authDomain: "pythos-website.firebaseapp.com",
-            projectId: "pythos-website",
-            storageBucket: "pythos-website.firebasestorage.app",
-            messagingSenderId: "781241739137",
-            appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
-            measurementId: "G-HE54S62K6K"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-    </script>
+    <script src="firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --primary: #ffe500;
@@ -249,33 +236,109 @@
         }
 
         .news-item {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
+            padding: 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .news-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
+        .news-item:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .news-date {
-            font-size: 0.9rem;
-            color: var(--accent);
+            font-size: 0.8rem;
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
 
         .news-title {
-            color: var(--light);
             font-size: 1.2rem;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
         }
 
         .news-desc {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Markdown styles for news content */
+        .news-content {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .news-content h1, .news-content h2, .news-content h3 {
+            color: #fff;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .news-content h1 {
+            font-size: 1.3rem;
+        }
+        
+        .news-content h2 {
+            font-size: 1.2rem;
+        }
+        
+        .news-content h3 {
+            font-size: 1.1rem;
+        }
+        
+        .news-content p {
+            margin-bottom: 0.8rem;
+        }
+        
+        .news-content a {
+            color: var(--primary);
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+        
+        .news-content a:hover {
+            color: var(--accent);
+        }
+        
+        .news-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .news-content pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .news-content ul, .news-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .news-content blockquote {
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin-left: 0.5rem;
             color: #aaa;
-            font-size: 0.95rem;
-            line-height: 1.6;
+        }
+        
+        .news-content img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .loading-placeholder, .error, .no-news {
+            padding: 1rem;
+            text-align: center;
         }
 
         .settings-form {
@@ -547,12 +610,15 @@
                         // 格式化日期顯示：將 YYYY-MM-DD 轉換為 YYYY/MM/DD
                         const formattedDate = news.date ? news.date.replace(/-/g, '/') : 'Date not specified';
                         
+                        // 解析 Markdown 格式的新聞內容
+                        const parsedContent = marked.parse(news.desc);
+                        
                         const newsElement = document.createElement('li');
                         newsElement.className = 'news-item';
                         newsElement.innerHTML = `
                             <div class="news-date">${formattedDate}</div>
                             <h3 class="news-title">${news.title}</h3>
-                            <p class="news-desc">${news.desc}</p>
+                            <div class="news-content">${parsedContent}</div>
                         `;
                         
                         newsContainer.appendChild(newsElement);
