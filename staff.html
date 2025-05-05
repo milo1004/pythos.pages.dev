@@ -594,30 +594,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="newsDesc">內容 <small>(支援 Markdown 格式)</small></label>
-                    <textarea id="newsDesc" rows="10" required placeholder="輸入新聞內容..."></textarea>
-                    <div class="markdown-tips">
-                        <details>
-                            <summary>Markdown 格式提示</summary>
-                            <div class="tips-content">
-                                <p># 標題1</p>
-                                <p>## 標題2</p>
-                                <p>**粗體文字**</p>
-                                <p>*斜體文字*</p>
-                                <p>[連結文字](https://example.com)</p>
-                                <p>- 項目列表</p>
-                                <p>1. 編號列表</p>
-                                <p>`程式碼`</p>
-                                <p>```</p>
-                                <p>程式碼區塊</p>
-                                <p>```</p>
-                            </div>
-                        </details>
-                    </div>
+                    <label for="newsDesc">內容 (支援 Markdown 格式)</label>
+                    <textarea id="newsDesc" rows="5" required placeholder="輸入新聞內容..."></textarea>
+                    <div class="markdown-help">支援 Markdown 格式: **粗體**, *斜體*, [連結](URL), # 標題, - 列表, ```代碼```</div>
                 </div>
                 
                 <div class="form-group">
-                    <label>預覽</label>
+                    <label for="markdownPreview">預覽</label>
                     <div id="markdownPreview" class="markdown-preview"></div>
                 </div>
                 
