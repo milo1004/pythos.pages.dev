@@ -7,7 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- 直接初始化 Firebase -->
+    <script>
+        // Firebase 配置
+        const firebaseConfig = {
+          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+          authDomain: "pythos-website.firebaseapp.com",
+          projectId: "pythos-website",
+          storageBucket: "pythos-website.firebasestorage.app",
+          messagingSenderId: "781241739137",
+          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+          measurementId: "G-HE54S62K6K"
+        };
+    
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <style>
         :root {
             --primary: #ffe500;
@@ -428,9 +444,9 @@
         <button onclick="logout()" class="logout-btn">登出</button>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
-        // 初始化Firestore
+        // 獲取 Firebase 服務實例
+        const auth = firebase.auth();
         const db = firebase.firestore();
         
         // 允許的電子郵件列表
@@ -443,10 +459,16 @@
         // Google 登入
         document.getElementById('googleSignIn').addEventListener('click', () => {
             try {
+                // 創建 Google 登入提供者
                 const provider = new firebase.auth.GoogleAuthProvider();
                 
-                // 確保使用彈出方式登入
-                firebase.auth().signInWithPopup(provider)
+                // 設定 Google 登入選項，強制使用者選擇帳號
+                provider.setCustomParameters({
+                  prompt: 'select_account'
+                });
+                
+                // 使用彈出方式登入
+                auth.signInWithPopup(provider)
                     .then((result) => {
                         // 成功登入
                         console.log('Google 登入成功', result.user.email);
@@ -467,7 +489,7 @@
         });
 
         // 檢查用戶權限
-        firebase.auth().onAuthStateChanged((user) => {
+        auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log('用戶已登入:', user.email);
                 if (ALLOWED_EMAILS.includes(user.email)) {
@@ -482,7 +504,7 @@
                     errorDiv.textContent = '您沒有權限訪問此管理頁面';
                     errorDiv.style.display = 'block';
                     // 自動登出未授權用戶
-                    firebase.auth().signOut();
+                    auth.signOut();
                 }
             } else {
                 console.log('用戶未登入');
@@ -493,7 +515,7 @@
 
         // 登出功能
         function logout() {
-            firebase.auth().signOut()
+            auth.signOut()
                 .then(() => {
                     console.log('成功登出');
                     document.getElementById('authContent').style.display = 'none';
