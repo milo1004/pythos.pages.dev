@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PythOS - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --primary: #ffe500;
+            --secondary: #205c64;
+            --accent: #fabd69;
+            --dark: #0a0a0a;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: #1a1a1a;
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-right: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar .initial {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .user-email {
+            color: var(--accent);
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 229, 0, 0.1);
+            color: var(--primary);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .welcome-message {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .language-selector {
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        .language-selector select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 2rem 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .language-selector::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 229, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .card-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .card-content {
+            color: #aaa;
+        }
+
+        .news-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .news-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .news-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .news-date {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .news-title {
+            color: var(--light);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .news-desc {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .settings-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .btn-save {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-save:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                display: block;
+                transform: translateX(0);
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .header {
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-message {
+                font-size: 1.2rem;
+            }
+
+            .dashboard-card {
+                padding: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <div class="initial" id="userInitial"></div>
+                    <img id="userAvatar" style="display: none;" alt="User Avatar">
+                </div>
+                <div class="user-name" id="userName">[username]</div>
+                <div class="user-email" id="userEmail"></div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#overview" class="nav-link active">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            概覽
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#news" class="nav-link">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            系統狀態
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-message">歡迎回來！</h1>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="language-selector">
+                        <select id="language-select" onchange="changeLanguage(this.value)">
+                            <option value="zh" selected>正體中文</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-logout" id="logoutBtn">登出</button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">系統狀態</h2>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="24" height="24" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                                <span style="color: #ffe500;">版本</span>
+                            </div>
+                            <div>PythOS 6.0 NewCore</div>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="24" height="24" fill="none" stroke="#ffe500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span style="color: #ffe500;">更新時間</span>
+                            </div>
+                            <div>2024/04/29</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">最新消息</h2>
+                    </div>
+                    <div class="card-content">
+                        <ul class="news-list" id="dashboardNewsList">
+                            <li class="news-item">
+                                <div class="news-date">2024/04/29</div>
+                                <h3 class="news-title">PythOS 6.0 NewCore 發布</h3>
+                                <p class="news-desc">全新的核心系統，提供更好的性能和更多新功能。</p>
+                            </li>
+                            <li class="news-item">
+                                <div class="news-date">2024/04/28</div>
+                                <h3 class="news-title">開發者更新</h3>
+                                <p class="news-desc">新增應用程式開發功能，現在可以更容易地創建自己的應用。</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Firebase 配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+            authDomain: "pythos-website.firebaseapp.com",
+            projectId: "pythos-website",
+            storageBucket: "pythos-website.firebasestorage.app",
+            messagingSenderId: "781241739137",
+            appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+            measurementId: "G-HE54S62K6K"
+        };
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // 獲取 Firebase 服務實例
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const analytics = firebase.analytics();
+
+        // 語言切換功能
+        function changeLanguage(lang) {
+            // 儲存語言偏好
+            localStorage.setItem('preferred_language', lang);
+            
+            // 更新頁面文字
+            const translations = {
+                'zh': {
+                    'welcome': '歡迎回來！',
+                    'logout': '登出',
+                    'overview': '概覽',
+                    'system_status': '系統狀態',
+                    'version': '版本',
+                    'update_time': '更新時間',
+                    'news': '最新消息',
+                    'developer_update': '開發者更新',
+                    'new_features': '全新的核心系統，提供更好的性能和更多新功能。',
+                    'dev_desc': '新增應用程式開發功能，現在可以更容易地創建自己的應用。'
+                },
+                'en': {
+                    'welcome': 'Welcome Back!',
+                    'logout': 'Logout',
+                    'overview': 'Overview',
+                    'system_status': 'System Status',
+                    'version': 'Version',
+                    'update_time': 'Last Update',
+                    'news': 'Latest News',
+                    'developer_update': 'Developer Update',
+                    'new_features': 'New core system with better performance and more features.',
+                    'dev_desc': 'Added app development features, making it easier to create your own applications.'
+                }
+            };
+
+            const t = translations[lang];
+
+            // 更新所有需要翻譯的元素
+            document.querySelector('.welcome-message').textContent = t.welcome;
+            document.getElementById('logoutBtn').textContent = t.logout;
+            document.querySelector('a[href="#overview"]').textContent = t.overview;
+            document.querySelector('a[href="#news"]').textContent = t.system_status;
+            document.querySelectorAll('.card-title')[0].textContent = t.system_status;
+            document.querySelectorAll('.card-title')[1].textContent = t.news;
+            document.querySelector('[style*="color: #ffe500"]').textContent = t.version;
+            document.querySelectorAll('[style*="color: #ffe500"]')[1].textContent = t.update_time;
+            
+            // 不更新新聞內容，保持原樣
+        }
+
+        // 頁面載入時檢查並應用已保存的語言偏好
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLanguage = localStorage.getItem('preferred_language');
+            if (savedLanguage) {
+                document.getElementById('language-select').value = savedLanguage;
+                changeLanguage(savedLanguage);
+            }
+
+            // 載入最新新聞
+            loadLatestNews();
+        });
+
+        // 載入最新新聞
+        async function loadLatestNews() {
+            const newsContainer = document.getElementById('dashboardNewsList');
+            
+            try {
+                // 從Firestore獲取最新的新聞數據
+                const snapshot = await db.collection('news')
+                    .orderBy('timestamp', 'desc')
+                    .limit(5) // 只顯示最新的5條
+                    .get();
+                
+                if (!snapshot.empty) {
+                    // 清空容器
+                    newsContainer.innerHTML = '';
+                    
+                    // 顯示所有新聞
+                    snapshot.forEach(doc => {
+                        const news = doc.data();
+                        
+                        const newsElement = document.createElement('li');
+                        newsElement.className = 'news-item';
+                        newsElement.innerHTML = `
+                            <div class="news-date">${news.date.replace(/-/g, '/')}</div>
+                            <h3 class="news-title">${news.title}</h3>
+                            <p class="news-desc">${news.desc}</p>
+                        `;
+                        
+                        newsContainer.appendChild(newsElement);
+                    });
+                }
+                // 如果沒有新聞或發生錯誤，保留默認新聞顯示
+            } catch (error) {
+                console.error('Error loading news:', error);
+            }
+        }
+
+        // 登出處理
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                console.log('開始登出程序...');
+                await firebase.auth().signOut();
+                console.log('登出成功，重定向到首頁...');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('登出錯誤：', error);
+                alert('登出時發生錯誤：' + error.message);
+            }
+        });
+
+        // 檢查用戶登入狀態
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log('用戶已登入：', user.email);
+                // 更新用戶資訊
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('userEmail').textContent = user.email;
+                
+                // 更新用戶頭像
+                const avatarElement = document.getElementById('userAvatar');
+                const initialElement = document.getElementById('userInitial');
+                
+                if (user.photoURL) {
+                    // 如果用戶有頭像（例如從 Google 登入），顯示頭像
+                    avatarElement.src = user.photoURL;
+                    avatarElement.style.display = 'block';
+                    initialElement.style.display = 'none';
+                } else {
+                    // 如果沒有頭像，顯示名字首字母
+                    const initial = displayName.charAt(0);
+                    initialElement.textContent = initial;
+                    initialElement.style.display = 'flex';
+                    avatarElement.style.display = 'none';
+                }
+            } else {
+                console.log('用戶未登入，重定向到首頁...');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // 導航處理
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                document.querySelector('.nav-link.active').classList.remove('active');
+                e.currentTarget.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html> 
