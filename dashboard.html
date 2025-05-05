@@ -757,33 +757,61 @@
             const loginError = document.getElementById('loginError');
             
             try {
+                // Clear any previous error message
+                loginError.style.display = 'none';
+                
+                // Sign in with email and password
                 await firebase.auth().signInWithEmailAndPassword(email, password);
-                document.getElementById('loginOverlay').style.display = 'none';
+                
+                // If successful, the onAuthStateChanged listener will handle the UI update
+                // No need to manually hide the login overlay here
             } catch (error) {
+                console.error('Login error:', error.code, error.message);
                 loginError.style.display = 'block';
+                
+                // Display specific error messages based on error code
                 if (error.code === 'auth/user-not-found') {
                     loginError.textContent = '找不到此用戶';
                 } else if (error.code === 'auth/wrong-password') {
                     loginError.textContent = '密碼錯誤';
+                } else if (error.code === 'auth/invalid-email') {
+                    loginError.textContent = '無效的電子郵件格式';
+                } else if (error.code === 'auth/too-many-requests') {
+                    loginError.textContent = '嘗試次數過多，請稍後再試';
                 } else {
                     loginError.textContent = '登入失敗，請稍後再試';
                 }
-                console.error('登入錯誤:', error.code, error.message);
             }
         });
         
         // Google 登入
         document.getElementById('googleLogin').addEventListener('click', async () => {
             try {
-                const result = await firebase.auth().signInWithPopup(googleProvider);
-                if (result.user) {
-                    document.getElementById('loginOverlay').style.display = 'none';
-                }
+                // Clear any previous error message
+                document.getElementById('loginError').style.display = 'none';
+                
+                // Sign in with Google
+                await firebase.auth().signInWithPopup(googleProvider);
+                
+                // If successful, the onAuthStateChanged listener will handle the UI update
+                // No need to manually hide the login overlay here
             } catch (error) {
+                console.error('Google login error:', error.code, error.message);
                 const loginError = document.getElementById('loginError');
                 loginError.style.display = 'block';
-                loginError.textContent = '登入失敗，請稍後再試';
-                console.error('Google 登入錯誤:', error.code, error.message);
+                
+                // Display specific error messages based on error code
+                if (error.code === 'auth/popup-closed-by-user') {
+                    loginError.textContent = '登入視窗已關閉，請再試一次';
+                } else if (error.code === 'auth/popup-blocked') {
+                    loginError.textContent = '登入視窗被封鎖，請允許彈出視窗後再試';
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    loginError.textContent = '登入請求已取消，請再試一次';
+                } else if (error.code === 'auth/network-request-failed') {
+                    loginError.textContent = '網絡錯誤，請檢查您的網絡連接';
+                } else {
+                    loginError.textContent = '登入失敗，請稍後再試';
+                }
             }
         });
 
@@ -869,6 +897,12 @@
             } else {
                 console.log('User not logged in, showing login screen');
                 document.getElementById('loginOverlay').style.display = 'flex';
+                
+                // Reset login form to clear any previous input/errors
+                if (document.getElementById('loginForm')) {
+                    document.getElementById('loginForm').reset();
+                    document.getElementById('loginError').style.display = 'none';
+                }
             }
         });
 
