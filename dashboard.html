@@ -266,25 +266,29 @@
             line-height: 1.5;
         }
         
-        /* Markdown styles for news content */
         .news-content {
-            color: #ccc;
             font-size: 0.9rem;
             line-height: 1.5;
+            margin-top: 1rem;
         }
         
-        .news-content h1, .news-content h2, .news-content h3 {
-            color: #fff;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
+        .news-content h1, 
+        .news-content h2, 
+        .news-content h3, 
+        .news-content h4, 
+        .news-content h5, 
+        .news-content h6 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            color: var(--primary);
         }
         
         .news-content h1 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
         }
         
         .news-content h2 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         
         .news-content h3 {
@@ -292,51 +296,88 @@
         }
         
         .news-content p {
-            margin-bottom: 0.8rem;
+            margin-bottom: 1em;
+        }
+        
+        .news-content ul, 
+        .news-content ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        
+        .news-content li {
+            margin-bottom: 0.5em;
         }
         
         .news-content a {
             color: var(--primary);
-            text-decoration: underline;
-            transition: color 0.2s ease;
+            text-decoration: none;
         }
         
         .news-content a:hover {
-            color: var(--accent);
-        }
-        
-        .news-content code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.85rem;
-        }
-        
-        .news-content pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.8rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-bottom: 1rem;
-        }
-        
-        .news-content ul, .news-content ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
+            text-decoration: underline;
         }
         
         .news-content blockquote {
             border-left: 3px solid var(--primary);
-            padding-left: 1rem;
-            margin-left: 0.5rem;
+            padding-left: 1em;
+            margin-left: 0;
+            margin-right: 0;
+            font-style: italic;
             color: #aaa;
+        }
+        
+        .news-content code {
+            font-family: 'Roboto Mono', monospace;
+            background: rgba(255, 229, 0, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .news-content pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+        
+        .news-content pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
         }
         
         .news-content img {
             max-width: 100%;
+            height: auto;
             border-radius: 5px;
-            margin: 1rem 0;
+            margin: 1em 0;
+        }
+        
+        .news-content hr {
+            border: none;
+            border-top: 1px solid rgba(255, 229, 0, 0.2);
+            margin: 1.5em 0;
+        }
+        
+        .news-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+        
+        .news-content th, 
+        .news-content td {
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            padding: 0.5em;
+            text-align: left;
+        }
+        
+        .news-content th {
+            background: rgba(255, 229, 0, 0.1);
+            color: var(--primary);
         }
         
         .loading-placeholder, .error, .no-news {
@@ -417,9 +458,192 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* 登入頁面樣式 */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo img {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .login-form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .login-form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 6px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .login-form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--primary);
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .login-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .google-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            cursor: pointer;
+            background: #ffffff;
+            color: #757575;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .google-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        
+        .login-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            color: var(--primary);
+        }
+        
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: rgba(255, 229, 0, 0.2);
+        }
+        
+        .login-divider::before {
+            left: 0;
+        }
+        
+        .login-divider::after {
+            right: 0;
+        }
+        
+        .login-error {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .return-home {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .return-home a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .return-home a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+    <!-- 登入覆蓋層 -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="PythOS.png" alt="PythOS Logo">
+            </div>
+            <h1 style="text-align: center; color: var(--primary); margin-bottom: 2rem;">Login</h1>
+            
+            <form id="loginForm">
+                <div class="login-form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="login-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            
+            <div class="login-divider">or</div>
+            
+            <button type="button" class="google-btn" id="googleLogin">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width: 16px; height: 16px;">
+                Continue with Google
+            </button>
+            
+            <div id="loginError" class="login-error"></div>
+            
+            <div class="return-home">
+                <a href="index.html">Return to Home</a>
+            </div>
+        </div>
+    </div>
+
     <div class="dashboard">
         <aside class="sidebar">
             <div class="user-info">
@@ -523,6 +747,45 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         const analytics = firebase.analytics();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        
+        // 登入表單處理
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginError = document.getElementById('loginError');
+            
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                document.getElementById('loginOverlay').style.display = 'none';
+            } catch (error) {
+                loginError.style.display = 'block';
+                if (error.code === 'auth/user-not-found') {
+                    loginError.textContent = '找不到此用戶';
+                } else if (error.code === 'auth/wrong-password') {
+                    loginError.textContent = '密碼錯誤';
+                } else {
+                    loginError.textContent = '登入失敗，請稍後再試';
+                }
+                console.error('登入錯誤:', error.code, error.message);
+            }
+        });
+        
+        // Google 登入
+        document.getElementById('googleLogin').addEventListener('click', async () => {
+            try {
+                const result = await firebase.auth().signInWithPopup(googleProvider);
+                if (result.user) {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                }
+            } catch (error) {
+                const loginError = document.getElementById('loginError');
+                loginError.style.display = 'block';
+                loginError.textContent = '登入失敗，請稍後再試';
+                console.error('Google 登入錯誤:', error.code, error.message);
+            }
+        });
 
         // Language switching functionality
         function changeLanguage(lang) {
@@ -576,6 +839,9 @@
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 console.log('User logged in:', user.email);
+                // Hide login overlay
+                document.getElementById('loginOverlay').style.display = 'none';
+                
                 // Update user info
                 const displayName = user.displayName || user.email.split('@')[0];
                 document.getElementById('userName').textContent = displayName;
@@ -601,18 +867,43 @@
                 // Load latest news now that we know user is logged in
                 loadLatestNews();
             } else {
-                console.log('User not logged in, redirecting to home page...');
-                window.location.href = 'index.html';
+                console.log('User not logged in, showing login screen');
+                document.getElementById('loginOverlay').style.display = 'flex';
             }
         });
 
         // Check and apply saved language preference on page load
         document.addEventListener('DOMContentLoaded', () => {
+            // Configure marked.js options
+            marked.setOptions({
+                headerIds: false,                  // Disable header IDs for security
+                mangle: false,                     // Disable mangling for security
+                sanitize: false,                   // 不使用内置的 sanitize (已棄用)
+                silent: true,                      // Don't throw for parse errors
+                smartypants: true,                 // Enable smart typographic punctuation
+                breaks: true,                      // Treat newlines as <br>
+                gfm: true,                         // Enable GitHub Flavored Markdown
+                xhtml: false                       // Don't use self-closing tags
+            });
+            
+            // Set up a custom renderer for enhanced security and styling
+            const renderer = new marked.Renderer();
+            
+            // Add target="_blank" to links for opening links in new tab
+            renderer.link = function(href, title, text) {
+                const link = marked.Renderer.prototype.link.apply(this, arguments);
+                return link.replace('<a', '<a target="_blank" rel="noopener noreferrer"');
+            };
+            
+            // Apply the renderer
+            marked.use({ renderer });
+            
+            // Apply saved language preference
             const savedLanguage = localStorage.getItem('preferred_language') || 'en';
             document.getElementById('language-select').value = savedLanguage;
             changeLanguage(savedLanguage);
             
-            // Note: Moved loadLatestNews() to onAuthStateChanged to ensure user is authenticated first
+            // Note: loadLatestNews() is called in onAuthStateChanged to ensure user is authenticated first
         });
 
         // Load latest news
@@ -643,21 +934,38 @@
                     snapshot.forEach(doc => {
                         const news = doc.data();
                         
-                        // 格式化日期顯示：將 YYYY-MM-DD 轉換為 YYYY/MM/DD
+                        // Format date display: convert YYYY-MM-DD to YYYY/MM/DD
                         const formattedDate = news.date ? news.date.replace(/-/g, '/') : 'Date not specified';
                         
-                        // 解析 Markdown 格式的新聞內容
-                        const parsedContent = marked.parse(news.desc);
-                        
-                        const newsElement = document.createElement('li');
-                        newsElement.className = 'news-item';
-                        newsElement.innerHTML = `
-                            <div class="news-date">${formattedDate}</div>
-                            <h3 class="news-title">${news.title}</h3>
-                            <div class="news-content">${parsedContent}</div>
-                        `;
-                        
-                        newsContainer.appendChild(newsElement);
+                        // Parse Markdown content
+                        try {
+                            // Safely parse Markdown using marked.js
+                            const parsedContent = marked.parse(news.desc || '');
+                            
+                            const newsElement = document.createElement('li');
+                            newsElement.className = 'news-item';
+                            newsElement.innerHTML = `
+                                <div class="news-date">${formattedDate}</div>
+                                <h3 class="news-title">${news.title || 'No Title'}</h3>
+                                <div class="news-content">${parsedContent}</div>
+                            `;
+                            
+                            newsContainer.appendChild(newsElement);
+                            
+                        } catch (parseError) {
+                            console.error('Error parsing markdown:', parseError);
+                            
+                            // Fallback to plain text if Markdown parsing fails
+                            const newsElement = document.createElement('li');
+                            newsElement.className = 'news-item';
+                            newsElement.innerHTML = `
+                                <div class="news-date">${formattedDate}</div>
+                                <h3 class="news-title">${news.title || 'No Title'}</h3>
+                                <div class="news-desc">${news.desc || 'No content available'}</div>
+                            `;
+                            
+                            newsContainer.appendChild(newsElement);
+                        }
                     });
                 } else {
                     // Display no news prompt
@@ -676,7 +984,7 @@
                 let errorTitle = 'Unable to Load News';
                 let errorMessage = 'Cannot connect to server. Please try again later.';
                 
-                // 判斷錯誤類型並提供相應訊息
+                // Determine error type and provide appropriate message
                 if (error.code === 'permission-denied') {
                     errorTitle = 'Access Restricted';
                     errorMessage = 'You do not have permission to view this content.';
