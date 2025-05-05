@@ -273,8 +273,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-    <!-- Firebase 配置 -->
+
+    <!-- 自定義腳本 -->
     <script src="firebase-config.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/languageManager.js"></script>
 </head>
 <body>
     <div class="login-container">
@@ -327,10 +330,6 @@
         </div>
     </div>
 
-    <!-- 自定義腳本 -->
-    <script src="firebase-config.js"></script>
-    <script src="js/translations.js"></script>
-    <script src="js/languageManager.js"></script>
     <script>
         // 語言切換功能
         function changeLanguage(lang) {
