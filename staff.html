@@ -5,27 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS - Staff Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <!-- Firebase 配置 -->
+    <script src="firebase-config.js"></script>
     <!-- Marked.js for Markdown support -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- 直接初始化 Firebase -->
-    <script>
-        // Firebase 配置
-        const firebaseConfig = {
-          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
-          authDomain: "pythos-website.firebaseapp.com",
-          projectId: "pythos-website",
-          storageBucket: "pythos-website.firebasestorage.app",
-          messagingSenderId: "781241739137",
-          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
-          measurementId: "G-HE54S62K6K"
-        };
-    
-        // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
-    </script>
     <style>
         :root {
             --primary: #ffe500;
