@@ -513,27 +513,28 @@
 
         /* 登入彈窗 */
         .login-modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
+            background: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            display: none;
         }
 
         .modal-content {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
+            background: #1a1a1a;
             border-radius: 12px;
             width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255, 229, 0, 0.1);
+            max-width: 450px;
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
         }
 
         .modal-header {
@@ -545,42 +546,107 @@
 
         .modal-title {
             color: var(--primary);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin: 0;
         }
 
         .close-modal {
             background: none;
             border: none;
-            color: var(--light);
-            font-size: 1.5rem;
+            color: #aaa;
+            font-size: 1.8rem;
             cursor: pointer;
-            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
         }
 
         .btn-google {
-            background: #ffffff;
-            color: #757575;
+            background: #fff;
+            color: #444;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.8rem;
-            padding: 0.8rem;
-            font-size: 0.9rem;
             width: 100%;
-            border: 1px solid #dadce0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
         }
 
         .btn-google:hover {
-            background: #f8f9fa;
-            border-color: #dadce0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+            background: #f2f2f2;
         }
 
         .btn-google img {
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* 電子郵件登入表單樣式 */
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #aaa;
+        }
+        
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .login-divider span {
+            padding: 0 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .email-login-form,
+        .register-form {
+            margin-bottom: 1.5rem;
+        }
+        
+        .forgot-password {
+            color: #aaa;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        
+        .login-error,
+        .register-error {
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            min-height: 1.5rem;
+        }
+        
+        .register-link {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+            color: var(--accent);
         }
 
         /* Markdown 樣式 */
@@ -817,6 +883,52 @@
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                 Continue with Google
             </button>
+            
+            <div class="login-divider">
+                <span>or</span>
+            </div>
+            
+            <form id="email-login-form" class="email-login-form">
+                <div class="form-group">
+                    <label for="login-email">電子郵件</label>
+                    <input type="email" id="login-email" placeholder="example@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密碼</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <div class="form-footer">
+                    <div>
+                        <a href="#" id="forgot-password" class="forgot-password">忘記密碼？</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary">登入</button>
+                </div>
+                <div class="login-error" id="login-error"></div>
+            </form>
+            
+            <div class="register-link">
+                <p>還沒有帳戶？ <a href="#" id="show-register">註冊</a></p>
+            </div>
+            
+            <form id="register-form" class="register-form" style="display: none;">
+                <div class="form-group">
+                    <label for="register-email">電子郵件</label>
+                    <input type="email" id="register-email" placeholder="example@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密碼</label>
+                    <input type="password" id="register-password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">確認密碼</label>
+                    <input type="password" id="register-confirm" placeholder="••••••••" required>
+                </div>
+                <div class="form-footer">
+                    <button type="button" id="back-to-login" class="btn btn-secondary">返回登入</button>
+                    <button type="submit" class="btn btn-primary">註冊</button>
+                </div>
+                <div class="register-error" id="register-error"></div>
+            </form>
         </div>
     </div>
     
@@ -1004,7 +1116,141 @@ service cloud.firestore {
                     })
                     .catch((error) => {
                         console.error('Google 登入錯誤:', error);
-                        alert('登入失敗: ' + error.message);
+                    });
+            });
+            
+            // 電子郵件登入
+            const emailLoginForm = document.getElementById('email-login-form');
+            emailLoginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                const errorElement = document.getElementById('login-error');
+                
+                errorElement.textContent = '';
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        loginModal.style.display = 'none';
+                        emailLoginForm.reset();
+                        console.log('電子郵件登入成功:', userCredential.user.email);
+                    })
+                    .catch((error) => {
+                        console.error('電子郵件登入錯誤:', error);
+                        switch (error.code) {
+                            case 'auth/invalid-email':
+                                errorElement.textContent = '無效的電子郵件地址';
+                                break;
+                            case 'auth/user-disabled':
+                                errorElement.textContent = '此帳戶已被停用';
+                                break;
+                            case 'auth/user-not-found':
+                                errorElement.textContent = '找不到此電子郵件的帳戶';
+                                break;
+                            case 'auth/wrong-password':
+                                errorElement.textContent = '密碼錯誤';
+                                break;
+                            default:
+                                errorElement.textContent = '登入失敗，請稍後再試';
+                        }
+                    });
+            });
+            
+            // 顯示註冊表單
+            const showRegister = document.getElementById('show-register');
+            const registerForm = document.getElementById('register-form');
+            showRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                emailLoginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                document.querySelector('.register-link').style.display = 'none';
+            });
+            
+            // 返回登入表單
+            const backToLogin = document.getElementById('back-to-login');
+            backToLogin.addEventListener('click', () => {
+                registerForm.style.display = 'none';
+                emailLoginForm.style.display = 'block';
+                document.querySelector('.register-link').style.display = 'block';
+            });
+            
+            // 註冊新帳戶
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm').value;
+                const errorElement = document.getElementById('register-error');
+                
+                errorElement.textContent = '';
+                
+                // 檢查密碼是否匹配
+                if (password !== confirmPassword) {
+                    errorElement.textContent = '密碼和確認密碼不符';
+                    return;
+                }
+                
+                // 檢查密碼強度
+                if (password.length < 6) {
+                    errorElement.textContent = '密碼必須至少為 6 個字符';
+                    return;
+                }
+                
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        loginModal.style.display = 'none';
+                        registerForm.reset();
+                        console.log('註冊成功:', userCredential.user.email);
+                    })
+                    .catch((error) => {
+                        console.error('註冊錯誤:', error);
+                        switch (error.code) {
+                            case 'auth/email-already-in-use':
+                                errorElement.textContent = '此電子郵件已被使用';
+                                break;
+                            case 'auth/invalid-email':
+                                errorElement.textContent = '無效的電子郵件地址';
+                                break;
+                            case 'auth/weak-password':
+                                errorElement.textContent = '密碼強度不足';
+                                break;
+                            default:
+                                errorElement.textContent = '註冊失敗，請稍後再試';
+                        }
+                    });
+            });
+            
+            // 忘記密碼
+            const forgotPassword = document.getElementById('forgot-password');
+            forgotPassword.addEventListener('click', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const errorElement = document.getElementById('login-error');
+                
+                if (!email) {
+                    errorElement.textContent = '請輸入電子郵件地址';
+                    return;
+                }
+                
+                auth.sendPasswordResetEmail(email)
+                    .then(() => {
+                        errorElement.style.color = '#4caf50';
+                        errorElement.textContent = '密碼重置郵件已發送，請檢查您的電子郵件';
+                    })
+                    .catch((error) => {
+                        console.error('重置密碼錯誤:', error);
+                        errorElement.style.color = '#ff4444';
+                        
+                        switch (error.code) {
+                            case 'auth/invalid-email':
+                                errorElement.textContent = '無效的電子郵件地址';
+                                break;
+                            case 'auth/user-not-found':
+                                errorElement.textContent = '找不到此電子郵件的帳戶';
+                                break;
+                            default:
+                                errorElement.textContent = '無法發送重置郵件，請稍後再試';
+                        }
                     });
             });
 
@@ -1012,7 +1258,7 @@ service cloud.firestore {
             logoutBtn.addEventListener('click', () => {
                 auth.signOut()
                     .then(() => {
-                        console.log('登出成功');
+                        console.log('用戶已登出');
                     })
                     .catch((error) => {
                         console.error('登出錯誤:', error);
