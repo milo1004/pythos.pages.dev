@@ -182,6 +182,176 @@
             list-style: none;
         }
 
+        /* 搜索欄樣式 */
+        .search-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 6px 0 0 6px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-box button {
+            padding: 0.8rem 1rem;
+            border-radius: 0 6px 6px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 表情反應樣式 */
+        .reactions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .reaction-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .reaction-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .reaction-btn.active {
+            background: rgba(255, 229, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .reaction-emoji {
+            font-size: 1.1rem;
+        }
+
+        .reaction-count {
+            color: #aaa;
+        }
+
+        .add-reaction-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 229, 0, 0.2);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            cursor: pointer;
+            color: #aaa;
+            transition: all 0.2s ease;
+        }
+
+        .add-reaction-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 229, 0, 0.4);
+        }
+
+        .emoji-picker {
+            position: absolute;
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: none;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+        }
+
+        .emoji-item {
+            font-size: 1.5rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .emoji-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 回覆樣式增強 */
+        .reply-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            align-items: center;
+        }
+
+        .reply-button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .reply-button:hover {
+            text-decoration: underline;
+        }
+
+        .delete-button {
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .delete-button:hover {
+            text-decoration: underline;
+        }
+
+        .nested-replies {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+            border-left: 2px solid rgba(255, 229, 0, 0.2);
+            padding-left: 1rem;
+        }
+
         .topic-item {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -555,6 +725,19 @@
             </div>
         </header>
         
+        <!-- 搜索欄 -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search topics...">
+                <button id="search-btn" class="btn btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
         <div class="forum-categories">
             <button class="category-btn active" data-category="all">All</button>
             <button class="category-btn" data-category="discussion">Discussion</button>
@@ -644,6 +827,28 @@
         </svg>
     </div>
 
+    <!-- Emoji 選擇器 -->
+    <div id="emoji-picker" class="emoji-picker">
+        <div class="emoji-grid">
+            <div class="emoji-item" data-emoji="👍">👍</div>
+            <div class="emoji-item" data-emoji="👎">👎</div>
+            <div class="emoji-item" data-emoji="😂">😂</div>
+            <div class="emoji-item" data-emoji="❤️">❤️</div>
+            <div class="emoji-item" data-emoji="🔥">🔥</div>
+            <div class="emoji-item" data-emoji="👏">👏</div>
+            <div class="emoji-item" data-emoji="😍">😍</div>
+            <div class="emoji-item" data-emoji="🎉">🎉</div>
+            <div class="emoji-item" data-emoji="😮">😮</div>
+            <div class="emoji-item" data-emoji="🤔">🤔</div>
+            <div class="emoji-item" data-emoji="😢">😢</div>
+            <div class="emoji-item" data-emoji="🙏">🙏</div>
+            <div class="emoji-item" data-emoji="👀">👀</div>
+            <div class="emoji-item" data-emoji="💯">💯</div>
+            <div class="emoji-item" data-emoji="⭐">⭐</div>
+            <div class="emoji-item" data-emoji="🤣">🤣</div>
+        </div>
+    </div>
+
     <script>
         // 獲取 Firebase 服務實例
         const auth = firebase.auth();
@@ -668,12 +873,17 @@
         const topicList = document.getElementById('topic-list');
         const categoryBtns = document.querySelectorAll('.category-btn');
         const backToTop = document.getElementById('back-to-top');
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const emojiPicker = document.getElementById('emoji-picker');
 
         // 全局變數
         let currentUser = null;
         let selectedFiles = [];
         let currentCategory = 'all';
-
+        let currentTopicId = null;
+        let currentReplyId = null;
+        
         // 當頁面載入時
         document.addEventListener('DOMContentLoaded', () => {
             // 檢查用戶登入狀態
@@ -865,6 +1075,47 @@ service cloud.firestore {
                     behavior: 'smooth'
                 });
             });
+
+            // 搜索功能
+            searchBtn.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    searchTopics(searchTerm);
+                }
+            });
+            
+            // 按 Enter 鍵搜索
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        searchTopics(searchTerm);
+                    }
+                }
+            });
+            
+            // 點擊 body 關閉 emoji 選擇器
+            document.body.addEventListener('click', (e) => {
+                // 如果點擊的不是 emoji 選擇器或其子元素，也不是添加反應按鈕
+                if (!e.target.closest('#emoji-picker') && 
+                    !e.target.classList.contains('add-reaction-btn') &&
+                    !e.target.closest('.add-reaction-btn')) {
+                    emojiPicker.style.display = 'none';
+                }
+            });
+            
+            // Emoji 選擇事件
+            document.querySelectorAll('.emoji-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const emoji = e.target.dataset.emoji;
+                    if (currentTopicId) {
+                        addReaction(currentTopicId, null, emoji);
+                    } else if (currentReplyId) {
+                        addReaction(null, currentReplyId, emoji);
+                    }
+                    emojiPicker.style.display = 'none';
+                });
+            });
         }
 
         // 處理話題提交
@@ -1039,6 +1290,9 @@ service cloud.firestore {
         // 查看話題詳情
         async function viewTopic(topicId) {
             try {
+                // 設置當前話題ID
+                currentTopicId = topicId;
+                
                 // 增加瀏覽次數
                 if (db) {
                     try {
@@ -1077,6 +1331,91 @@ service cloud.firestore {
                 // 創建詳情頁面
                 const topicDetail = document.createElement('div');
                 topicDetail.className = 'topic-detail';
+                
+                // 創建返回按鈕
+                const backButton = document.createElement('button');
+                backButton.className = 'btn btn-secondary';
+                backButton.style.marginBottom = '1rem';
+                backButton.textContent = 'Back to Topic List';
+                backButton.addEventListener('click', () => {
+                    loadTopics(currentCategory);
+                });
+                
+                topicList.appendChild(backButton);
+                
+                // 檢查是否為話題作者或管理員以顯示刪除按鈕
+                let deleteButtonHtml = '';
+                if (currentUser && (currentUser.uid === topic.authorId || 
+                    ['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email))) {
+                    deleteButtonHtml = `
+                        <button class="delete-button" onclick="deleteTopic('${topicId}', event)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"></path>
+                            </svg>
+                            Delete Topic
+                        </button>
+                    `;
+                }
+                
+                // 獲取反應數據
+                const reactions = topic.reactions || [];
+                
+                // 按表情分組計算數量
+                const reactionGroups = {};
+                reactions.forEach(reaction => {
+                    if (!reactionGroups[reaction.emoji]) {
+                        reactionGroups[reaction.emoji] = {
+                            count: 0,
+                            users: [],
+                            active: false
+                        };
+                    }
+                    reactionGroups[reaction.emoji].count++;
+                    reactionGroups[reaction.emoji].users.push(reaction.userName);
+                    
+                    // 檢查當前用戶是否已添加此反應
+                    if (currentUser && reaction.userId === currentUser.uid) {
+                        reactionGroups[reaction.emoji].active = true;
+                    }
+                });
+                
+                // 構建反應按鈕 HTML
+                let reactionsHtml = '';
+                if (Object.keys(reactionGroups).length > 0) {
+                    reactionsHtml = '<div class="reactions-container">';
+                    for (const emoji in reactionGroups) {
+                        const group = reactionGroups[emoji];
+                        const activeClass = group.active ? 'active' : '';
+                        reactionsHtml += `
+                            <div class="reaction-btn ${activeClass}" 
+                                 onclick="addReaction('${topicId}', null, '${emoji}')" 
+                                 title="${group.users.join(', ')}">
+                                <span class="reaction-emoji">${emoji}</span>
+                                <span class="reaction-count">${group.count}</span>
+                            </div>
+                        `;
+                    }
+                    reactionsHtml += `
+                        <div class="add-reaction-btn" onclick="showEmojiPicker(event, '${topicId}', null)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                        </div>
+                    `;
+                    reactionsHtml += '</div>';
+                } else {
+                    reactionsHtml = `
+                        <div class="reactions-container">
+                            <div class="add-reaction-btn" onclick="showEmojiPicker(event, '${topicId}', null)">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M12 5v14M5 12h14"></path>
+                                </svg>
+                                Add Reaction
+                            </div>
+                        </div>
+                    `;
+                }
+                
                 topicDetail.innerHTML = `
                     <div class="topic-header">
                         <h2 class="topic-title">${topic.title}</h2>
@@ -1087,6 +1426,11 @@ service cloud.firestore {
                         </div>
                     </div>
                     <div class="markdown-content">${parsedContent}</div>
+                    ${reactionsHtml}
+                    <div class="reply-actions">
+                        <div></div>
+                        ${deleteButtonHtml}
+                    </div>
                 `;
                 
                 // 如果有附件，顯示附件列表
@@ -1116,21 +1460,11 @@ service cloud.firestore {
                     topicDetail.appendChild(attachmentsDiv);
                 }
                 
-                // 創建返回按鈕
-                const backButton = document.createElement('button');
-                backButton.className = 'btn btn-secondary';
-                backButton.style.marginTop = '1rem';
-                backButton.textContent = 'Back to Topic List';
-                backButton.addEventListener('click', () => {
-                    loadTopics(currentCategory);
-                });
-                
                 // 添加詳情頁面到 DOM
                 topicList.appendChild(topicDetail);
-                topicList.appendChild(backButton);
                 
                 // 載入回覆
-                loadReplies(topicId);
+                await loadReplies(topicId);
                 
                 // 如果用戶已登入，顯示回覆表單
                 if (currentUser) {
@@ -1178,34 +1512,24 @@ service cloud.firestore {
                 
                 const snapshot = await db.collection('forum_replies')
                     .where('topicId', '==', topicId)
+                    .where('parentReplyId', '==', null) // 只獲取頂層回覆
                     .orderBy('timestamp', 'asc')
                     .get();
                 
                 if (snapshot.empty) {
                     repliesContainer.innerHTML += '<p style="color:#aaa;">No replies yet</p>';
                 } else {
-                    snapshot.forEach(doc => {
+                    for (const doc of snapshot.docs) {
                         const reply = doc.data();
+                        const replyId = doc.id;
                         
-                        // 處理時間戳
-                        const timestamp = reply.timestamp ? reply.timestamp.toDate() : new Date();
-                        const formattedDate = formatDate(timestamp);
+                        // 創建回覆元素
+                        const replyElement = await createReplyElement(reply, replyId, topicId);
+                        repliesContainer.appendChild(replyElement);
                         
-                        // 處理 Markdown 內容
-                        const parsedContent = marked.parse(reply.content);
-                        
-                        const replyItem = document.createElement('div');
-                        replyItem.className = 'reply-item';
-                        replyItem.innerHTML = `
-                            <div class="reply-header">
-                                <span class="reply-author">${reply.authorName}</span>
-                                <span class="reply-date">${formattedDate}</span>
-                            </div>
-                            <div class="reply-content markdown-content">${parsedContent}</div>
-                        `;
-                        
-                        repliesContainer.appendChild(replyItem);
-                    });
+                        // 載入子回覆
+                        await loadNestedReplies(topicId, replyId, replyElement);
+                    }
                 }
                 
                 topicList.appendChild(repliesContainer);
@@ -1223,14 +1547,208 @@ service cloud.firestore {
             }
         }
 
-        // 處理回覆提交
-        async function handleReplySubmit(topicId) {
+        // 載入嵌套回覆
+        async function loadNestedReplies(topicId, parentReplyId, parentElement) {
+            try {
+                const snapshot = await db.collection('forum_replies')
+                    .where('topicId', '==', topicId)
+                    .where('parentReplyId', '==', parentReplyId)
+                    .orderBy('timestamp', 'asc')
+                    .get();
+                
+                if (!snapshot.empty) {
+                    const nestedRepliesContainer = document.createElement('div');
+                    nestedRepliesContainer.className = 'nested-replies';
+                    
+                    for (const doc of snapshot.docs) {
+                        const reply = doc.data();
+                        const replyId = doc.id;
+                        
+                        // 創建子回覆元素
+                        const replyElement = await createReplyElement(reply, replyId, topicId, parentReplyId);
+                        nestedRepliesContainer.appendChild(replyElement);
+                        
+                        // 遞歸載入更深層的回覆
+                        await loadNestedReplies(topicId, replyId, replyElement);
+                    }
+                    
+                    parentElement.appendChild(nestedRepliesContainer);
+                }
+                
+            } catch (error) {
+                console.error('Error loading nested replies:', error);
+            }
+        }
+
+        // 創建回覆元素
+        async function createReplyElement(reply, replyId, topicId, parentReplyId = null) {
+            // 處理時間戳
+            const timestamp = reply.timestamp ? reply.timestamp.toDate() : new Date();
+            const formattedDate = formatDate(timestamp);
+            
+            // 處理 Markdown 內容
+            const parsedContent = marked.parse(reply.content);
+            
+            // 創建回覆元素
+            const replyElement = document.createElement('div');
+            replyElement.className = 'reply-item';
+            replyElement.id = `reply-${replyId}`;
+            
+            // 檢查是否為回覆作者或管理員以顯示刪除按鈕
+            let deleteButtonHtml = '';
+            if (currentUser && (currentUser.uid === reply.authorId || 
+                ['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email))) {
+                deleteButtonHtml = `
+                    <button class="delete-button" onclick="deleteReply('${replyId}', '${topicId}', event)">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"></path>
+                        </svg>
+                        Delete
+                    </button>
+                `;
+            }
+            
+            // 獲取反應數據
+            const reactions = reply.reactions || [];
+            
+            // 按表情分組計算數量
+            const reactionGroups = {};
+            reactions.forEach(reaction => {
+                if (!reactionGroups[reaction.emoji]) {
+                    reactionGroups[reaction.emoji] = {
+                        count: 0,
+                        users: [],
+                        active: false
+                    };
+                }
+                reactionGroups[reaction.emoji].count++;
+                reactionGroups[reaction.emoji].users.push(reaction.userName);
+                
+                // 檢查當前用戶是否已添加此反應
+                if (currentUser && reaction.userId === currentUser.uid) {
+                    reactionGroups[reaction.emoji].active = true;
+                }
+            });
+            
+            // 構建反應按鈕 HTML
+            let reactionsHtml = '';
+            if (Object.keys(reactionGroups).length > 0) {
+                reactionsHtml = '<div class="reactions-container">';
+                for (const emoji in reactionGroups) {
+                    const group = reactionGroups[emoji];
+                    const activeClass = group.active ? 'active' : '';
+                    reactionsHtml += `
+                        <div class="reaction-btn ${activeClass}" 
+                             onclick="addReaction(null, '${replyId}', '${emoji}')" 
+                             title="${group.users.join(', ')}">
+                            <span class="reaction-emoji">${emoji}</span>
+                            <span class="reaction-count">${group.count}</span>
+                        </div>
+                    `;
+                }
+                reactionsHtml += `
+                    <div class="add-reaction-btn" onclick="showEmojiPicker(event, null, '${replyId}')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                    </div>
+                `;
+                reactionsHtml += '</div>';
+            } else {
+                reactionsHtml = `
+                    <div class="reactions-container">
+                        <div class="add-reaction-btn" onclick="showEmojiPicker(event, null, '${replyId}')">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Add Reaction
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // 顯示回覆按鈕（如果用戶已登入）
+            let replyButtonHtml = '';
+            if (currentUser) {
+                replyButtonHtml = `
+                    <button class="reply-button" onclick="showReplyForm('${replyId}', '${topicId}', event)">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                        </svg>
+                        Reply
+                    </button>
+                `;
+            }
+            
+            replyElement.innerHTML = `
+                <div class="reply-header">
+                    <span class="reply-author">${reply.authorName}</span>
+                    <span class="reply-date">${formattedDate}</span>
+                </div>
+                <div class="reply-content markdown-content">${parsedContent}</div>
+                ${reactionsHtml}
+                <div class="reply-actions">
+                    ${replyButtonHtml}
+                    ${deleteButtonHtml}
+                </div>
+                <div id="reply-form-${replyId}" style="display: none;"></div>
+            `;
+            
+            return replyElement;
+        }
+
+        // 顯示回覆表單
+        function showReplyForm(replyId, topicId, event) {
+            event.preventDefault();
+            
+            const formContainer = document.getElementById(`reply-form-${replyId}`);
+            
+            // 如果表單已顯示，則隱藏
+            if (formContainer.style.display !== 'none') {
+                formContainer.style.display = 'none';
+                return;
+            }
+            
+            // 創建回覆表單
+            formContainer.innerHTML = `
+                <div class="new-topic-form" style="margin-top: 1rem;">
+                    <form id="nested-reply-form-${replyId}">
+                        <div class="form-group">
+                            <textarea id="nested-reply-content-${replyId}" rows="3" placeholder="Reply to this comment..." required></textarea>
+                        </div>
+                        <div class="form-footer">
+                            <div class="markdown-info">Supports Markdown</div>
+                            <div>
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('reply-form-${replyId}').style.display = 'none';">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Reply</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            // 顯示表單
+            formContainer.style.display = 'block';
+            
+            // 添加提交事件
+            document.getElementById(`nested-reply-form-${replyId}`).addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleNestedReplySubmit(topicId, replyId);
+            });
+            
+            // 聚焦到文本框
+            document.getElementById(`nested-reply-content-${replyId}`).focus();
+        }
+
+        // 處理嵌套回覆提交
+        async function handleNestedReplySubmit(topicId, parentReplyId) {
             if (!currentUser) {
                 alert('Please login first');
                 return;
             }
             
-            const content = document.getElementById('reply-content').value.trim();
+            const contentElement = document.getElementById(`nested-reply-content-${parentReplyId}`);
+            const content = contentElement.value.trim();
             
             if (!content) {
                 alert('Reply content cannot be empty');
@@ -1241,6 +1759,7 @@ service cloud.firestore {
                 // 創建新回覆
                 await db.collection('forum_replies').add({
                     topicId: topicId,
+                    parentReplyId: parentReplyId,
                     content: content,
                     authorId: currentUser.uid,
                     authorName: currentUser.displayName || currentUser.email.split('@')[0],
@@ -1259,8 +1778,153 @@ service cloud.firestore {
                 viewTopic(topicId);
                 
             } catch (error) {
-                console.error('Error posting reply:', error);
+                console.error('Error posting nested reply:', error);
                 alert('Failed to post reply: ' + error.message);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
+            }
+        }
+
+        // 刪除話題
+        async function deleteTopic(topicId, event) {
+            event.stopPropagation();
+            
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to delete this topic? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                // 獲取話題數據以檢查權限
+                const doc = await db.collection('forum_topics').doc(topicId).get();
+                
+                if (!doc.exists) {
+                    alert('Topic does not exist or has been deleted');
+                    return;
+                }
+                
+                const topic = doc.data();
+                
+                // 檢查是否為話題作者或管理員
+                if (currentUser.uid !== topic.authorId && 
+                    !['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email)) {
+                    alert('You do not have permission to delete this topic');
+                    return;
+                }
+                
+                // 刪除話題的所有回覆
+                const repliesSnapshot = await db.collection('forum_replies')
+                    .where('topicId', '==', topicId)
+                    .get();
+                
+                const batch = db.batch();
+                
+                repliesSnapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                
+                // 刪除話題
+                batch.delete(db.collection('forum_topics').doc(topicId));
+                
+                // 提交批量操作
+                await batch.commit();
+                
+                // 刪除附件（如果有）
+                if (topic.attachments && topic.attachments.length > 0) {
+                    for (const attachment of topic.attachments) {
+                        if (attachment.path) {
+                            try {
+                                await storage.ref(attachment.path).delete();
+                            } catch (deleteError) {
+                                console.warn('Error deleting attachment:', deleteError);
+                                // 繼續處理其他附件
+                            }
+                        }
+                    }
+                }
+                
+                // 返回話題列表
+                loadTopics(currentCategory);
+                
+                alert('Topic deleted successfully');
+                
+            } catch (error) {
+                console.error('Error deleting topic:', error);
+                alert('Failed to delete topic: ' + error.message);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
+            }
+        }
+
+        // 刪除回覆
+        async function deleteReply(replyId, topicId, event) {
+            event.stopPropagation();
+            
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to delete this reply? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                // 獲取回覆數據以檢查權限
+                const doc = await db.collection('forum_replies').doc(replyId).get();
+                
+                if (!doc.exists) {
+                    alert('Reply does not exist or has been deleted');
+                    return;
+                }
+                
+                const reply = doc.data();
+                
+                // 檢查是否為回覆作者或管理員
+                if (currentUser.uid !== reply.authorId && 
+                    !['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email)) {
+                    alert('You do not have permission to delete this reply');
+                    return;
+                }
+                
+                // 獲取所有子回覆
+                const childRepliesSnapshot = await db.collection('forum_replies')
+                    .where('parentReplyId', '==', replyId)
+                    .get();
+                
+                const batch = db.batch();
+                
+                // 刪除所有子回覆
+                childRepliesSnapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                
+                // 刪除這個回覆
+                batch.delete(db.collection('forum_replies').doc(replyId));
+                
+                // 更新話題回覆數
+                const totalDeletedReplies = childRepliesSnapshot.size + 1;
+                await db.collection('forum_topics').doc(topicId).update({
+                    replies: firebase.firestore.FieldValue.increment(-totalDeletedReplies)
+                });
+                
+                // 提交批量操作
+                await batch.commit();
+                
+                // 重新載入話題
+                viewTopic(topicId);
+                
+            } catch (error) {
+                console.error('Error deleting reply:', error);
+                alert('Failed to delete reply: ' + error.message);
                 
                 if (error.code === 'permission-denied') {
                     showPermissionsError();
@@ -1317,6 +1981,199 @@ service cloud.firestore {
             };
             
             return categories[category] || category;
+        }
+
+        // 搜索話題
+        async function searchTopics(searchTerm) {
+            topicList.innerHTML = '<li class="topic-item loading"><div class="topic-title">Searching...</div><div class="topic-preview">Searching for topics matching your query...</div></li>';
+            
+            try {
+                // 獲取所有話題
+                const snapshot = await db.collection('forum_topics')
+                    .orderBy('timestamp', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    topicList.innerHTML = '<li class="topic-item"><div class="topic-title">No Topics Found</div><div class="topic-preview">There are no topics in the forum yet.</div></li>';
+                    return;
+                }
+                
+                // 在客戶端進行搜索過濾
+                const matchingTopics = [];
+                
+                snapshot.forEach(doc => {
+                    const topic = doc.data();
+                    const topicId = doc.id;
+                    
+                    // 檢查標題和內容是否包含搜索詞（不區分大小寫）
+                    const titleMatch = topic.title.toLowerCase().includes(searchTerm.toLowerCase());
+                    const contentMatch = topic.content.toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    if (titleMatch || contentMatch) {
+                        matchingTopics.push({ id: topicId, ...topic });
+                    }
+                });
+                
+                // 顯示搜索結果
+                if (matchingTopics.length === 0) {
+                    topicList.innerHTML = `<li class="topic-item"><div class="topic-title">No Results</div><div class="topic-preview">No topics found matching "${searchTerm}"</div></li>`;
+                    return;
+                }
+                
+                // 清空列表
+                topicList.innerHTML = `<div style="margin-bottom: 1rem; color: #aaa;">Found ${matchingTopics.length} results for "${searchTerm}"</div>`;
+                
+                // 添加清除搜索按鈕
+                const clearSearchBtn = document.createElement('button');
+                clearSearchBtn.textContent = 'Clear Search';
+                clearSearchBtn.className = 'btn btn-secondary';
+                clearSearchBtn.style.marginBottom = '1rem';
+                clearSearchBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    loadTopics(currentCategory);
+                });
+                
+                topicList.appendChild(clearSearchBtn);
+                
+                // 創建話題列表
+                const topicsUl = document.createElement('ul');
+                topicsUl.className = 'topic-list';
+                
+                // 遍歷匹配的話題
+                matchingTopics.forEach(topic => {
+                    // 處理時間戳
+                    const timestamp = topic.timestamp ? new Date(topic.timestamp.seconds * 1000) : new Date();
+                    const formattedDate = formatDate(timestamp);
+                    
+                    // 截取預覽內容（不超過 150 字）
+                    const contentPreview = topic.content.length > 150 
+                        ? topic.content.substring(0, 150) + '...' 
+                        : topic.content;
+                    
+                    // 獲取分類顯示名稱
+                    const categoryName = getCategoryName(topic.category);
+                    
+                    // 創建話題元素
+                    const topicElement = document.createElement('li');
+                    topicElement.className = 'topic-item';
+                    topicElement.innerHTML = `
+                        <div class="topic-header">
+                            <h3 class="topic-title">${topic.title}</h3>
+                            <div class="topic-info">
+                                <span class="topic-author">${topic.authorName}</span>
+                                <span class="topic-date">${formattedDate}</span>
+                                <span class="topic-category">${categoryName}</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">${contentPreview}</div>
+                        <div class="topic-stats">
+                            <span>${topic.views || 0} views</span>
+                            <span>${topic.replies || 0} replies</span>
+                            ${topic.attachments && topic.attachments.length > 0 ? `<span>${topic.attachments.length} attachments</span>` : ''}
+                        </div>
+                    `;
+                    
+                    // 點擊話題查看詳情
+                    topicElement.addEventListener('click', () => {
+                        viewTopic(topic.id);
+                    });
+                    
+                    topicsUl.appendChild(topicElement);
+                });
+                
+                topicList.appendChild(topicsUl);
+                
+            } catch (error) {
+                console.error('Error searching topics:', error);
+                topicList.innerHTML = `<li class="topic-item"><div class="topic-title">Search Error</div><div class="topic-preview">Error searching topics: ${error.message}</div></li>`;
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
+            }
+        }
+
+        // 添加表情反應
+        async function addReaction(topicId, replyId, emoji) {
+            if (!currentUser) {
+                alert('Please login first to add reactions');
+                return;
+            }
+            
+            try {
+                let docRef;
+                if (topicId) {
+                    docRef = db.collection('forum_topics').doc(topicId);
+                } else if (replyId) {
+                    docRef = db.collection('forum_replies').doc(replyId);
+                } else {
+                    return;
+                }
+                
+                // 獲取當前文檔
+                const doc = await docRef.get();
+                
+                if (!doc.exists) {
+                    console.error('Document does not exist');
+                    return;
+                }
+                
+                const data = doc.data();
+                
+                // 獲取或創建 reactions 陣列
+                let reactions = data.reactions || [];
+                
+                // 檢查用戶是否已經添加了這個表情
+                const existingReactionIndex = reactions.findIndex(
+                    r => r.userId === currentUser.uid && r.emoji === emoji
+                );
+                
+                if (existingReactionIndex !== -1) {
+                    // 如果已存在，則刪除該反應
+                    reactions.splice(existingReactionIndex, 1);
+                } else {
+                    // 添加新反應
+                    reactions.push({
+                        userId: currentUser.uid,
+                        userName: currentUser.displayName || currentUser.email.split('@')[0],
+                        emoji: emoji,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                
+                // 更新文檔
+                await docRef.update({ reactions: reactions });
+                
+                // 如果是查看話題頁面，重新加載以顯示最新反應
+                if (topicId === currentTopicId) {
+                    viewTopic(topicId);
+                }
+                
+            } catch (error) {
+                console.error('Error adding reaction:', error);
+                alert('Failed to add reaction: ' + error.message);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
+            }
+        }
+
+        // 顯示表情選擇器
+        function showEmojiPicker(event, topicId, replyId) {
+            event.stopPropagation(); // 阻止事件冒泡
+            
+            // 設置當前選中的話題或回覆 ID
+            currentTopicId = topicId || null;
+            currentReplyId = replyId || null;
+            
+            // 定位 emoji 選擇器
+            const rect = event.target.getBoundingClientRect();
+            emojiPicker.style.top = `${rect.bottom + window.scrollY + 5}px`;
+            emojiPicker.style.left = `${rect.left + window.scrollX}px`;
+            
+            // 顯示 emoji 選擇器
+            emojiPicker.style.display = 'block';
         }
     </script>
 </body>
