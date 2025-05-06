@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS - Forum</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PythOS Forum">
+    <link rel="apple-touch-icon" href="PythOS.png">
+    <link rel="apple-touch-startup-image" href="PythOS.png">
+    <!-- End of iOS Web App Meta Tags -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -62,9 +70,41 @@
             border-bottom: 1px solid rgba(255, 229, 0, 0.1);
         }
 
+        .forum-title-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .forum-title-container::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,229,0,0.5) 0%, rgba(255,229,0,0) 100%);
+        }
+
+        .forum-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 8px rgba(255, 229, 0, 0.3));
+        }
+
+        .forum-logo:hover {
+            transform: rotate(10deg) scale(1.1);
+        }
+
         .forum-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary);
+            text-shadow: 0 0 15px rgba(255, 229, 0, 0.3);
+            position: relative;
         }
 
         .user-controls {
@@ -180,6 +220,118 @@
         /* 話題列表 */
         .topic-list {
             list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .topic-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 229, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-detail {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .topic-title {
+            color: var(--light);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .topic-author {
+            color: var(--accent);
+        }
+
+        .topic-date {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .topic-category {
+            background: rgba(255, 229, 0, 0.2);
+            color: var(--primary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .topic-preview {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .topic-stats {
+            display: flex;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .topic-item {
+                padding: 1.2rem;
+            }
+            
+            .topic-detail {
+                padding: 1.2rem;
+            }
+            
+            .topic-header {
+                flex-direction: column;
+            }
+            
+            .topic-info {
+                margin-top: 0.5rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .topic-item {
+                padding: 1rem;
+            }
+            
+            .topic-title {
+                font-size: 1.1rem;
+            }
+            
+            .topic-stats {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
         }
 
         /* 搜索欄樣式 */
@@ -235,11 +387,13 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .reaction-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .reaction-btn.active {
@@ -303,11 +457,62 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* 回覆列表 */
+        .replies-container {
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+        }
+        
+        .replies-container h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.4rem;
+        }
+
+        .reply-item {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .reply-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 229, 0, 0.1);
+        }
+
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .reply-author {
+            color: var(--accent);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .reply-date {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        .reply-content {
+            color: #e0e0e0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
         /* 回覆樣式增強 */
         .reply-actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
             align-items: center;
         }
 
@@ -322,10 +527,12 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            transition: all 0.2s ease;
         }
 
         .reply-button:hover {
-            text-decoration: underline;
+            color: var(--accent);
+            transform: translateY(-1px);
         }
 
         .delete-button {
@@ -339,118 +546,47 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            transition: all 0.2s ease;
         }
 
         .delete-button:hover {
-            text-decoration: underline;
+            color: #ff6666;
+            transform: translateY(-1px);
         }
 
         .nested-replies {
-            margin-left: 2rem;
-            margin-top: 0.5rem;
-            border-left: 2px solid rgba(255, 229, 0, 0.2);
-            padding-left: 1rem;
+            margin-left: 2.5rem;
+            margin-top: 0.8rem;
+            border-left: 2px solid rgba(255, 229, 0, 0.15);
+            padding-left: 1.2rem;
         }
-
-        .topic-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 229, 0, 0.1);
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
+        
+        @media (max-width: 768px) {
+            .nested-replies {
+                margin-left: 1.2rem;
+                padding-left: 0.8rem;
+            }
+            
+            .reply-item {
+                padding: 1rem;
+            }
         }
-
-        .topic-item:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255, 229, 0, 0.3);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .topic-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .topic-title {
-            color: var(--light);
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .topic-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .topic-author {
-            color: var(--accent);
-        }
-
-        .topic-date {
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .topic-category {
-            background: rgba(255, 229, 0, 0.2);
-            color: var(--primary);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-
-        .topic-preview {
-            color: #aaa;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .topic-stats {
-            display: flex;
-            gap: 1rem;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        /* 回覆列表 */
-        .replies-container {
-            margin-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1rem;
-        }
-
-        .reply-item {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .reply-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .reply-author {
-            color: var(--accent);
-            font-size: 0.9rem;
-        }
-
-        .reply-date {
-            color: #aaa;
-            font-size: 0.8rem;
-        }
-
-        .reply-content {
-            color: #ccc;
-            line-height: 1.5;
+        
+        @media (max-width: 480px) {
+            .nested-replies {
+                margin-left: 0.8rem;
+                padding-left: 0.5rem;
+            }
+            
+            .reply-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+            
+            .reply-item {
+                padding: 0.8rem;
+            }
         }
 
         /* 文件上傳 */
@@ -519,35 +655,64 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
         }
 
         .modal-content {
             background: #1a1a1a;
-            border-radius: 12px;
+            border-radius: 16px;
             width: 90%;
             max-width: 450px;
-            border: 1px solid rgba(255, 229, 0, 0.2);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 229, 0, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 229, 0, 0.1);
             max-height: 90vh;
             overflow-y: auto;
             padding: 2rem;
+            margin: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         .modal-title {
             color: var(--primary);
             font-size: 1.8rem;
             margin: 0;
+            position: relative;
+        }
+        
+        .modal-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
         }
 
         .close-modal {
@@ -556,11 +721,21 @@
             color: #aaa;
             font-size: 1.8rem;
             cursor: pointer;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            line-height: 1;
+            padding: 0;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
         .close-modal:hover {
             color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
         }
 
         .btn-google {
@@ -572,10 +747,17 @@
             gap: 0.8rem;
             width: 100%;
             margin-bottom: 1rem;
+            border-radius: 8px;
+            height: 48px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
         .btn-google:hover {
             background: #f2f2f2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn-google img {
@@ -736,6 +918,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             opacity: 0;
             visibility: hidden;
+            z-index: 100;
         }
 
         .back-to-top.visible {
@@ -746,32 +929,6 @@
         .back-to-top:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .forum-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .user-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .topic-header {
-                flex-direction: column;
-            }
-
-            .topic-info {
-                margin-top: 0.5rem;
-            }
         }
 
         /* 編輯按鈕和已編輯標記的樣式 */
@@ -786,7 +943,6 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
-            margin-right: 1rem;
         }
 
         .edit-button:hover {
@@ -835,12 +991,198 @@
             text-decoration: underline;
             color: var(--accent);
         }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .forum-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .user-controls {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .forum-title-container {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .forum-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .forum-title {
+                font-size: 1.6rem;
+            }
+            
+            /* 優化小屏幕上的按鈕顯示 */
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* 優化分類按鈕在小屏幕上的顯示 */
+            .forum-categories {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            
+            .category-btn {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            /* 調整論壇內容在小屏幕上的顯示 */
+            .topic-item {
+                padding: 1.2rem;
+            }
+            
+            .topic-detail {
+                padding: 1.2rem;
+            }
+            
+            .topic-header {
+                flex-direction: column;
+            }
+            
+            .topic-info {
+                margin-top: 0.5rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            /* 調整彈窗在小屏幕上的樣式 */
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            
+            /* 優化回覆在小屏幕上的顯示 */
+            .reply-item {
+                padding: 1rem;
+            }
+            
+            .nested-replies {
+                margin-left: 1.2rem;
+                padding-left: 0.8rem;
+            }
+            
+            /* 改進搜索欄樣式 */
+            .search-container {
+                margin-bottom: 1rem;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+
+        /* 新增針對非常小屏幕的優化 */
+        @media (max-width: 480px) {
+            .forum-header {
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .forum-title {
+                font-size: 1.5rem;
+            }
+
+            .user-controls {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .topic-item {
+                padding: 1rem;
+            }
+            
+            .topic-title {
+                font-size: 1.1rem;
+            }
+            
+            .topic-stats {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+            
+            .search-container {
+                margin-bottom: 1rem;
+            }
+            
+            .back-to-top {
+                width: 40px;
+                height: 40px;
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            /* 優化模態視窗在超小屏幕上的顯示 */
+            .modal-content {
+                padding: 1rem;
+                max-height: 85vh;
+            }
+            
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            
+            /* 優化表單元素在小屏幕上的顯示 */
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.6rem;
+            }
+            
+            .form-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .form-footer div:last-child {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .reply-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+            
+            .reply-item {
+                padding: 0.8rem;
+            }
+            
+            .nested-replies {
+                margin-left: 0.8rem;
+                padding-left: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="forum-header">
-            <h1 class="forum-title">PythOS Forum</h1>
+            <div class="forum-title-container">
+                <img src="PythOS.png" alt="PythOS Logo" class="forum-logo">
+                <h1 class="forum-title">PythOS Forum</h1>
+            </div>
             <div class="user-controls">
                 <div id="user-info" style="display: none;">
                     <span id="user-name">User</span>
@@ -849,7 +1191,12 @@
                 <div id="auth-controls">
                     <button id="login-btn" class="btn btn-primary">Login</button>
                 </div>
-                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+                <a href="index.html" class="btn btn-secondary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Home
+                </a>
             </div>
         </header>
         
@@ -876,7 +1223,12 @@
         </div>
         
         <div id="create-topic-container">
-            <button id="new-topic-btn" class="btn btn-primary">Create New Topic</button>
+            <button id="new-topic-btn" class="btn btn-primary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14"></path>
+                </svg>
+                Create New Topic
+            </button>
             
             <div id="new-topic-form" class="new-topic-form">
                 <form id="topic-form">
@@ -952,42 +1304,42 @@
             
             <form id="email-login-form" class="email-login-form">
                 <div class="form-group">
-                    <label for="login-email">電子郵件</label>
+                    <label for="login-email">Email</label>
                     <input type="email" id="login-email" placeholder="example@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="login-password">密碼</label>
+                    <label for="login-password">Password</label>
                     <input type="password" id="login-password" placeholder="••••••••" required>
                 </div>
                 <div class="form-footer">
                     <div>
-                        <a href="#" id="forgot-password" class="forgot-password">忘記密碼？</a>
+                        <a href="#" id="forgot-password" class="forgot-password">Forgot password?</a>
                     </div>
-                    <button type="submit" class="btn btn-primary">登入</button>
+                    <button type="submit" class="btn btn-primary">Login</button>
                 </div>
                 <div class="login-error" id="login-error"></div>
             </form>
             
             <div class="register-link">
-                <p>還沒有帳戶？ <a href="#" id="show-register">註冊</a></p>
+                <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
             </div>
             
             <form id="register-form" class="register-form" style="display: none;">
                 <div class="form-group">
-                    <label for="register-email">電子郵件</label>
+                    <label for="register-email">Email</label>
                     <input type="email" id="register-email" placeholder="example@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="register-password">密碼</label>
+                    <label for="register-password">Password</label>
                     <input type="password" id="register-password" placeholder="••••••••" required>
                 </div>
                 <div class="form-group">
-                    <label for="register-confirm">確認密碼</label>
+                    <label for="register-confirm">Confirm Password</label>
                     <input type="password" id="register-confirm" placeholder="••••••••" required>
                 </div>
                 <div class="form-footer">
-                    <button type="button" id="back-to-login" class="btn btn-secondary">返回登入</button>
-                    <button type="submit" class="btn btn-primary">註冊</button>
+                    <button type="button" id="back-to-login" class="btn btn-secondary">Back to Login</button>
+                    <button type="submit" class="btn btn-primary">Register</button>
                 </div>
                 <div class="register-error" id="register-error"></div>
             </form>
@@ -1174,10 +1526,10 @@ service cloud.firestore {
                 auth.signInWithPopup(provider)
                     .then((result) => {
                         loginModal.style.display = 'none';
-                        console.log('Google 登入成功:', result.user.email);
+                        console.log('Google login successful:', result.user.email);
                     })
                     .catch((error) => {
-                        console.error('Google 登入錯誤:', error);
+                        console.error('Google login error:', error);
                     });
             });
             
@@ -1195,25 +1547,25 @@ service cloud.firestore {
                     .then((userCredential) => {
                         loginModal.style.display = 'none';
                         emailLoginForm.reset();
-                        console.log('電子郵件登入成功:', userCredential.user.email);
+                        console.log('Email login successful:', userCredential.user.email);
                     })
                     .catch((error) => {
-                        console.error('電子郵件登入錯誤:', error);
+                        console.error('Email login error:', error);
                         switch (error.code) {
                             case 'auth/invalid-email':
-                                errorElement.textContent = '無效的電子郵件地址';
+                                errorElement.textContent = 'Invalid email address';
                                 break;
                             case 'auth/user-disabled':
-                                errorElement.textContent = '此帳戶已被停用';
+                                errorElement.textContent = 'This account has been disabled';
                                 break;
                             case 'auth/user-not-found':
-                                errorElement.textContent = '找不到此電子郵件的帳戶';
+                                errorElement.textContent = 'Account not found for this email';
                                 break;
                             case 'auth/wrong-password':
-                                errorElement.textContent = '密碼錯誤';
+                                errorElement.textContent = 'Incorrect password';
                                 break;
                             default:
-                                errorElement.textContent = '登入失敗，請稍後再試';
+                                errorElement.textContent = 'Login failed, please try again later';
                         }
                     });
             });
@@ -1248,13 +1600,13 @@ service cloud.firestore {
                 
                 // 檢查密碼是否匹配
                 if (password !== confirmPassword) {
-                    errorElement.textContent = '密碼和確認密碼不符';
+                    errorElement.textContent = 'Passwords do not match';
                     return;
                 }
                 
                 // 檢查密碼強度
                 if (password.length < 6) {
-                    errorElement.textContent = '密碼必須至少為 6 個字符';
+                    errorElement.textContent = 'Password must be at least 6 characters';
                     return;
                 }
                 
@@ -1262,22 +1614,22 @@ service cloud.firestore {
                     .then((userCredential) => {
                         loginModal.style.display = 'none';
                         registerForm.reset();
-                        console.log('註冊成功:', userCredential.user.email);
+                        console.log('Registration successful:', userCredential.user.email);
                     })
                     .catch((error) => {
                         console.error('註冊錯誤:', error);
                         switch (error.code) {
                             case 'auth/email-already-in-use':
-                                errorElement.textContent = '此電子郵件已被使用';
+                                errorElement.textContent = 'This email is already in use';
                                 break;
                             case 'auth/invalid-email':
-                                errorElement.textContent = '無效的電子郵件地址';
+                                errorElement.textContent = 'Invalid email address';
                                 break;
                             case 'auth/weak-password':
-                                errorElement.textContent = '密碼強度不足';
+                                errorElement.textContent = 'Password is too weak';
                                 break;
                             default:
-                                errorElement.textContent = '註冊失敗，請稍後再試';
+                                errorElement.textContent = 'Registration failed, please try again later';
                         }
                     });
             });
@@ -1290,28 +1642,28 @@ service cloud.firestore {
                 const errorElement = document.getElementById('login-error');
                 
                 if (!email) {
-                    errorElement.textContent = '請輸入電子郵件地址';
+                    errorElement.textContent = 'Please enter your email address';
                     return;
                 }
                 
                 auth.sendPasswordResetEmail(email)
                     .then(() => {
                         errorElement.style.color = '#4caf50';
-                        errorElement.textContent = '密碼重置郵件已發送，請檢查您的電子郵件';
+                        errorElement.textContent = 'Password reset email sent. Please check your inbox.';
                     })
                     .catch((error) => {
-                        console.error('重置密碼錯誤:', error);
+                        console.error('Password reset error:', error);
                         errorElement.style.color = '#ff4444';
                         
                         switch (error.code) {
                             case 'auth/invalid-email':
-                                errorElement.textContent = '無效的電子郵件地址';
+                                errorElement.textContent = 'Invalid email address';
                                 break;
                             case 'auth/user-not-found':
-                                errorElement.textContent = '找不到此電子郵件的帳戶';
+                                errorElement.textContent = 'No account found with this email';
                                 break;
                             default:
-                                errorElement.textContent = '無法發送重置郵件，請稍後再試';
+                                errorElement.textContent = 'Unable to send reset email, please try again later';
                         }
                     });
             });
@@ -1320,10 +1672,10 @@ service cloud.firestore {
             logoutBtn.addEventListener('click', () => {
                 auth.signOut()
                     .then(() => {
-                        console.log('用戶已登出');
+                        console.log('User logged out');
                     })
                     .catch((error) => {
-                        console.error('登出錯誤:', error);
+                        console.error('Logout error:', error);
                     });
             });
 
@@ -1632,7 +1984,7 @@ service cloud.firestore {
                 if (topic.editedAt && !topic.editedByAdmin) {
                     const editedTimestamp = topic.editedAt.toDate();
                     const formattedEditedDate = formatDate(editedTimestamp);
-                    editedInfo = `<span class="edited-info">(已編輯於 ${formattedEditedDate})</span>`;
+                    editedInfo = `<span class="edited-info">(edited on ${formattedEditedDate})</span>`;
                 }
                 
                 // 處理 Markdown 內容
@@ -1830,7 +2182,7 @@ service cloud.firestore {
                     const loginPrompt = document.createElement('div');
                     loginPrompt.className = 'login-prompt';
                     loginPrompt.innerHTML = `
-                        <p>請 <a href="#" onclick="document.getElementById('login-modal').style.display = 'flex'; return false;">登入</a> 後參與討論</p>
+                        <p>Please <a href="#" onclick="document.getElementById('login-modal').style.display = 'flex'; return false;">login</a> to join the discussion</p>
                     `;
                     topicList.appendChild(loginPrompt);
                 }
@@ -1933,7 +2285,7 @@ service cloud.firestore {
             if (reply.editedAt && !reply.editedByAdmin) {
                 const editedTimestamp = reply.editedAt.toDate();
                 const formattedEditedDate = formatDate(editedTimestamp);
-                editedInfo = `<span class="edited-info">(已編輯於 ${formattedEditedDate})</span>`;
+                editedInfo = `<span class="edited-info">(edited on ${formattedEditedDate})</span>`;
             }
             
             // 處理 Markdown 內容
