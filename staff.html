@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythOS - Staff Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    <!-- Online Users Tracking -->
+    <script src="online-users.js"></script>
     <!-- 直接初始化 Firebase -->
     <script>
         // Firebase 配置
@@ -19,11 +25,36 @@
           storageBucket: "pythos-website.firebasestorage.app",
           messagingSenderId: "781241739137",
           appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
-          measurementId: "G-HE54S62K6K"
+          measurementId: "G-HE54S62K6K",
+          databaseURL: "https://pythos-website-default-rtdb.firebaseio.com"
         };
     
         // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // 獲取 Firebase 服務實例
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const database = firebase.database();
+        const analytics = firebase.analytics();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+        // 設定 Google 登入選項
+        googleProvider.setCustomParameters({
+            prompt: 'select_account'
+        });
+
+        // 設定 Firebase 持久性
+        db.enablePersistence()
+          .catch((err) => {
+            if (err.code == 'failed-precondition') {
+              console.warn('Firebase 持久性初始化失敗：多個標籤頁開啟');
+            } else if (err.code == 'unimplemented') {
+              console.warn('當前瀏覽器不支援 Firebase 持久性');
+            }
+          });
     </script>
     <style>
         :root {
@@ -638,10 +669,6 @@
     </div>
 
     <script>
-        // 獲取 Firebase 服務實例
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
         // 允許的電子郵件列表
         const ALLOWED_EMAILS = [
             'pythos.team@gmail.com',
@@ -996,20 +1023,25 @@
 
         // Initialize online users tracking
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('Initializing online users tracking...');
+            
             // Update online status when user logs in
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
+                    console.log('User logged in, updating online status:', user.email);
                     window.onlineUsers.updateOnlineStatus();
                 }
             });
 
             // Update online users count
             window.onlineUsers.getOnlineUsersCount((count) => {
+                console.log('Online users count updated:', count);
                 document.getElementById('onlineUsersCount').textContent = count;
             });
 
             // Update online users list
             window.onlineUsers.getOnlineUsersList((users) => {
+                console.log('Online users list updated:', users);
                 const usersList = document.getElementById('onlineUsersList');
                 usersList.innerHTML = users.map(user => `
                     <div class="online-user-item">
