@@ -934,14 +934,14 @@ service cloud.firestore {
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null && 
         (request.auth.uid == resource.data.authorId || 
-        request.auth.token.email == 'admin@example.com');
+        request.auth.token.email in ['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com']);
     }
     match /forum_replies/{replyId} {
       allow read: if true;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null && 
         (request.auth.uid == resource.data.authorId || 
-        request.auth.token.email == 'admin@example.com');
+        request.auth.token.email in ['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com']);
     }
   }
 }
@@ -2137,7 +2137,7 @@ service cloud.firestore {
                         userId: currentUser.uid,
                         userName: currentUser.displayName || currentUser.email.split('@')[0],
                         emoji: emoji,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        timestamp: new Date().getTime() // 使用普通的 JavaScript 時間戳代替 serverTimestamp
                     });
                 }
                 
