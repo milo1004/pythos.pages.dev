@@ -9,8 +9,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <!-- Firebase Config -->
     <script src="firebase-config.js"></script>
+    <!-- Online Users Tracking -->
+    <script src="online-users.js"></script>
     <!-- iOS Web App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -899,6 +902,47 @@
         .edit-link:hover {
             text-decoration: underline;
         }
+
+        /* Online Users Counter Styles */
+        .online-users-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: var(--light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .online-users-counter .dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1294,6 +1338,12 @@ SOFTWARE.</code></pre>
         <p>&copy; 2025 PythOS. All rights reserved.</p>
     </footer>
 
+    <!-- Online Users Counter -->
+    <div class="online-users-counter">
+        <span class="dot"></span>
+        <span id="onlineUsersCount">0</span> online
+    </div>
+
     <script>
         // Attempt to hide the address bar on iOS when added to home screen
         window.addEventListener('load', function() {
@@ -1390,6 +1440,21 @@ SOFTWARE.</code></pre>
                 window.location.href = 'index.html';
             }
         }
+
+        // Initialize online users tracking
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update online status when user logs in
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    window.onlineUsers.updateOnlineStatus();
+                }
+            });
+
+            // Update online users count
+            window.onlineUsers.getOnlineUsersCount((count) => {
+                document.getElementById('onlineUsersCount').textContent = count;
+            });
+        });
     </script>
 </body>
 </html>
