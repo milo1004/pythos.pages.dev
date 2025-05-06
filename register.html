@@ -239,7 +239,6 @@
                         <li data-requirement="uppercase">At least one uppercase letter</li>
                         <li data-requirement="lowercase">At least one lowercase letter</li>
                         <li data-requirement="number">At least one number</li>
-                        <li data-requirement="special">At least one special character</li>
                     </ul>
                 </div>
             </div>
@@ -288,33 +287,37 @@
             } else {
                 switch(error.code) {
                     case 'auth/email-already-in-use':
-                        message = '此電子郵件已被註冊';
+                        message = 'This email is already registered, <a href="login.html" style="color: #ffe500;">click here to login</a>';
                         break;
                     case 'auth/invalid-email':
-                        message = '請輸入有效的電子郵件地址';
+                        message = 'Please enter a valid email address';
                         break;
                     case 'auth/operation-not-allowed':
-                        message = '電子郵件/密碼註冊功能未啟用';
+                        message = 'Email/password registration is not enabled';
                         break;
                     case 'auth/weak-password':
-                        message = '密碼強度不足';
+                        message = 'Password is too weak';
                         break;
                     case 'auth/network-request-failed':
-                        message = '網路連線失敗，請檢查您的網路連線';
+                        message = 'Network connection failed, please check your connection';
                         break;
                     case 'auth/popup-closed-by-user':
-                        message = 'Google 註冊視窗被關閉，請重試';
+                        message = 'Google registration window was closed, please try again';
                         break;
                     default:
-                        message = error.message || '註冊失敗，請稍後再試';
+                        message = error.message || 'Registration failed, please try again later';
                 }
             }
             
-            errorDiv.textContent = message;
+            errorDiv.innerHTML = message;
             errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
+            
+            // 特殊情況不自動隱藏錯誤信息
+            if (error.code !== 'auth/email-already-in-use') {
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
         }
 
         // 密碼強度檢查
@@ -323,8 +326,7 @@
                 length: password.length >= 8,
                 uppercase: /[A-Z]/.test(password),
                 lowercase: /[a-z]/.test(password),
-                number: /[0-9]/.test(password),
-                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                number: /[0-9]/.test(password)
             };
 
             // 更新密碼要求清單的視覺顯示
@@ -356,19 +358,19 @@
             const newsletter = document.getElementById('newsletter').checked;
 
             if (password !== confirmPassword) {
-                showError('密碼不一致');
+                showError('Passwords do not match');
                 return;
             }
 
             if (!checkPasswordStrength(password)) {
-                showError('密碼不符合要求');
+                showError('Password does not meet requirements');
                 return;
             }
 
             try {
-                console.log('開始註冊程序...');
+                console.log('Starting registration process...');
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                console.log('註冊成功，正在建立用戶資料...');
+                console.log('Registration successful, creating user profile...');
                 const user = userCredential.user;
 
                 // 儲存用戶資料
@@ -379,10 +381,10 @@
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                console.log('用戶資料建立完成，重定向到儀表板...');
+                console.log('User profile created, redirecting to dashboard...');
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error('註冊錯誤：', error);
+                console.error('Registration error:', error);
                 showError(error);
             }
         });
@@ -390,9 +392,9 @@
         // Google 註冊處理
         document.getElementById('googleRegister').addEventListener('click', async () => {
             try {
-                console.log('開始 Google 註冊程序...');
+                console.log('Starting Google registration process...');
                 const result = await auth.signInWithPopup(googleProvider);
-                console.log('Google 註冊成功，正在建立用戶資料...');
+                console.log('Google registration successful, creating user profile...');
                 const user = result.user;
                 
                 // 儲存用戶資料
@@ -405,10 +407,10 @@
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                console.log('用戶資料建立完成，重定向到儀表板...');
+                console.log('User profile created, redirecting to dashboard...');
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                console.error('Google 註冊錯誤：', error);
+                console.error('Google registration error:', error);
                 showError(error);
             }
         });
