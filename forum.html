@@ -684,7 +684,64 @@
             
             // 初始化事件監聽器
             initEventListeners();
+            
+            // 檢查 Firebase 權限配置
+            checkFirebasePermissions();
         });
+
+        // 檢查 Firebase 權限
+        async function checkFirebasePermissions() {
+            try {
+                // 嘗試讀取測試文檔，如果失敗會拋出權限錯誤
+                await db.collection('forum_topics').limit(1).get();
+                console.log('Firebase permissions check: Read access granted');
+            } catch (error) {
+                if (error.code === 'permission-denied') {
+                    console.error('Firebase permissions error:', error);
+                    showPermissionsError();
+                }
+            }
+        }
+
+        // 顯示權限錯誤提示
+        function showPermissionsError() {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+            errorDiv.style.color = '#ff4444';
+            errorDiv.style.padding = '1rem';
+            errorDiv.style.marginBottom = '1rem';
+            errorDiv.style.borderRadius = '6px';
+            errorDiv.style.border = '1px solid rgba(255, 0, 0, 0.3)';
+            errorDiv.innerHTML = `
+                <strong>Firebase Permissions Error</strong>
+                <p>Your Firebase security rules need to be updated to allow forum functionality.</p>
+                <p>Please add the following rules to your Firebase Console:</p>
+                <pre style="background: rgba(0,0,0,0.2); padding: 10px; overflow-x: auto; margin-top: 10px;">
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /forum_topics/{topicId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.authorId || 
+        request.auth.token.email == 'admin@example.com');
+    }
+    match /forum_replies/{replyId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.authorId || 
+        request.auth.token.email == 'admin@example.com');
+    }
+  }
+}
+                </pre>
+            `;
+            
+            // 插入到頂部
+            const container = document.querySelector('.container');
+            container.insertBefore(errorDiv, container.firstChild);
+        }
 
         // 處理用戶登入狀態變化
         function handleAuthStateChanged(user) {
@@ -696,7 +753,7 @@
                 userName.textContent = user.displayName || user.email.split('@')[0];
                 newTopicBtn.style.display = 'block';
                 document.getElementById('create-topic-container').style.display = 'block';
-                console.log('用戶已登入:', user.email);
+                console.log('User logged in:', user.email);
             } else {
                 // 用戶未登入
                 currentUser = null;
@@ -704,7 +761,7 @@
                 authControls.style.display = 'block';
                 newTopicBtn.style.display = 'none';
                 document.getElementById('create-topic-container').style.display = 'none';
-                console.log('用戶未登入');
+                console.log('User not logged in');
             }
         }
 
@@ -773,7 +830,7 @@
                 selectedFiles = Array.from(e.target.files);
                 if (selectedFiles.length > 0) {
                     fileName.textContent = selectedFiles.length > 1 
-                        ? `${selectedFiles.length} 個檔案已選取` 
+                        ? `${selectedFiles.length} files selected` 
                         : selectedFiles[0].name;
                 } else {
                     fileName.textContent = '';
@@ -815,7 +872,7 @@
             e.preventDefault();
             
             if (!currentUser) {
-                alert('請先登入');
+                alert('Please login first');
                 return;
             }
             
@@ -826,7 +883,7 @@
             // 禁用表單避免重複提交
             const submitBtn = topicForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '發布中...';
+            submitBtn.innerHTML = 'Publishing...';
             
             try {
                 // 創建新話題文檔
@@ -886,21 +943,25 @@
                 loadTopics(currentCategory);
                 
                 // 顯示成功訊息
-                alert('話題發布成功！');
+                alert('Topic published successfully!');
                 
             } catch (error) {
-                console.error('發布話題錯誤:', error);
-                alert('發布失敗: ' + error.message);
+                console.error('Error publishing topic:', error);
+                alert('Publishing failed: ' + error.message);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
             } finally {
                 // 啟用提交按鈕
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '發布';
+                submitBtn.innerHTML = 'Publish';
             }
         }
 
         // 載入話題列表
         async function loadTopics(category = 'all') {
-            topicList.innerHTML = '<li class="topic-item loading"><div class="topic-title">載入中...</div><div class="topic-preview">正在載入論壇內容，請稍候...</div></li>';
+            topicList.innerHTML = '<li class="topic-item loading"><div class="topic-title">Loading...</div><div class="topic-preview">Loading forum content, please wait...</div></li>';
             
             try {
                 let query = db.collection('forum_topics').orderBy('updatedAt', 'desc');
@@ -913,7 +974,7 @@
                 const snapshot = await query.limit(20).get();
                 
                 if (snapshot.empty) {
-                    topicList.innerHTML = '<li class="topic-item"><div class="topic-title">暫無話題</div><div class="topic-preview">目前還沒有相關話題，成為第一個發布者吧！</div></li>';
+                    topicList.innerHTML = '<li class="topic-item"><div class="topic-title">No Topics Yet</div><div class="topic-preview">There are no topics yet. Be the first to create one!</div></li>';
                     return;
                 }
                 
@@ -951,9 +1012,9 @@
                         </div>
                         <div class="topic-preview">${contentPreview}</div>
                         <div class="topic-stats">
-                            <span>${topic.views || 0} 次查看</span>
-                            <span>${topic.replies || 0} 個回覆</span>
-                            ${topic.attachments && topic.attachments.length > 0 ? `<span>${topic.attachments.length} 個附件</span>` : ''}
+                            <span>${topic.views || 0} views</span>
+                            <span>${topic.replies || 0} replies</span>
+                            ${topic.attachments && topic.attachments.length > 0 ? `<span>${topic.attachments.length} attachments</span>` : ''}
                         </div>
                     `;
                     
@@ -966,8 +1027,12 @@
                 });
                 
             } catch (error) {
-                console.error('載入話題錯誤:', error);
-                topicList.innerHTML = `<li class="topic-item"><div class="topic-title">載入錯誤</div><div class="topic-preview">載入話題時發生錯誤: ${error.message}</div></li>`;
+                console.error('Error loading topics:', error);
+                topicList.innerHTML = `<li class="topic-item"><div class="topic-title">Loading Error</div><div class="topic-preview">Error loading topics: ${error.message}</div></li>`;
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
             }
         }
 
@@ -975,15 +1040,22 @@
         async function viewTopic(topicId) {
             try {
                 // 增加瀏覽次數
-                await db.collection('forum_topics').doc(topicId).update({
-                    views: firebase.firestore.FieldValue.increment(1)
-                });
+                if (db) {
+                    try {
+                        await db.collection('forum_topics').doc(topicId).update({
+                            views: firebase.firestore.FieldValue.increment(1)
+                        });
+                    } catch (updateError) {
+                        console.warn('Could not update view count:', updateError);
+                        // 繼續執行，不阻止用戶查看話題
+                    }
+                }
                 
                 // 獲取話題資料
                 const doc = await db.collection('forum_topics').doc(topicId).get();
                 
                 if (!doc.exists) {
-                    alert('話題不存在或已被刪除');
+                    alert('Topic does not exist or has been deleted');
                     return;
                 }
                 
@@ -1023,7 +1095,7 @@
                     attachmentsDiv.className = 'attachments';
                     
                     const attachmentTitle = document.createElement('h3');
-                    attachmentTitle.textContent = '附件';
+                    attachmentTitle.textContent = 'Attachments';
                     attachmentsDiv.appendChild(attachmentTitle);
                     
                     topic.attachments.forEach(attachment => {
@@ -1048,7 +1120,7 @@
                 const backButton = document.createElement('button');
                 backButton.className = 'btn btn-secondary';
                 backButton.style.marginTop = '1rem';
-                backButton.textContent = '返回話題列表';
+                backButton.textContent = 'Back to Topic List';
                 backButton.addEventListener('click', () => {
                     loadTopics(currentCategory);
                 });
@@ -1066,14 +1138,14 @@
                     replyForm.className = 'new-topic-form';
                     replyForm.style.display = 'block';
                     replyForm.innerHTML = `
-                        <h3>發表回覆</h3>
+                        <h3>Post Reply</h3>
                         <form id="reply-form">
                             <div class="form-group">
-                                <textarea id="reply-content" rows="4" placeholder="輸入回覆內容..." required></textarea>
+                                <textarea id="reply-content" rows="4" placeholder="Enter your reply..." required></textarea>
                             </div>
                             <div class="form-footer">
-                                <div class="markdown-info">支援 Markdown 格式</div>
-                                <button type="submit" class="btn btn-primary">發布回覆</button>
+                                <div class="markdown-info">Supports Markdown</div>
+                                <button type="submit" class="btn btn-primary">Post Reply</button>
                             </div>
                         </form>
                     `;
@@ -1088,8 +1160,12 @@
                 }
                 
             } catch (error) {
-                console.error('查看話題錯誤:', error);
-                alert('載入話題詳情失敗: ' + error.message);
+                console.error('Error viewing topic:', error);
+                alert('Failed to load topic: ' + error.message);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
             }
         }
 
@@ -1098,7 +1174,7 @@
             try {
                 const repliesContainer = document.createElement('div');
                 repliesContainer.className = 'replies-container';
-                repliesContainer.innerHTML = '<h3>回覆</h3>';
+                repliesContainer.innerHTML = '<h3>Replies</h3>';
                 
                 const snapshot = await db.collection('forum_replies')
                     .where('topicId', '==', topicId)
@@ -1106,7 +1182,7 @@
                     .get();
                 
                 if (snapshot.empty) {
-                    repliesContainer.innerHTML += '<p style="color:#aaa;">目前還沒有回覆</p>';
+                    repliesContainer.innerHTML += '<p style="color:#aaa;">No replies yet</p>';
                 } else {
                     snapshot.forEach(doc => {
                         const reply = doc.data();
@@ -1135,21 +1211,29 @@
                 topicList.appendChild(repliesContainer);
                 
             } catch (error) {
-                console.error('載入回覆錯誤:', error);
+                console.error('Error loading replies:', error);
+                const errorMessage = document.createElement('p');
+                errorMessage.style.color = '#ff4444';
+                errorMessage.textContent = `Could not load replies: ${error.message}`;
+                topicList.appendChild(errorMessage);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
             }
         }
 
         // 處理回覆提交
         async function handleReplySubmit(topicId) {
             if (!currentUser) {
-                alert('請先登入');
+                alert('Please login first');
                 return;
             }
             
             const content = document.getElementById('reply-content').value.trim();
             
             if (!content) {
-                alert('回覆內容不能為空');
+                alert('Reply content cannot be empty');
                 return;
             }
             
@@ -1175,8 +1259,12 @@
                 viewTopic(topicId);
                 
             } catch (error) {
-                console.error('發布回覆錯誤:', error);
-                alert('發布回覆失敗: ' + error.message);
+                console.error('Error posting reply:', error);
+                alert('Failed to post reply: ' + error.message);
+                
+                if (error.code === 'permission-denied') {
+                    showPermissionsError();
+                }
             }
         }
 
@@ -1190,13 +1278,13 @@
             const diffDay = Math.floor(diffHour / 24);
             
             if (diffSec < 60) {
-                return '剛剛';
+                return 'just now';
             } else if (diffMin < 60) {
-                return `${diffMin} 分鐘前`;
+                return `${diffMin} minutes ago`;
             } else if (diffHour < 24) {
-                return `${diffHour} 小時前`;
+                return `${diffHour} hours ago`;
             } else if (diffDay < 30) {
-                return `${diffDay} 天前`;
+                return `${diffDay} days ago`;
             } else {
                 const year = date.getFullYear();
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -1221,11 +1309,11 @@
         // 獲取分類顯示名稱
         function getCategoryName(category) {
             const categories = {
-                'discussion': '討論',
-                'question': '問題',
-                'suggestion': '建議',
-                'development': '開發',
-                'announcement': '公告'
+                'discussion': 'Discussion',
+                'question': 'Question',
+                'suggestion': 'Suggestion',
+                'development': 'Development',
+                'announcement': 'Announcement'
             };
             
             return categories[category] || category;
