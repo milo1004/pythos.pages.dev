@@ -808,6 +808,33 @@
         .edit-form-container {
             margin-bottom: 2rem;
         }
+
+        /* 未登入用戶提示樣式 */
+        .login-prompt {
+            background: rgba(255, 229, 0, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .login-prompt p {
+            margin: 0;
+            color: var(--light);
+        }
+
+        .login-prompt a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .login-prompt a:hover {
+            text-decoration: underline;
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -1491,7 +1518,7 @@ service cloud.firestore {
             }
         }
 
-        // 載入話題列表
+        // 載入話題列表 - 確保未登入用戶也能看到
         async function loadTopics(category = 'all') {
             topicList.innerHTML = '<li class="topic-item loading"><div class="topic-title">Loading...</div><div class="topic-preview">Loading forum content, please wait...</div></li>';
             
@@ -1568,7 +1595,7 @@ service cloud.firestore {
             }
         }
 
-        // 查看話題詳情
+        // 查看話題詳情 - 確保未登入用戶也能看到內容和回覆
         async function viewTopic(topicId) {
             try {
                 // 設置當前話題ID
@@ -1693,29 +1720,37 @@ service cloud.firestore {
                             </div>
                         `;
                     }
-                    reactionsHtml += `
-                        <div class="add-reaction-btn" onclick="showEmojiPicker(event, '${topicId}', null)">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M12 5v14M5 12h14"></path>
-                            </svg>
-                        </div>
-                    `;
-                    reactionsHtml += '</div>';
-                } else {
-                    reactionsHtml = `
-                        <div class="reactions-container">
+                    
+                    // 僅對已登入用戶顯示添加反應按鈕
+                    if (currentUser) {
+                        reactionsHtml += `
                             <div class="add-reaction-btn" onclick="showEmojiPicker(event, '${topicId}', null)">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <path d="M12 5v14M5 12h14"></path>
                                 </svg>
-                                Add Reaction
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
+                    
+                    reactionsHtml += '</div>';
+                } else {
+                    // 僅對已登入用戶顯示添加反應按鈕
+                    if (currentUser) {
+                        reactionsHtml = `
+                            <div class="reactions-container">
+                                <div class="add-reaction-btn" onclick="showEmojiPicker(event, '${topicId}', null)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <path d="M12 5v14M5 12h14"></path>
+                                    </svg>
+                                    Add Reaction
+                                </div>
+                            </div>
+                        `;
+                    }
                 }
                 
-                topicList.innerHTML = `
-                    <div class="topic-item">
+                topicList.innerHTML += `
+                    <div class="topic-detail">
                         <div class="topic-header">
                             <h2 class="topic-title">${topic.title}</h2>
                             <div class="topic-info">
@@ -1790,6 +1825,14 @@ service cloud.firestore {
                         e.preventDefault();
                         handleReplySubmit(topicId);
                     });
+                } else {
+                    // 未登入用戶顯示登入提示
+                    const loginPrompt = document.createElement('div');
+                    loginPrompt.className = 'login-prompt';
+                    loginPrompt.innerHTML = `
+                        <p>請 <a href="#" onclick="document.getElementById('login-modal').style.display = 'flex'; return false;">登入</a> 後參與討論</p>
+                    `;
+                    topicList.appendChild(loginPrompt);
                 }
                 
             } catch (error) {
@@ -1879,7 +1922,7 @@ service cloud.firestore {
             }
         }
 
-        // 創建回覆元素
+        // 創建回覆元素 - 確保未登入用戶也能看到回覆和反應
         async function createReplyElement(reply, replyId, topicId, parentReplyId = null) {
             // 處理時間戳
             const timestamp = reply.timestamp ? reply.timestamp.toDate() : new Date();
@@ -1966,15 +2009,21 @@ service cloud.firestore {
                         </div>
                     `;
                 }
-                reactionsHtml += `
-                    <div class="add-reaction-btn" onclick="showEmojiPicker(event, null, '${replyId}')">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M12 5v14M5 12h14"></path>
-                        </svg>
-                    </div>
-                `;
+                
+                // 僅對已登入用戶顯示添加反應按鈕
+                if (currentUser) {
+                    reactionsHtml += `
+                        <div class="add-reaction-btn" onclick="showEmojiPicker(event, null, '${replyId}')">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                        </div>
+                    `;
+                }
+                
                 reactionsHtml += '</div>';
-            } else {
+            } else if (currentUser) {
+                // 僅對已登入用戶顯示添加反應按鈕
                 reactionsHtml = `
                     <div class="reactions-container">
                         <div class="add-reaction-btn" onclick="showEmojiPicker(event, null, '${replyId}')">
@@ -1985,6 +2034,9 @@ service cloud.firestore {
                         </div>
                     </div>
                 `;
+            } else {
+                // 未登入用戶顯示空的反應容器
+                reactionsHtml = `<div class="reactions-container"></div>`;
             }
             
             // 顯示回覆按鈕（如果用戶已登入）
