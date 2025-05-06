@@ -276,8 +276,6 @@
 
     <!-- 自定義腳本 -->
     <script src="firebase-config.js"></script>
-    <script src="js/translations.js"></script>
-    <script src="js/languageManager.js"></script>
 </head>
 <body>
     <div class="login-container">
@@ -293,10 +291,6 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Password" required>
-            </div>
-            <div class="newsletter-checkbox">
-                <input type="checkbox" id="newsletter">
-                <label for="newsletter">Subscribe to newsletter</label>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
@@ -331,82 +325,7 @@
     </div>
 
     <script>
-        // 語言切換功能
-        function changeLanguage(lang) {
-            // 儲存語言偏好
-            localStorage.setItem('preferred_language', lang);
-            
-            // 更新頁面文字
-            const translations = {
-                'zh': {
-                    'login.title': '登入',
-                    'login.email': '電子郵件',
-                    'login.password': '密碼',
-                    'login.loginButton': '登入',
-                    'login.newsletter': '訂閱電子報',
-                    'login.googleLogin': '使用 Google 帳號繼續',
-                    'login.forgotPassword': '忘記密碼？',
-                    'login.noAccount': '還沒有帳號？',
-                    'login.signUp': '註冊',
-                    'or': '或',
-                    'resetPassword.title': '重設密碼',
-                    'resetPassword.email': '電子郵件',
-                    'resetPassword.sendButton': '發送重設連結',
-                    'resetPassword.backToLogin': '返回登入',
-                    'resetPassword.success': '重設密碼連結已發送到您的電子郵件',
-                    'login.errors.auth/user-not-found': '找不到此用戶',
-                    'login.errors.auth/wrong-password': '密碼錯誤',
-                    'login.errors.default': '登入失敗，請稍後再試'
-                },
-                'en': {
-                    'login.title': 'Login',
-                    'login.email': 'Email',
-                    'login.password': 'Password',
-                    'login.loginButton': 'Login',
-                    'login.newsletter': 'Subscribe to newsletter',
-                    'login.googleLogin': 'Continue with Google',
-                    'login.forgotPassword': 'Forgot Password?',
-                    'login.noAccount': "Don't have an account?",
-                    'login.signUp': 'Sign up',
-                    'or': 'or',
-                    'resetPassword.title': 'Reset Password',
-                    'resetPassword.email': 'Email',
-                    'resetPassword.sendButton': 'Send Reset Link',
-                    'resetPassword.backToLogin': 'Back to Login',
-                    'resetPassword.success': 'Password reset link has been sent to your email',
-                    'login.errors.auth/user-not-found': 'User not found',
-                    'login.errors.auth/wrong-password': 'Wrong password',
-                    'login.errors.default': 'Login failed, please try again later'
-                }
-            };
-
-            const t = translations[lang];
-            
-            // 更新所有需要翻譯的元素
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (t[key]) {
-                    element.textContent = t[key];
-                }
-            });
-
-            // 更新所有需要翻譯的佔位符
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-i18n-placeholder');
-                if (t[key]) {
-                    element.placeholder = t[key];
-                }
-            });
-
-            // 更新語言選擇器的選中項
-            document.getElementById('language-select').value = lang;
-        }
-
-        // 頁面載入時檢查並應用已保存的語言偏好
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLanguage = localStorage.getItem('preferred_language') || 'zh';
-            changeLanguage(savedLanguage);
-        });
+        // 直接設定固定語言，不使用語言管理器
 
         // 登入表單處理
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -414,28 +333,96 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('error-message');
-
+            let hideErrorTimeout;
+            
             try {
+                // 隱藏之前可能顯示的錯誤信息
+                errorMessage.style.display = 'none';
+                clearTimeout(hideErrorTimeout);
+                
+                // 嘗試電子郵件登入
                 await firebase.auth().signInWithEmailAndPassword(email, password);
+                console.log('Email login successful, redirecting...');
                 window.location.href = 'dashboard.html';
             } catch (error) {
+                console.error('Login error:', error.code, error.message);
                 errorMessage.style.display = 'block';
-                errorMessage.textContent = langManager.getText(`login.errors.${error.code}`) || 
-                                        langManager.getText('login.errors.default');
+                
+                // 顯示具體的錯誤信息
+                if (error.code === 'auth/user-not-found') {
+                    // 用戶不存在的錯誤
+                    errorMessage.innerHTML = 'User not found, <a href="register.html" style="color: #ffe500;">click here to register</a>';
+                    
+                    // 對於提供註冊鏈接的錯誤不自動隱藏
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage.innerHTML = 'Incorrect password';
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage.innerHTML = 'Invalid email format';
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage.innerHTML = 'Too many login attempts, please try again later';
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                } else if (error.code === 'auth/invalid-credential') {
+                    // 新增對無效憑證錯誤的處理
+                    errorMessage.innerHTML = 'Login failed: incorrect email or password';
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    errorMessage.innerHTML = 'Login failed: ' + error.message;
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                }
             }
         });
 
         // Google 登入
         document.getElementById('googleLogin').addEventListener('click', async () => {
+            let hideErrorTimeout;
             try {
+                // 隱藏之前可能顯示的錯誤信息
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'none';
+                clearTimeout(hideErrorTimeout);
+                
+                // 使用 firebase-config.js 中定義的 googleProvider
                 const result = await firebase.auth().signInWithPopup(googleProvider);
+                console.log('Google login successful, redirecting...');
                 if (result.user) {
                     window.location.href = 'dashboard.html';
                 }
             } catch (error) {
+                console.error('Google login error:', error.code, error.message);
                 const errorMessage = document.getElementById('error-message');
                 errorMessage.style.display = 'block';
-                errorMessage.textContent = langManager.getText('login.errors.default');
+                
+                // 顯示具體的錯誤信息
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage.innerHTML = 'Login window closed. Please try again';
+                } else if (error.code === 'auth/popup-blocked') {
+                    errorMessage.innerHTML = 'Login popup was blocked. Please allow popups for this site';
+                } else if (error.code === 'auth/account-exists-with-different-credential') {
+                    errorMessage.innerHTML = 'An account already exists with this email using a different sign-in method';
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    errorMessage.innerHTML = 'Login request was cancelled';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage.innerHTML = 'Network error. Please check your connection';
+                } else {
+                    errorMessage.innerHTML = 'Login failed: ' + error.message;
+                }
+                
+                // 設置錯誤信息自動消失
+                hideErrorTimeout = setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
             }
         });
 
@@ -458,12 +445,15 @@
             e.preventDefault();
             const email = document.getElementById('resetEmail').value;
             const errorMessage = document.getElementById('error-message');
+            let hideErrorTimeout;
 
             try {
+                clearTimeout(hideErrorTimeout);
                 await firebase.auth().sendPasswordResetEmail(email);
                 errorMessage.style.display = 'block';
                 errorMessage.style.color = '#4CAF50';
-                errorMessage.textContent = langManager.getText('resetPassword.success');
+                errorMessage.innerHTML = 'Password reset link has been sent to your email';
+                
                 setTimeout(() => {
                     modal.style.display = "none";
                     errorMessage.style.display = 'none';
@@ -471,8 +461,20 @@
             } catch (error) {
                 errorMessage.style.display = 'block';
                 errorMessage.style.color = '#ff4444';
-                errorMessage.textContent = langManager.getText(`resetPassword.errors.${error.code}`) || 
-                                        langManager.getText('resetPassword.errors.default');
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage.innerHTML = 'No account found with this email, <a href="register.html" style="color: #ffe500;">click here to register</a>';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage.innerHTML = 'Invalid email format';
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    errorMessage.innerHTML = 'Error sending reset link: ' + error.message;
+                    hideErrorTimeout = setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 5000);
+                }
             }
         });
     </script>
