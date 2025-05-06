@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PythOS - Forum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Firebase 配置
+        const firebaseConfig = {
+          apiKey: "AIzaSyDmFopvvT7QGumBOAF8ixPYqILleyN6i68",
+          authDomain: "pythos-website.firebaseapp.com",
+          projectId: "pythos-website",
+          storageBucket: "pythos-website.firebasestorage.app",
+          messagingSenderId: "781241739137",
+          appId: "1:781241739137:web:c61a4961dfd6b284b2ea80",
+          measurementId: "G-HE54S62K6K"
+        };
+    
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <style>
+        :root {
+            --primary: #ffe500;
+            --secondary: #205c64;
+            --accent: #fabd69;
+            --dark: #0a0a0a;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: #1a1a1a;
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .forum-title {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 論壇分類 */
+        .forum-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 50px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        /* 新話題表單 */
+        .new-topic-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .form-group input, 
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 229, 0, 0.2);
+            border-radius: 6px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .markdown-info {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* 話題列表 */
+        .topic-list {
+            list-style: none;
+        }
+
+        .topic-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 229, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .topic-title {
+            color: var(--light);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .topic-author {
+            color: var(--accent);
+        }
+
+        .topic-date {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .topic-category {
+            background: rgba(255, 229, 0, 0.2);
+            color: var(--primary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .topic-preview {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .topic-stats {
+            display: flex;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* 回覆列表 */
+        .replies-container {
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+        }
+
+        .reply-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .reply-author {
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .reply-date {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        .reply-content {
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        /* 文件上傳 */
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .file-upload label {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload label:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* 附件 */
+        .attachments {
+            margin-top: 1rem;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .attachment-name {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .attachment-name:hover {
+            text-decoration: underline;
+        }
+
+        .attachment-size {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        /* 登入彈窗 */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 229, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .btn-google {
+            background: #ffffff;
+            color: #757575;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            width: 100%;
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: #dadce0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+
+        .btn-google img {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Markdown 樣式 */
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3,
+        .markdown-content h4,
+        .markdown-content h5,
+        .markdown-content h6 {
+            color: var(--light);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1em;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 1em 0;
+            padding-left: 2em;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.5em;
+        }
+
+        .markdown-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .markdown-content pre {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1em;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .markdown-content blockquote {
+            border-left: 3px solid var(--primary);
+            margin: 1em 0;
+            padding-left: 1em;
+            color: #ccc;
+        }
+
+        .markdown-content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .markdown-content a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 1em 0;
+        }
+
+        /* 回到頂部按鈕 */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: var(--dark);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .forum-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .user-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .topic-header {
+                flex-direction: column;
+            }
+
+            .topic-info {
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="forum-header">
+            <h1 class="forum-title">PythOS Forum</h1>
+            <div class="user-controls">
+                <div id="user-info" style="display: none;">
+                    <span id="user-name">User</span>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+                <div id="auth-controls">
+                    <button id="login-btn" class="btn btn-primary">Login</button>
+                </div>
+                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </header>
+        
+        <div class="forum-categories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="discussion">Discussion</button>
+            <button class="category-btn" data-category="question">Question</button>
+            <button class="category-btn" data-category="suggestion">Suggestion</button>
+            <button class="category-btn" data-category="development">Development</button>
+            <button class="category-btn" data-category="announcement">Announcement</button>
+        </div>
+        
+        <div id="create-topic-container">
+            <button id="new-topic-btn" class="btn btn-primary">Create New Topic</button>
+            
+            <div id="new-topic-form" class="new-topic-form">
+                <form id="topic-form">
+                    <div class="form-group">
+                        <label for="topic-title">Title</label>
+                        <input type="text" id="topic-title" placeholder="Enter topic title..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="topic-category">Category</label>
+                        <select id="topic-category" required>
+                            <option value="discussion">Discussion</option>
+                            <option value="question">Question</option>
+                            <option value="suggestion">Suggestion</option>
+                            <option value="development">Development</option>
+                            <option value="announcement">Announcement</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="topic-content">Content (Supports Markdown Format)</label>
+                        <textarea id="topic-content" rows="5" placeholder="Enter topic content..." required></textarea>
+                    </div>
+                    
+                    <div class="file-upload">
+                        <label for="topic-attachment">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                            Add Attachment
+                        </label>
+                        <input type="file" id="topic-attachment" multiple>
+                        <div id="file-name" class="file-name"></div>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <div class="markdown-info">Supports Markdown</div>
+                        <div>
+                            <button type="button" id="cancel-topic" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Publish</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <main class="forum-content">
+            <ul id="topic-list" class="topic-list">
+                <!-- 話題將在這裡動態載入 -->
+                <li class="topic-item loading">
+                    <div class="topic-title">Loading...</div>
+                    <div class="topic-preview">Loading forum content, please wait...</div>
+                </li>
+            </ul>
+        </main>
+    </div>
+
+    <!-- 登入彈窗 -->
+    <div id="login-modal" class="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Login</h2>
+                <button id="close-modal" class="close-modal">&times;</button>
+            </div>
+            <button id="google-login" class="btn btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                Continue with Google
+            </button>
+        </div>
+    </div>
+    
+    <!-- 返回頂部按鈕 -->
+    <div id="back-to-top" class="back-to-top">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </div>
+
+    <script>
+        // 獲取 Firebase 服務實例
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        // DOM 元素選擇
+        const userInfo = document.getElementById('user-info');
+        const authControls = document.getElementById('auth-controls');
+        const userName = document.getElementById('user-name');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeModal = document.getElementById('close-modal');
+        const googleLogin = document.getElementById('google-login');
+        const newTopicBtn = document.getElementById('new-topic-btn');
+        const newTopicForm = document.getElementById('new-topic-form');
+        const cancelTopic = document.getElementById('cancel-topic');
+        const topicForm = document.getElementById('topic-form');
+        const topicAttachment = document.getElementById('topic-attachment');
+        const fileName = document.getElementById('file-name');
+        const topicList = document.getElementById('topic-list');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const backToTop = document.getElementById('back-to-top');
+
+        // 全局變數
+        let currentUser = null;
+        let selectedFiles = [];
+        let currentCategory = 'all';
+
+        // 當頁面載入時
+        document.addEventListener('DOMContentLoaded', () => {
+            // 檢查用戶登入狀態
+            auth.onAuthStateChanged(handleAuthStateChanged);
+            
+            // 載入話題
+            loadTopics(currentCategory);
+            
+            // 初始化事件監聽器
+            initEventListeners();
+        });
+
+        // 處理用戶登入狀態變化
+        function handleAuthStateChanged(user) {
+            if (user) {
+                // 用戶已登入
+                currentUser = user;
+                userInfo.style.display = 'flex';
+                authControls.style.display = 'none';
+                userName.textContent = user.displayName || user.email.split('@')[0];
+                newTopicBtn.style.display = 'block';
+                document.getElementById('create-topic-container').style.display = 'block';
+                console.log('用戶已登入:', user.email);
+            } else {
+                // 用戶未登入
+                currentUser = null;
+                userInfo.style.display = 'none';
+                authControls.style.display = 'block';
+                newTopicBtn.style.display = 'none';
+                document.getElementById('create-topic-container').style.display = 'none';
+                console.log('用戶未登入');
+            }
+        }
+
+        // 初始化事件監聽器
+        function initEventListeners() {
+            // 登入按鈕
+            loginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'flex';
+            });
+
+            // 關閉登入彈窗
+            closeModal.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
+
+            // 點擊彈窗外部關閉
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    loginModal.style.display = 'none';
+                }
+            });
+
+            // Google 登入
+            googleLogin.addEventListener('click', () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        loginModal.style.display = 'none';
+                        console.log('Google 登入成功:', result.user.email);
+                    })
+                    .catch((error) => {
+                        console.error('Google 登入錯誤:', error);
+                        alert('登入失敗: ' + error.message);
+                    });
+            });
+
+            // 登出按鈕
+            logoutBtn.addEventListener('click', () => {
+                auth.signOut()
+                    .then(() => {
+                        console.log('登出成功');
+                    })
+                    .catch((error) => {
+                        console.error('登出錯誤:', error);
+                    });
+            });
+
+            // 新話題按鈕
+            newTopicBtn.addEventListener('click', () => {
+                newTopicForm.style.display = 'block';
+                newTopicBtn.style.display = 'none';
+                document.getElementById('topic-title').focus();
+            });
+
+            // 取消新話題
+            cancelTopic.addEventListener('click', () => {
+                newTopicForm.style.display = 'none';
+                newTopicBtn.style.display = 'block';
+                topicForm.reset();
+                selectedFiles = [];
+                fileName.textContent = '';
+            });
+
+            // 檔案上傳
+            topicAttachment.addEventListener('change', (e) => {
+                selectedFiles = Array.from(e.target.files);
+                if (selectedFiles.length > 0) {
+                    fileName.textContent = selectedFiles.length > 1 
+                        ? `${selectedFiles.length} 個檔案已選取` 
+                        : selectedFiles[0].name;
+                } else {
+                    fileName.textContent = '';
+                }
+            });
+
+            // 話題表單提交
+            topicForm.addEventListener('submit', handleTopicSubmit);
+
+            // 分類切換
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    loadTopics(currentCategory);
+                });
+            });
+
+            // 返回頂部按鈕
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // 處理話題提交
+        async function handleTopicSubmit(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                alert('請先登入');
+                return;
+            }
+            
+            const title = document.getElementById('topic-title').value;
+            const category = document.getElementById('topic-category').value;
+            const content = document.getElementById('topic-content').value;
+            
+            // 禁用表單避免重複提交
+            const submitBtn = topicForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '發布中...';
+            
+            try {
+                // 創建新話題文檔
+                const topicRef = db.collection('forum_topics').doc();
+                const topicId = topicRef.id;
+                
+                // 上傳附件（如果有）
+                const attachments = [];
+                
+                if (selectedFiles.length > 0) {
+                    for (const file of selectedFiles) {
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `${topicId}/${Date.now()}-${Math.floor(Math.random() * 1000)}.${fileExt}`;
+                        const storageRef = storage.ref(`forum_attachments/${fileName}`);
+                        
+                        // 上傳檔案
+                        await storageRef.put(file);
+                        
+                        // 獲取下載 URL
+                        const downloadURL = await storageRef.getDownloadURL();
+                        
+                        // 添加到附件列表
+                        attachments.push({
+                            name: file.name,
+                            size: file.size,
+                            type: file.type,
+                            url: downloadURL,
+                            path: `forum_attachments/${fileName}`
+                        });
+                    }
+                }
+                
+                // 儲存話題數據
+                await topicRef.set({
+                    title: title,
+                    category: category,
+                    content: content,
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName || currentUser.email.split('@')[0],
+                    authorEmail: currentUser.email,
+                    authorPhotoURL: currentUser.photoURL || null,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    attachments: attachments,
+                    views: 0,
+                    replies: 0
+                });
+                
+                // 重置表單
+                topicForm.reset();
+                selectedFiles = [];
+                fileName.textContent = '';
+                newTopicForm.style.display = 'none';
+                newTopicBtn.style.display = 'block';
+                
+                // 重新載入話題列表
+                loadTopics(currentCategory);
+                
+                // 顯示成功訊息
+                alert('話題發布成功！');
+                
+            } catch (error) {
+                console.error('發布話題錯誤:', error);
+                alert('發布失敗: ' + error.message);
+            } finally {
+                // 啟用提交按鈕
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '發布';
+            }
+        }
+
+        // 載入話題列表
+        async function loadTopics(category = 'all') {
+            topicList.innerHTML = '<li class="topic-item loading"><div class="topic-title">載入中...</div><div class="topic-preview">正在載入論壇內容，請稍候...</div></li>';
+            
+            try {
+                let query = db.collection('forum_topics').orderBy('updatedAt', 'desc');
+                
+                // 根據分類篩選
+                if (category !== 'all') {
+                    query = query.where('category', '==', category);
+                }
+                
+                const snapshot = await query.limit(20).get();
+                
+                if (snapshot.empty) {
+                    topicList.innerHTML = '<li class="topic-item"><div class="topic-title">暫無話題</div><div class="topic-preview">目前還沒有相關話題，成為第一個發布者吧！</div></li>';
+                    return;
+                }
+                
+                // 清空列表
+                topicList.innerHTML = '';
+                
+                // 遍歷話題
+                snapshot.forEach(doc => {
+                    const topic = doc.data();
+                    const topicId = doc.id;
+                    
+                    // 處理時間戳
+                    const timestamp = topic.timestamp ? topic.timestamp.toDate() : new Date();
+                    const formattedDate = formatDate(timestamp);
+                    
+                    // 截取預覽內容（不超過 150 字）
+                    const contentPreview = topic.content.length > 150 
+                        ? topic.content.substring(0, 150) + '...' 
+                        : topic.content;
+                    
+                    // 獲取分類顯示名稱
+                    const categoryName = getCategoryName(topic.category);
+                    
+                    // 創建話題元素
+                    const topicElement = document.createElement('li');
+                    topicElement.className = 'topic-item';
+                    topicElement.innerHTML = `
+                        <div class="topic-header">
+                            <h3 class="topic-title">${topic.title}</h3>
+                            <div class="topic-info">
+                                <span class="topic-author">${topic.authorName}</span>
+                                <span class="topic-date">${formattedDate}</span>
+                                <span class="topic-category">${categoryName}</span>
+                            </div>
+                        </div>
+                        <div class="topic-preview">${contentPreview}</div>
+                        <div class="topic-stats">
+                            <span>${topic.views || 0} 次查看</span>
+                            <span>${topic.replies || 0} 個回覆</span>
+                            ${topic.attachments && topic.attachments.length > 0 ? `<span>${topic.attachments.length} 個附件</span>` : ''}
+                        </div>
+                    `;
+                    
+                    // 點擊話題查看詳情
+                    topicElement.addEventListener('click', () => {
+                        viewTopic(topicId);
+                    });
+                    
+                    topicList.appendChild(topicElement);
+                });
+                
+            } catch (error) {
+                console.error('載入話題錯誤:', error);
+                topicList.innerHTML = `<li class="topic-item"><div class="topic-title">載入錯誤</div><div class="topic-preview">載入話題時發生錯誤: ${error.message}</div></li>`;
+            }
+        }
+
+        // 查看話題詳情
+        async function viewTopic(topicId) {
+            try {
+                // 增加瀏覽次數
+                await db.collection('forum_topics').doc(topicId).update({
+                    views: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                // 獲取話題資料
+                const doc = await db.collection('forum_topics').doc(topicId).get();
+                
+                if (!doc.exists) {
+                    alert('話題不存在或已被刪除');
+                    return;
+                }
+                
+                const topic = doc.data();
+                
+                // 處理時間戳
+                const timestamp = topic.timestamp ? topic.timestamp.toDate() : new Date();
+                const formattedDate = formatDate(timestamp);
+                
+                // 處理 Markdown 內容
+                const parsedContent = marked.parse(topic.content);
+                
+                // 獲取分類顯示名稱
+                const categoryName = getCategoryName(topic.category);
+                
+                // 清空話題列表
+                topicList.innerHTML = '';
+                
+                // 創建詳情頁面
+                const topicDetail = document.createElement('div');
+                topicDetail.className = 'topic-detail';
+                topicDetail.innerHTML = `
+                    <div class="topic-header">
+                        <h2 class="topic-title">${topic.title}</h2>
+                        <div class="topic-info">
+                            <span class="topic-author">${topic.authorName}</span>
+                            <span class="topic-date">${formattedDate}</span>
+                            <span class="topic-category">${categoryName}</span>
+                        </div>
+                    </div>
+                    <div class="markdown-content">${parsedContent}</div>
+                `;
+                
+                // 如果有附件，顯示附件列表
+                if (topic.attachments && topic.attachments.length > 0) {
+                    const attachmentsDiv = document.createElement('div');
+                    attachmentsDiv.className = 'attachments';
+                    
+                    const attachmentTitle = document.createElement('h3');
+                    attachmentTitle.textContent = '附件';
+                    attachmentsDiv.appendChild(attachmentTitle);
+                    
+                    topic.attachments.forEach(attachment => {
+                        const fileSize = formatFileSize(attachment.size);
+                        const attachmentItem = document.createElement('div');
+                        attachmentItem.className = 'attachment-item';
+                        attachmentItem.innerHTML = `
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            <a href="${attachment.url}" class="attachment-name" target="_blank">${attachment.name}</a>
+                            <span class="attachment-size">${fileSize}</span>
+                        `;
+                        attachmentsDiv.appendChild(attachmentItem);
+                    });
+                    
+                    topicDetail.appendChild(attachmentsDiv);
+                }
+                
+                // 創建返回按鈕
+                const backButton = document.createElement('button');
+                backButton.className = 'btn btn-secondary';
+                backButton.style.marginTop = '1rem';
+                backButton.textContent = '返回話題列表';
+                backButton.addEventListener('click', () => {
+                    loadTopics(currentCategory);
+                });
+                
+                // 添加詳情頁面到 DOM
+                topicList.appendChild(topicDetail);
+                topicList.appendChild(backButton);
+                
+                // 載入回覆
+                loadReplies(topicId);
+                
+                // 如果用戶已登入，顯示回覆表單
+                if (currentUser) {
+                    const replyForm = document.createElement('div');
+                    replyForm.className = 'new-topic-form';
+                    replyForm.style.display = 'block';
+                    replyForm.innerHTML = `
+                        <h3>發表回覆</h3>
+                        <form id="reply-form">
+                            <div class="form-group">
+                                <textarea id="reply-content" rows="4" placeholder="輸入回覆內容..." required></textarea>
+                            </div>
+                            <div class="form-footer">
+                                <div class="markdown-info">支援 Markdown 格式</div>
+                                <button type="submit" class="btn btn-primary">發布回覆</button>
+                            </div>
+                        </form>
+                    `;
+                    
+                    topicList.appendChild(replyForm);
+                    
+                    // 添加回覆表單提交事件
+                    document.getElementById('reply-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        handleReplySubmit(topicId);
+                    });
+                }
+                
+            } catch (error) {
+                console.error('查看話題錯誤:', error);
+                alert('載入話題詳情失敗: ' + error.message);
+            }
+        }
+
+        // 載入話題回覆
+        async function loadReplies(topicId) {
+            try {
+                const repliesContainer = document.createElement('div');
+                repliesContainer.className = 'replies-container';
+                repliesContainer.innerHTML = '<h3>回覆</h3>';
+                
+                const snapshot = await db.collection('forum_replies')
+                    .where('topicId', '==', topicId)
+                    .orderBy('timestamp', 'asc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    repliesContainer.innerHTML += '<p style="color:#aaa;">目前還沒有回覆</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const reply = doc.data();
+                        
+                        // 處理時間戳
+                        const timestamp = reply.timestamp ? reply.timestamp.toDate() : new Date();
+                        const formattedDate = formatDate(timestamp);
+                        
+                        // 處理 Markdown 內容
+                        const parsedContent = marked.parse(reply.content);
+                        
+                        const replyItem = document.createElement('div');
+                        replyItem.className = 'reply-item';
+                        replyItem.innerHTML = `
+                            <div class="reply-header">
+                                <span class="reply-author">${reply.authorName}</span>
+                                <span class="reply-date">${formattedDate}</span>
+                            </div>
+                            <div class="reply-content markdown-content">${parsedContent}</div>
+                        `;
+                        
+                        repliesContainer.appendChild(replyItem);
+                    });
+                }
+                
+                topicList.appendChild(repliesContainer);
+                
+            } catch (error) {
+                console.error('載入回覆錯誤:', error);
+            }
+        }
+
+        // 處理回覆提交
+        async function handleReplySubmit(topicId) {
+            if (!currentUser) {
+                alert('請先登入');
+                return;
+            }
+            
+            const content = document.getElementById('reply-content').value.trim();
+            
+            if (!content) {
+                alert('回覆內容不能為空');
+                return;
+            }
+            
+            try {
+                // 創建新回覆
+                await db.collection('forum_replies').add({
+                    topicId: topicId,
+                    content: content,
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName || currentUser.email.split('@')[0],
+                    authorEmail: currentUser.email,
+                    authorPhotoURL: currentUser.photoURL || null,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // 更新話題回覆數
+                await db.collection('forum_topics').doc(topicId).update({
+                    replies: firebase.firestore.FieldValue.increment(1),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // 重新載入話題
+                viewTopic(topicId);
+                
+            } catch (error) {
+                console.error('發布回覆錯誤:', error);
+                alert('發布回覆失敗: ' + error.message);
+            }
+        }
+
+        // 格式化日期
+        function formatDate(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+            
+            if (diffSec < 60) {
+                return '剛剛';
+            } else if (diffMin < 60) {
+                return `${diffMin} 分鐘前`;
+            } else if (diffHour < 24) {
+                return `${diffHour} 小時前`;
+            } else if (diffDay < 30) {
+                return `${diffDay} 天前`;
+            } else {
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${year}/${month}/${day}`;
+            }
+        }
+
+        // 格式化檔案大小
+        function formatFileSize(bytes) {
+            if (bytes < 1024) {
+                return bytes + ' B';
+            } else if (bytes < 1024 * 1024) {
+                return (bytes / 1024).toFixed(1) + ' KB';
+            } else if (bytes < 1024 * 1024 * 1024) {
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            } else {
+                return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+            }
+        }
+
+        // 獲取分類顯示名稱
+        function getCategoryName(category) {
+            const categories = {
+                'discussion': '討論',
+                'question': '問題',
+                'suggestion': '建議',
+                'development': '開發',
+                'announcement': '公告'
+            };
+            
+            return categories[category] || category;
+        }
+    </script>
+</body>
+</html>
