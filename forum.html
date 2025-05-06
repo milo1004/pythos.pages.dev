@@ -773,6 +773,41 @@
                 margin-top: 0.5rem;
             }
         }
+
+        /* 編輯按鈕和已編輯標記的樣式 */
+        .edit-button {
+            background: none;
+            border: none;
+            color: #4caf50;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-right: 1rem;
+        }
+
+        .edit-button:hover {
+            text-decoration: underline;
+        }
+
+        .edited-info {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            font-style: italic;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .edit-form-container {
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -1565,6 +1600,14 @@ service cloud.firestore {
                 const timestamp = topic.timestamp ? topic.timestamp.toDate() : new Date();
                 const formattedDate = formatDate(timestamp);
                 
+                // 檢查是否有編輯時間戳
+                let editedInfo = '';
+                if (topic.editedAt && !topic.editedByAdmin) {
+                    const editedTimestamp = topic.editedAt.toDate();
+                    const formattedEditedDate = formatDate(editedTimestamp);
+                    editedInfo = `<span class="edited-info">(已編輯於 ${formattedEditedDate})</span>`;
+                }
+                
                 // 處理 Markdown 內容
                 const parsedContent = marked.parse(topic.content);
                 
@@ -1573,10 +1616,6 @@ service cloud.firestore {
                 
                 // 清空話題列表
                 topicList.innerHTML = '';
-                
-                // 創建詳情頁面
-                const topicDetail = document.createElement('div');
-                topicDetail.className = 'topic-detail';
                 
                 // 創建返回按鈕
                 const backButton = document.createElement('button');
@@ -1589,11 +1628,24 @@ service cloud.firestore {
                 
                 topicList.appendChild(backButton);
                 
-                // 檢查是否為話題作者或管理員以顯示刪除按鈕
-                let deleteButtonHtml = '';
+                // 檢查是否為話題作者或管理員以顯示刪除和編輯按鈕
+                let actionButtonsHtml = '';
                 if (currentUser && (currentUser.uid === topic.authorId || 
                     ['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email))) {
-                    deleteButtonHtml = `
+                    
+                    // 編輯按鈕
+                    actionButtonsHtml += `
+                        <button class="edit-button" onclick="showTopicEditForm('${topicId}', event)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit Topic
+                        </button>
+                    `;
+                    
+                    // 刪除按鈕
+                    actionButtonsHtml += `
                         <button class="delete-button" onclick="deleteTopic('${topicId}', event)">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"></path>
@@ -1662,20 +1714,24 @@ service cloud.firestore {
                     `;
                 }
                 
-                topicDetail.innerHTML = `
-                    <div class="topic-header">
-                        <h2 class="topic-title">${topic.title}</h2>
-                        <div class="topic-info">
-                            <span class="topic-author">${topic.authorName}</span>
-                            <span class="topic-date">${formattedDate}</span>
-                            <span class="topic-category">${categoryName}</span>
+                topicList.innerHTML = `
+                    <div class="topic-item">
+                        <div class="topic-header">
+                            <h2 class="topic-title">${topic.title}</h2>
+                            <div class="topic-info">
+                                <span class="topic-author">${topic.authorName}</span>
+                                <span class="topic-date">${formattedDate} ${editedInfo}</span>
+                                <span class="topic-category">${categoryName}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="markdown-content">${parsedContent}</div>
-                    ${reactionsHtml}
-                    <div class="reply-actions">
-                        <div></div>
-                        ${deleteButtonHtml}
+                        <div class="markdown-content">${parsedContent}</div>
+                        ${reactionsHtml}
+                        <div class="reply-actions">
+                            <div></div>
+                            <div class="action-buttons">
+                                ${actionButtonsHtml}
+                            </div>
+                        </div>
                     </div>
                 `;
                 
@@ -1703,11 +1759,8 @@ service cloud.firestore {
                         attachmentsDiv.appendChild(attachmentItem);
                     });
                     
-                    topicDetail.appendChild(attachmentsDiv);
+                    topicList.appendChild(attachmentsDiv);
                 }
-                
-                // 添加詳情頁面到 DOM
-                topicList.appendChild(topicDetail);
                 
                 // 載入回覆
                 await loadReplies(topicId);
@@ -1832,6 +1885,14 @@ service cloud.firestore {
             const timestamp = reply.timestamp ? reply.timestamp.toDate() : new Date();
             const formattedDate = formatDate(timestamp);
             
+            // 檢查是否有編輯時間戳
+            let editedInfo = '';
+            if (reply.editedAt && !reply.editedByAdmin) {
+                const editedTimestamp = reply.editedAt.toDate();
+                const formattedEditedDate = formatDate(editedTimestamp);
+                editedInfo = `<span class="edited-info">(已編輯於 ${formattedEditedDate})</span>`;
+            }
+            
             // 處理 Markdown 內容
             const parsedContent = marked.parse(reply.content);
             
@@ -1840,11 +1901,24 @@ service cloud.firestore {
             replyElement.className = 'reply-item';
             replyElement.id = `reply-${replyId}`;
             
-            // 檢查是否為回覆作者或管理員以顯示刪除按鈕
-            let deleteButtonHtml = '';
+            // 檢查是否為回覆作者或管理員以顯示刪除和編輯按鈕
+            let actionButtonsHtml = '';
             if (currentUser && (currentUser.uid === reply.authorId || 
                 ['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email))) {
-                deleteButtonHtml = `
+                
+                // 編輯按鈕
+                actionButtonsHtml += `
+                    <button class="edit-button" onclick="showReplyEditForm('${replyId}', '${topicId}', event)">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit
+                    </button>
+                `;
+                
+                // 刪除按鈕
+                actionButtonsHtml += `
                     <button class="delete-button" onclick="deleteReply('${replyId}', '${topicId}', event)">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"></path>
@@ -1929,15 +2003,18 @@ service cloud.firestore {
             replyElement.innerHTML = `
                 <div class="reply-header">
                     <span class="reply-author">${reply.authorName}</span>
-                    <span class="reply-date">${formattedDate}</span>
+                    <span class="reply-date">${formattedDate} ${editedInfo}</span>
                 </div>
                 <div class="reply-content markdown-content">${parsedContent}</div>
                 ${reactionsHtml}
                 <div class="reply-actions">
                     ${replyButtonHtml}
-                    ${deleteButtonHtml}
+                    <div class="action-buttons">
+                        ${actionButtonsHtml}
+                    </div>
                 </div>
                 <div id="reply-form-${replyId}" style="display: none;"></div>
+                <div id="reply-edit-form-${replyId}" style="display: none;"></div>
             `;
             
             return replyElement;
@@ -2420,6 +2497,289 @@ service cloud.firestore {
             
             // 顯示 emoji 選擇器
             emojiPicker.style.display = 'block';
+        }
+
+        // 顯示話題編輯表單
+        function showTopicEditForm(topicId, event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            // 獲取話題詳情
+            db.collection('forum_topics').doc(topicId).get().then(doc => {
+                if (!doc.exists) {
+                    alert('Topic does not exist or has been deleted');
+                    return;
+                }
+                
+                const topic = doc.data();
+                
+                // 檢查權限
+                if (currentUser.uid !== topic.authorId && 
+                    !['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email)) {
+                    alert('You do not have permission to edit this topic');
+                    return;
+                }
+                
+                // 創建編輯表單
+                const editFormContainer = document.createElement('div');
+                editFormContainer.className = 'edit-form-container';
+                editFormContainer.innerHTML = `
+                    <div class="new-topic-form">
+                        <form id="edit-topic-form">
+                            <div class="form-group">
+                                <label for="edit-topic-title">Title</label>
+                                <input type="text" id="edit-topic-title" value="${topic.title}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="edit-topic-category">Category</label>
+                                <select id="edit-topic-category" required>
+                                    <option value="discussion" ${topic.category === 'discussion' ? 'selected' : ''}>Discussion</option>
+                                    <option value="question" ${topic.category === 'question' ? 'selected' : ''}>Question</option>
+                                    <option value="suggestion" ${topic.category === 'suggestion' ? 'selected' : ''}>Suggestion</option>
+                                    <option value="development" ${topic.category === 'development' ? 'selected' : ''}>Development</option>
+                                    <option value="announcement" ${topic.category === 'announcement' ? 'selected' : ''}>Announcement</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="edit-topic-content">Content (Supports Markdown Format)</label>
+                                <textarea id="edit-topic-content" rows="5" required>${topic.content}</textarea>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <div class="markdown-info">Supports Markdown</div>
+                                <div>
+                                    <button type="button" id="cancel-edit-topic" class="btn btn-secondary">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Update Topic</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                // 插入到 DOM
+                const topicDetail = document.querySelector('.topic-detail');
+                topicDetail.style.display = 'none';
+                
+                // 在返回按鈕後面插入編輯表單
+                const backButton = document.querySelector('.topic-detail').previousElementSibling;
+                backButton.insertAdjacentElement('afterend', editFormContainer);
+                
+                // 添加取消編輯事件
+                document.getElementById('cancel-edit-topic').addEventListener('click', () => {
+                    editFormContainer.remove();
+                    topicDetail.style.display = 'block';
+                });
+                
+                // 添加表單提交事件
+                document.getElementById('edit-topic-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    updateTopic(topicId, editFormContainer);
+                });
+                
+            }).catch(error => {
+                console.error('Error getting topic:', error);
+                alert('Failed to load topic data: ' + error.message);
+            });
+        }
+        
+        // 更新話題
+        async function updateTopic(topicId, formContainer) {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            const title = document.getElementById('edit-topic-title').value;
+            const category = document.getElementById('edit-topic-category').value;
+            const content = document.getElementById('edit-topic-content').value;
+            
+            try {
+                // 檢查權限
+                const doc = await db.collection('forum_topics').doc(topicId).get();
+                
+                if (!doc.exists) {
+                    alert('Topic does not exist or has been deleted');
+                    return;
+                }
+                
+                const topic = doc.data();
+                
+                if (currentUser.uid !== topic.authorId && 
+                    !['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email)) {
+                    alert('You do not have permission to edit this topic');
+                    return;
+                }
+                
+                // 檢查內容是否有變更
+                if (title === topic.title && category === topic.category && content === topic.content) {
+                    alert('No changes detected');
+                    // 移除編輯表單，顯示話題詳情
+                    formContainer.remove();
+                    document.querySelector('.topic-detail').style.display = 'block';
+                    return;
+                }
+                
+                // 更新話題
+                const updateData = {
+                    title: title,
+                    category: category,
+                    content: content,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    editedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // 如果是管理員編輯，則標記為管理員編輯
+                if (['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email) && 
+                    currentUser.uid !== topic.authorId) {
+                    updateData.editedByAdmin = true;
+                }
+                
+                await db.collection('forum_topics').doc(topicId).update(updateData);
+                
+                // 重新載入話題
+                viewTopic(topicId);
+                
+            } catch (error) {
+                console.error('Error updating topic:', error);
+                alert('Failed to update topic: ' + error.message);
+            }
+        }
+        
+        // 顯示回覆編輯表單
+        function showReplyEditForm(replyId, topicId, event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            // 獲取回覆詳情
+            db.collection('forum_replies').doc(replyId).get().then(doc => {
+                if (!doc.exists) {
+                    alert('Reply does not exist or has been deleted');
+                    return;
+                }
+                
+                const reply = doc.data();
+                
+                // 檢查權限
+                if (currentUser.uid !== reply.authorId && 
+                    !['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email)) {
+                    alert('You do not have permission to edit this reply');
+                    return;
+                }
+                
+                // 獲取回覆元素
+                const replyElement = document.getElementById(`reply-${replyId}`);
+                
+                // 顯示編輯表單
+                const editFormContainer = document.getElementById(`reply-edit-form-${replyId}`);
+                editFormContainer.innerHTML = `
+                    <div class="new-topic-form" style="margin-top: 1rem;">
+                        <form id="edit-reply-form-${replyId}">
+                            <div class="form-group">
+                                <textarea id="edit-reply-content-${replyId}" rows="3" required>${reply.content}</textarea>
+                            </div>
+                            <div class="form-footer">
+                                <div class="markdown-info">Supports Markdown</div>
+                                <div>
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('reply-edit-form-${replyId}').style.display = 'none';">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Update Reply</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                // 顯示表單
+                editFormContainer.style.display = 'block';
+                
+                // 隱藏回覆內容
+                replyElement.querySelector('.reply-content').style.display = 'none';
+                replyElement.querySelector('.reply-actions').style.display = 'none';
+                replyElement.querySelector('.reactions-container').style.display = 'none';
+                
+                // 添加提交事件
+                document.getElementById(`edit-reply-form-${replyId}`).addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    updateReply(replyId, topicId);
+                });
+                
+            }).catch(error => {
+                console.error('Error getting reply:', error);
+                alert('Failed to load reply data: ' + error.message);
+            });
+        }
+        
+        // 更新回覆
+        async function updateReply(replyId, topicId) {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            const content = document.getElementById(`edit-reply-content-${replyId}`).value;
+            
+            try {
+                // 檢查權限
+                const doc = await db.collection('forum_replies').doc(replyId).get();
+                
+                if (!doc.exists) {
+                    alert('Reply does not exist or has been deleted');
+                    return;
+                }
+                
+                const reply = doc.data();
+                
+                if (currentUser.uid !== reply.authorId && 
+                    !['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email)) {
+                    alert('You do not have permission to edit this reply');
+                    return;
+                }
+                
+                // 檢查內容是否有變更
+                if (content === reply.content) {
+                    alert('No changes detected');
+                    
+                    // 隱藏編輯表單，顯示回覆內容
+                    document.getElementById(`reply-edit-form-${replyId}`).style.display = 'none';
+                    
+                    const replyElement = document.getElementById(`reply-${replyId}`);
+                    replyElement.querySelector('.reply-content').style.display = 'block';
+                    replyElement.querySelector('.reply-actions').style.display = 'flex';
+                    replyElement.querySelector('.reactions-container').style.display = 'flex';
+                    
+                    return;
+                }
+                
+                // 更新回覆
+                const updateData = {
+                    content: content,
+                    editedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // 如果是管理員編輯，則標記為管理員編輯
+                if (['pythos.team@gmail.com', 'nok@pgmiv.com', 'milochan1313@gmail.com'].includes(currentUser.email) && 
+                    currentUser.uid !== reply.authorId) {
+                    updateData.editedByAdmin = true;
+                }
+                
+                await db.collection('forum_replies').doc(replyId).update(updateData);
+                
+                // 重新載入話題
+                viewTopic(topicId);
+                
+            } catch (error) {
+                console.error('Error updating reply:', error);
+                alert('Failed to update reply: ' + error.message);
+            }
         }
     </script>
 </body>
